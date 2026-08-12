@@ -678,6 +678,3 @@
   .evidence-personas .slide img { max-height:29vh; }
   .evidence-personas .slide figcaption { margin-top:6px; }
 }
-
-/* Dock 状态图使用应用内的真实马歇歇帧，并保持正方形比例。 */
-.dock-icon img { height:auto; aspect-ratio:1; object-fit:contain; }

@@ -6,33 +6,32 @@
   <meta name="description" content="马上下班——会催你上班，也会催你下班的桌面打工搭子。">
   <title>马上下班｜你的下班嘴替</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="preload" as="image" href="screenshots/today-640.webp" imagesrcset="screenshots/today-640.webp 640w, screenshots/today-1240.webp 1240w" imagesizes="(max-width: 650px) 94vw, 55vw" fetchpriority="high">
-  <link rel="stylesheet" href="styles.css?v=2.4.2">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="cursor-stamp" aria-hidden="true">撤</div>
   <header class="site-nav">
-    <a class="logo" href="#top" aria-label="马上下班首页"><img src="assets/app-icon.webp" width="192" height="192" alt="" fetchpriority="high"><span><b>马上下班</b><small>OFF DUTY COMPANION</small></span></a>
+    <a class="logo" href="#top" aria-label="马上下班首页"><img src="assets/app-icon.png" alt=""><span><b>马上下班</b><small>OFF DUTY COMPANION</small></span></a>
     <nav aria-label="页面导航"><a href="#companion">今日陪伴</a><a href="#health">马生健康</a><a href="#evidence">考勤簿</a></nav>
-    <a class="nav-download" href="https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.4.2/mashangxiaban-2.4.2-macOS-Apple-Silicon.dmg">下载 macOS 版 ↘</a>
+    <a class="nav-download" href="https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.4.3/mashangxiaban-2.4.3-macOS-Apple-Silicon.dmg">下载 macOS 版 ↘</a>
   </header>
 
   <main id="top">
     <section class="hero-section">
       <div class="hero-grid" aria-hidden="true"></div>
       <div class="hero-copy">
-        <div class="eyebrow"><span>打工人桌面陪伴应用</span><em>V2.4.2</em></div>
+        <div class="eyebrow"><span>打工人桌面陪伴应用</span><em>V2.4.3</em></div>
         <h1><span class="hero-title-line">工作催你干活，</span><span class="hero-title-line hero-title-accent">马歇歇催你下班。</span></h1>
         <p>需求可以无限续杯，你的人生不该。马歇歇替你盯住下班时间、记下加班案底，还会在你舍不得走时替你阴阳两句。</p>
         <div class="hero-actions">
-          <a class="primary-download" href="https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.4.2/mashangxiaban-2.4.2-macOS-Apple-Silicon.dmg"><span>免费下载</span><small>macOS · Apple 芯片 · 112 MB</small><b>↓</b></a>
+          <a class="primary-download" href="https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.4.3/mashangxiaban-2.4.3-macOS-Apple-Silicon.dmg"><span>免费下载</span><small>macOS · Apple 芯片 · 112 MB</small><b>↓</b></a>
         </div>
         <div class="hero-foot"><span>不注册</span><span>数据留在本机</span><span>老板无权查看</span></div>
       </div>
       <div class="hero-product">
         <div class="window-frame">
           <div class="window-bar"><i></i><i></i><i></i><span>马上下班.app</span></div>
-          <img src="screenshots/today-1240.webp" srcset="screenshots/today-640.webp 640w, screenshots/today-1240.webp 1240w" sizes="(max-width: 650px) 94vw, 55vw" width="1240" height="790" alt="马上下班今日陪伴页面" fetchpriority="high" decoding="async">
+          <img src="screenshots/today.png" alt="马上下班今日陪伴页面">
         </div>
         <button class="hero-muyu-demo" type="button" aria-label="连续敲击木鱼演示"><span class="hero-mallet" aria-hidden="true"></span><span class="hero-woodfish" aria-hidden="true">敲</span><strong><b>连续敲疯</b><em><span id="hero-hit-count">128</span> 次</em></strong><i class="hero-hit-ring" aria-hidden="true"></i><span class="hero-complaints" id="hero-complaints" aria-hidden="true"></span></button>
         <div class="floating-note note-one"><b>19:00</b><span>今日打烊</span></div>
@@ -45,7 +44,7 @@
       <header class="showcase-head"><div><span class="section-index">01 / 今日陪伴</span><h2><span class="headline-line">从“我到工位了”</span><span class="headline-line">陪你熬到“我要下班了”</span></h2></div><p>早上看你一脸班味，中午催你先去吃饭，晚上盯着你别再免费加钟。它不帮老板提高效率，只负责提醒你还有生活。</p></header>
       <div class="carousel-stage">
         <div class="carousel-track">
-          <figure class="slide is-active"><img src="screenshots/off-summary-1240.webp" srcset="screenshots/off-summary-640.webp 640w, screenshots/off-summary-1240.webp 1240w" sizes="(max-width: 650px) 90vw, 58vw" width="1240" height="790" alt="下班总结状态" loading="lazy" decoding="async"></figure>
+          <figure class="slide is-active"><img src="screenshots/off-summary.png" alt="下班总结状态"></figure>
         </div>
       </div>
     </section>
@@ -55,10 +54,10 @@
       <div class="notification-demo">
         <div class="desktop-time">18:55</div>
         <div class="demo-kicker"><span>正在演示</span><b>下班前 5 分钟</b></div>
-        <div class="system-banner"><img src="assets/app-icon.webp" width="192" height="192" alt="马上下班应用图标" loading="lazy" decoding="async"><div><small>马上下班 · 现在</small><b>距离下班还有 5 分钟</b><p>每一次多余的双击，都可能成为今晚的新事故。</p></div></div>
+        <div class="system-banner"><img src="assets/app-icon.png" alt="马上下班应用图标"><div><small>马上下班 · 现在</small><b>距离下班还有 5 分钟</b><p>每一次多余的双击，都可能成为今晚的新事故。</p></div></div>
         <div class="demo-note note-notification"><b>即时通知</b><p>不用打开应用，关键节点会主动弹出提醒。</p></div>
-        <div class="dock-icon dock-countdown"><img src="assets/dock-working.webp" width="512" height="512" alt="工作中马歇歇图标显示下班倒计时" loading="lazy" decoding="async"><span>05:00</span><small>倒计时</small></div>
-        <div class="dock-icon dock-overtime"><img src="assets/dock-overtime.webp" width="512" height="512" alt="加班中马歇歇图标显示超时时长" loading="lazy" decoding="async"><span>+00:09</span><small>已超时</small></div>
+        <div class="dock-icon dock-countdown"><img src="assets/app-icon.png" alt="应用图标显示下班倒计时"><span>05:00</span><small>倒计时</small></div>
+        <div class="dock-icon dock-overtime"><img src="assets/app-icon.png" alt="应用图标显示加班时长"><span>+00:09</span><small>已超时</small></div>
         <div class="demo-note note-icon"><b>应用图标</b><p>一眼查看还剩多久；超时后自动累计加班时长。</p></div>
       </div>
     </section>
@@ -66,9 +65,9 @@
     <section class="health-zone" id="health">
       <div class="health-intro"><span class="section-index">03 / 马生健康</span><h2><span class="headline-line">你每加一次班，</span><span class="headline-line">马替你掉一格血。</span></h2><p>你嘴上说“就一会儿”，身体可是一分钟都没忘。从活人微死到病床 ICU，再卷下去，马歇歇没等到年终奖，先等到了一块碑。</p></div>
       <div class="health-gallery">
-        <figure class="health-card yellow"><span>15—25h</span><img src="screenshots/health-with-data-hero.webp" width="600" height="779" alt="过劳生病状态：马歇歇与生命值" loading="lazy" decoding="async"><figcaption>过劳生病</figcaption></figure>
-        <figure class="health-card red"><span>40—50h</span><img src="screenshots/health-icu-hero.webp" width="600" height="779" alt="癌症警报状态：ICU 病床与生命值" loading="lazy" decoding="async"><figcaption>癌症警报</figcaption></figure>
-        <figure class="health-card black"><span>50h+</span><img src="screenshots/health-death-hero.webp" width="600" height="779" alt="猝死结局：墓碑与生命值" loading="lazy" decoding="async"><figcaption>猝死结局</figcaption></figure>
+        <figure class="health-card yellow"><span>15—25h</span><img src="screenshots/health-with-data-hero.png" alt="过劳生病状态：马歇歇与生命值"><figcaption>过劳生病</figcaption></figure>
+        <figure class="health-card red"><span>40—50h</span><img src="screenshots/health-icu-hero.png" alt="癌症警报状态：ICU 病床与生命值"><figcaption>癌症警报</figcaption></figure>
+        <figure class="health-card black"><span>50h+</span><img src="screenshots/health-death-hero.png" alt="猝死结局：墓碑与生命值"><figcaption>猝死结局</figcaption></figure>
       </div>
     </section>
 
@@ -88,18 +87,18 @@
       </header>
       <div class="carousel-stage">
         <div class="carousel-track">
-          <figure class="slide is-active"><img src="screenshots/attendance-mock-1240.webp" srcset="screenshots/attendance-mock-640.webp 640w, screenshots/attendance-mock-1240.webp 1240w" sizes="(max-width: 650px) 90vw, 58vw" width="1240" height="790" alt="考勤簿示例数据与工位钉子户预备役人格" loading="lazy" decoding="async"></figure>
+          <figure class="slide is-active"><img src="screenshots/attendance-mock.png" alt="考勤簿示例数据与工位钉子户预备役人格"></figure>
         </div>
       </div>
     </section>
 
     <section class="download-final">
-      <div class="download-horse"><img src="assets/horse.webp" width="900" height="900" alt="斜眼看你的马歇歇" loading="lazy" decoding="async"><span>你都看到这了，<br>还不准备下班？</span></div>
-      <div class="download-copy"><span class="section-index">05 / 现在开始</span><h2 class="final-night-title"><span>公司已经拥有你的白天，</span><span>美丽的你值得享受美丽的夜晚。</span></h2><p>免费下载 macOS Apple 芯片版。不需要账号，考勤只留在你的电脑里——放心，老板看不到你几点跑路。</p><a href="https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.4.2/mashangxiaban-2.4.2-macOS-Apple-Silicon.dmg"><span><b>下载马上下班 2.4.2</b><small>macOS · Apple Silicon</small></span><strong>↓</strong></a><div class="checksum">SHA-256 · a94ccd39c58a5fd66525bf11f173f858d771b7f483792083ff510c1eda252643</div></div>
+      <div class="download-horse"><img src="assets/horse.png" alt="斜眼看你的马歇歇"><span>你都看到这了，<br>还不准备下班？</span></div>
+      <div class="download-copy"><span class="section-index">05 / 现在开始</span><h2 class="final-night-title"><span>公司已经拥有你的白天，</span><span>美丽的你值得享受美丽的夜晚。</span></h2><p>免费下载 macOS Apple 芯片版。不需要账号，考勤只留在你的电脑里——放心，老板看不到你几点跑路。</p><a href="https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.4.3/mashangxiaban-2.4.3-macOS-Apple-Silicon.dmg"><span><b>下载马上下班 2.4.3</b><small>macOS · Apple Silicon</small></span><strong>↓</strong></a><div class="checksum">SHA-256 · 725a994cfceb9d8cae0a4cdccb88e9c90c87bd5f4aff509cc0631115177c43ca</div></div>
     </section>
   </main>
 
-  <footer><a class="logo" href="#top"><img src="assets/app-icon.webp" width="192" height="192" alt="" loading="lazy" decoding="async"><span><b>马上下班</b><small>© 2026 OFF DUTY DEPARTMENT</small></span></a><p>工作只是工作，晚上才是你的。</p><a href="#top">回到工位顶部 ↑</a></footer>
+  <footer><a class="logo" href="#top"><img src="assets/app-icon.png" alt=""><span><b>马上下班</b><small>© 2026 OFF DUTY DEPARTMENT</small></span></a><p>工作只是工作，晚上才是你的。</p><a href="#top">回到工位顶部 ↑</a></footer>
   <script src="site.js"></script>
 </body>
 </html>

@@ -1,13 +1,10 @@
 {
-  "version": "2.4.2",
-  "publishedAt": "2026-08-12T16:40:17Z",
+  "version": "2.4.3",
+  "publishedAt": "2026-08-12T16:47:00Z",
   "platform": "darwin-arm64",
-  "downloadUrl": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.4.2/mashangxiaban-2.4.2-macOS-Apple-Silicon.dmg",
-  "sha256": "a94ccd39c58a5fd66525bf11f173f858d771b7f483792083ff510c1eda252643",
+  "downloadUrl": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.4.3/mashangxiaban-2.4.3-macOS-Apple-Silicon.dmg",
+  "sha256": "725a994cfceb9d8cae0a4cdccb88e9c90c87bd5f4aff509cc0631115177c43ca",
   "notes": [
-    "## 马上下班 2.4.2",
-    "更新至 2.4.2。",
-    "持续优化应用稳定性与使用体验。",
-    "应用内已接入新版本检测，后续有更新时会主动提示。"
+    "更新至 2.4.3。\\n持续优化应用稳定性与使用体验。\\n应用会通过官网更新清单检测后续新版本。"
   ]
 }
