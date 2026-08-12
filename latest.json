@@ -1,13 +1,13 @@
 {
-  "version": "2.4.0",
-  "publishedAt": "2026-08-12T16:10:55Z",
+  "version": "2.4.1",
+  "publishedAt": "2026-08-12T16:17:17Z",
   "platform": "darwin-arm64",
-  "downloadUrl": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.4.0/mashangxiaban-2.4.0-macOS-Apple-Silicon.dmg",
-  "sha256": "0211a9e374ae015fa2dcb07f862a40d5b43a0dfb350b96804db5e64db3d5c286",
+  "downloadUrl": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.4.1/mashangxiaban-2.4.1-macOS-Apple-Silicon.dmg",
+  "sha256": "6b45ff63c24448994ec9702b0bb436baffc1d7d14861108728536b0565b5942b",
   "notes": [
-    "上班打卡升级为开市敲钟，并加入黄铜钟声",
-    "自动识别新版，右上角提示并支持校验后下载",
-    "优化桌面通知权限引导",
-    "顶部页面切换不再重复播放入场动画"
+    "正式接入 GitHub 自动更新通道",
+    "启动后自动读取远程版本清单",
+    "发现新版后可在应用内下载并校验安装包",
+    "延续 2.4.0 的开市敲钟与桌面通知优化"
   ]
 }
