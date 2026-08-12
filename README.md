@@ -10,7 +10,7 @@
 
 1. 打开仓库的 **Releases** 页面，选择 **Draft a new release**。
 2. 创建标签，例如 `v2.5.0`；Release 标题填写 `马上下班 2.5.0`。
-3. 上传一个 `.dmg` 安装包，文件名需包含版本号。
+3. 上传一个 `.dmg` 安装包，使用英文文件名 `mashangxiaban-版本号-macOS-Apple-Silicon.dmg`。
 4. 在 Release 正文中填写更新说明，每项一行。
 5. 点击 **Publish release**。
 
