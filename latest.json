@@ -1,9 +1,9 @@
 {
   "version": "2.4.0",
-  "publishedAt": "2026-08-12T23:55:00+08:00",
+  "publishedAt": "2026-08-12T16:10:55Z",
   "platform": "darwin-arm64",
-  "downloadUrl": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.4.0/马上下班-2.4.0-macOS-Apple芯片.dmg",
-  "sha256": "2443320932c898783689379ed40277fc1d8878a623f1a669d793ecb572e58732",
+  "downloadUrl": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.4.0/-2.4.0-macOS-Apple.dmg",
+  "sha256": "0211a9e374ae015fa2dcb07f862a40d5b43a0dfb350b96804db5e64db3d5c286",
   "notes": [
     "上班打卡升级为开市敲钟，并加入黄铜钟声",
     "自动识别新版，右上角提示并支持校验后下载",
