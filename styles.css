@@ -678,3 +678,60 @@
   .evidence-personas .slide img { max-height:29vh; }
   .evidence-personas .slide figcaption { margin-top:6px; }
 }
+
+/* 双平台下载：沿用原有印章式按钮，只增加清晰的平台选择。 */
+#download { scroll-margin-top:76px; }
+.platform-downloads {
+  width:min(650px,100%);
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+}
+.platform-downloads .primary-download {
+  min-width:0;
+  padding:15px 16px;
+}
+.platform-downloads .primary-download span { font-size:16px; }
+.platform-download-mac { background:var(--white); }
+
+.final-platform-downloads {
+  width:min(650px,100%);
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:13px;
+  margin-top:35px;
+}
+.final-platform-downloads>a {
+  min-width:0;
+  display:grid;
+  grid-template-columns:1fr auto;
+  align-items:center;
+  padding:20px 18px;
+  border:3px solid var(--ink);
+  background:var(--red);
+  color:white;
+  box-shadow:7px 7px 0 var(--ink);
+}
+.final-platform-downloads .final-download-mac {
+  background:var(--blue);
+}
+.final-platform-downloads b,
+.final-platform-downloads small { display:block; }
+.final-platform-downloads b { font-size:16px; }
+.final-platform-downloads small {
+  margin-top:6px;
+  font:700 9px var(--mono);
+  opacity:.72;
+}
+.final-platform-downloads strong { font-size:32px; }
+.checksum { display:grid; gap:4px; }
+
+@media (max-width:650px) {
+  #download { scroll-margin-top:66px; }
+  .platform-downloads,
+  .final-platform-downloads { grid-template-columns:1fr; }
+  .platform-downloads .primary-download { padding:13px 15px; }
+  .final-platform-downloads { margin-top:24px; }
+  .final-platform-downloads>a { padding:16px 17px; }
+  .checksum { display:none; }
+}

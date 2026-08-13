@@ -1,13 +1,23 @@
 {
-  "version": "2.4.5",
-  "publishedAt": "2026-08-13T02:53:48Z",
+  "version": "2.4.6",
+  "publishedAt": "2026-08-13T03:16:00Z",
+  "artifacts": {
+    "darwin-arm64": {
+      "downloadUrl": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.4.6/mashangxiaban-2.4.6-macOS-Apple-Silicon.dmg",
+      "sha256": "d1ad3372642a03a23d51b4d360539df23e292c499d5e208a4c8a54c02d06c0b6"
+    },
+    "win32-x64": {
+      "downloadUrl": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.4.6/mashangxiaban-2.4.6-Windows-x64.exe",
+      "sha256": "bcfde9c439a10c483e267f1d94685f29e2655ec75bda9ad811cc89b7774cb338"
+    }
+  },
   "platform": "darwin-arm64",
-  "downloadUrl": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.4.5/mashangxiaban-2.4.5-macOS-Apple-Silicon.dmg",
-  "sha256": "6ffa1ef69b2b4a6f1e49f71813488fdc719a3056bf9bae5c243924732cf6fef5",
+  "downloadUrl": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.4.6/mashangxiaban-2.4.6-macOS-Apple-Silicon.dmg",
+  "sha256": "d1ad3372642a03a23d51b4d360539df23e292c499d5e208a4c8a54c02d06c0b6",
   "notes": [
-    "## 马上下班 2.4.5",
-    "更新至 2.4.5。",
-    "持续优化应用稳定性与使用体验。",
-    "应用会通过官网更新清单检测后续新版本。"
+    "## 马上下班 2.4.6",
+    "新增 Windows x64 版本。",
+    "macOS 与 Windows 均支持应用内检测新版本。",
+    "持续优化应用稳定性与使用体验。"
   ]
 }
