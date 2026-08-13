@@ -45,6 +45,28 @@ const manifest = {
 };
 await writeFile('latest.json', `${JSON.stringify(manifest, null, 2)}\n`);
 
+let changelog = [];
+try {
+  changelog = JSON.parse(await readFile('changelog.json', 'utf8'));
+  if (!Array.isArray(changelog)) changelog = [];
+} catch {
+  changelog = [];
+}
+
+const releaseNotes = notes.filter((line) => !/^#{1,6}\s/.test(line));
+const releaseEntry = {
+  version,
+  publishedAt: manifest.publishedAt,
+  notes: releaseNotes.length ? releaseNotes : ['版本体验优化。'],
+  artifacts: {
+    windows: windows.downloadUrl,
+    mac: mac.downloadUrl,
+  },
+};
+changelog = [releaseEntry, ...changelog.filter((entry) => entry.version !== version)]
+  .sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt));
+await writeFile('changelog.json', `${JSON.stringify(changelog, null, 2)}\n`);
+
 let html = await readFile('index.html', 'utf8');
 html = html.replace(/https:\/\/github\.com\/vanyima\/mashangxiaban-releases\/releases\/download\/v[^"<]+\.dmg/g, mac.downloadUrl);
 html = html.replace(/https:\/\/github\.com\/vanyima\/mashangxiaban-releases\/releases\/download\/v[^"<]+\.exe/g, windows.downloadUrl);

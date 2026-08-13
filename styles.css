@@ -318,6 +318,13 @@
 /* v2.3.2 官网视觉修订：文案与产品并排，截图不垫黑底。 */
 .headline-line { display: block; white-space: nowrap; }
 .headline-line.accent { color: var(--red); }
+
+/* 官网与更新日志之间的轻量入口。 */
+.hero-foot a { margin-left: auto; color: var(--yellow); opacity: 1; }
+.hero-foot a:hover,
+.footer-links a:hover { text-decoration: underline; text-underline-offset: 4px; }
+.footer-links { display: flex; gap: 22px; }
+.footer-links a { color: var(--yellow); font-size: 12px; }
 .slide img {
   background: transparent;
   box-shadow: none;
