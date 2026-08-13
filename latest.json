@@ -1,24 +1,26 @@
 {
-  "version": "2.4.11",
-  "publishedAt": "2026-08-13T06:22:04Z",
+  "version": "2.4.12",
+  "publishedAt": "2026-08-13T16:37:46Z",
   "artifacts": {
     "darwin-arm64": {
-      "downloadUrl": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.4.11/mashangxiaban-2.4.11-macOS-Apple-Silicon.dmg",
-      "sha256": "3accb73f0a0ec744bfb03c4a37aaeaad1c21f48d5dd4f8d68fac76ca40965d78"
+      "downloadUrl": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.4.12/mashangxiaban-2.4.12-macOS-Apple-Silicon.dmg",
+      "sha256": "431a2385188895fcf067871e498a022e435cf77156633aa3ea192f755039d73b"
     },
     "win32-x64": {
-      "downloadUrl": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.4.11/mashangxiaban-2.4.11-Windows-x64.exe",
-      "sha256": "65512f7fe692cb36f105c26435dda4c3f28a68c03663222ef2624779d08a4b9f"
+      "downloadUrl": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.4.12/mashangxiaban-2.4.12-Windows-x64.exe",
+      "sha256": "df8e543a9f6ff9e8935437a286d4ad7bed37a7856dd7dbeb343cdbda2d6b037f"
     }
   },
   "platform": "darwin-arm64",
-  "downloadUrl": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.4.11/mashangxiaban-2.4.11-macOS-Apple-Silicon.dmg",
-  "sha256": "3accb73f0a0ec744bfb03c4a37aaeaad1c21f48d5dd4f8d68fac76ca40965d78",
+  "downloadUrl": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.4.12/mashangxiaban-2.4.12-macOS-Apple-Silicon.dmg",
+  "sha256": "431a2385188895fcf067871e498a022e435cf77156633aa3ea192f755039d73b",
   "notes": [
-    "## 马上下班 2.4.11",
-    "计划下班时间现在可以直接修改，倒计时与桌面提醒会自动重新排程。",
-    "优化 Windows 与 macOS 的桌面通知开启引导和通知自检流程。",
-    "修复 macOS 旧通知身份可能与新版冲突的问题。",
-    "持续优化应用稳定性与使用体验。"
+    "上下班时间均支持修改，下班日期可在今天与明天之间切换。",
+    "新增桌面宠物，可在设置中开启或关闭，并与上班时长和马生健康值联动。",
+    "桌宠新增工作、午饭、临近下班收包及加班后的多种动画与丰富文案。",
+    "桌宠支持注视鼠标、点击、连击、拖动、右键关闭等互动，并优化动画静止节奏。",
+    "修复点击桌宠意外打开主应用、桌宠与主页形象重叠或重影等问题。",
+    "修复考勤簿重复数据显示，并优先展示用户已有数据。",
+    "优化通知引导、下班小结、待办功能及应用图标的加班时长显示。"
   ]
 }

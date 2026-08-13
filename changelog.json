@@ -1,5 +1,22 @@
 [
   {
+    "version": "2.4.12",
+    "publishedAt": "2026-08-13T16:37:46Z",
+    "notes": [
+      "上下班时间均支持修改，下班日期可在今天与明天之间切换。",
+      "新增桌面宠物，可在设置中开启或关闭，并与上班时长和马生健康值联动。",
+      "桌宠新增工作、午饭、临近下班收包及加班后的多种动画与丰富文案。",
+      "桌宠支持注视鼠标、点击、连击、拖动、右键关闭等互动，并优化动画静止节奏。",
+      "修复点击桌宠意外打开主应用、桌宠与主页形象重叠或重影等问题。",
+      "修复考勤簿重复数据显示，并优先展示用户已有数据。",
+      "优化通知引导、下班小结、待办功能及应用图标的加班时长显示。"
+    ],
+    "artifacts": {
+      "windows": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.4.12/mashangxiaban-2.4.12-Windows-x64.exe",
+      "mac": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.4.12/mashangxiaban-2.4.12-macOS-Apple-Silicon.dmg"
+    }
+  },
+  {
     "version": "2.4.11",
     "publishedAt": "2026-08-13T06:22:04Z",
     "notes": [
