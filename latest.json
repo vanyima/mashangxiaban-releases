@@ -1,23 +1,24 @@
 {
-  "version": "2.4.6",
-  "publishedAt": "2026-08-13T03:27:15Z",
+  "version": "2.4.11",
+  "publishedAt": "2026-08-13T06:22:04Z",
   "artifacts": {
     "darwin-arm64": {
-      "downloadUrl": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.4.6/mashangxiaban-2.4.6-macOS-Apple-Silicon.dmg",
-      "sha256": "d1ad3372642a03a23d51b4d360539df23e292c499d5e208a4c8a54c02d06c0b6"
+      "downloadUrl": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.4.11/mashangxiaban-2.4.11-macOS-Apple-Silicon.dmg",
+      "sha256": "3accb73f0a0ec744bfb03c4a37aaeaad1c21f48d5dd4f8d68fac76ca40965d78"
     },
     "win32-x64": {
-      "downloadUrl": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.4.6/mashangxiaban-2.4.6-Windows-x64.exe",
-      "sha256": "bcfde9c439a10c483e267f1d94685f29e2655ec75bda9ad811cc89b7774cb338"
+      "downloadUrl": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.4.11/mashangxiaban-2.4.11-Windows-x64.exe",
+      "sha256": "65512f7fe692cb36f105c26435dda4c3f28a68c03663222ef2624779d08a4b9f"
     }
   },
   "platform": "darwin-arm64",
-  "downloadUrl": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.4.6/mashangxiaban-2.4.6-macOS-Apple-Silicon.dmg",
-  "sha256": "d1ad3372642a03a23d51b4d360539df23e292c499d5e208a4c8a54c02d06c0b6",
+  "downloadUrl": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.4.11/mashangxiaban-2.4.11-macOS-Apple-Silicon.dmg",
+  "sha256": "3accb73f0a0ec744bfb03c4a37aaeaad1c21f48d5dd4f8d68fac76ca40965d78",
   "notes": [
-    "## 马上下班 2.4.6",
-    "新增 Windows x64 版本。",
-    "macOS 与 Windows 均支持应用内检测新版本。",
+    "## 马上下班 2.4.11",
+    "计划下班时间现在可以直接修改，倒计时与桌面提醒会自动重新排程。",
+    "优化 Windows 与 macOS 的桌面通知开启引导和通知自检流程。",
+    "修复 macOS 旧通知身份可能与新版冲突的问题。",
     "持续优化应用稳定性与使用体验。"
   ]
 }
