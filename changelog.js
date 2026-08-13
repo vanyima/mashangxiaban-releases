@@ -14,11 +14,12 @@ function formatDate(value) {
 
 function renderRelease(release, index) {
   const notes = release.notes.map((note) => `<li>${escapeHtml(note)}</li>`).join('');
-  const windows = release.artifacts?.windows ? `<a href="${escapeHtml(release.artifacts.windows)}"><b>Windows</b><span>x64 安装包 ↓</span></a>` : '';
-  const mac = release.artifacts?.mac ? `<a href="${escapeHtml(release.artifacts.mac)}"><b>macOS</b><span>Apple 芯片 ↓</span></a>` : '';
+  const windows = index === 0 && release.artifacts?.windows ? `<a href="${escapeHtml(release.artifacts.windows)}"><b>Windows</b><span>x64 安装包 ↓</span></a>` : '';
+  const mac = index === 0 && release.artifacts?.mac ? `<a href="${escapeHtml(release.artifacts.mac)}"><b>macOS</b><span>Apple 芯片 ↓</span></a>` : '';
+  const downloads = windows || mac ? `<div class="release-downloads" aria-label="最新版本安装包">${windows}${mac}</div>` : '';
   return `<article class="release-card${index === 0 ? ' is-latest' : ''}">
     <div class="release-meta"><span>${index === 0 ? 'LATEST / 最新' : 'ARCHIVE / 存档'}</span><strong>V${escapeHtml(release.version)}</strong><time datetime="${escapeHtml(release.publishedAt)}">${formatDate(release.publishedAt)}</time></div>
-    <div class="release-content"><h3>${index === 0 ? '这匹马，刚刚更新。' : '那次，马又进化了一点。'}</h3><ul>${notes}</ul><div class="release-downloads">${windows}${mac}</div></div>
+    <div class="release-content"><h3>${index === 0 ? '这匹马，刚刚更新。' : '那次，马又进化了一点。'}</h3><ul>${notes}</ul>${downloads}</div>
   </article>`;
 }
 
