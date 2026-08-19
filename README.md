@@ -5,6 +5,7 @@
 - GitHub Pages 官网
 - `latest.json` 版本清单
 - GitHub Releases 安装包
+- 工位雷达 Cloudflare Worker / D1 服务端源码
 
 ## 发布新版本
 
@@ -17,3 +18,7 @@
 发布后，GitHub Actions 会自动计算安装包 SHA-256、更新 `latest.json`、写入 `changelog.json`，并重新部署官网和更新日志页面。
 
 > 安装包不要直接提交进 Git 仓库；请始终使用 Releases 上传。
+
+## 工位雷达云端服务
+
+`cloudflare/` 保存 Cloudflare Worker、D1 数据库迁移和 Wrangler 配置。线上服务为 `https://mashangxiaban-radar.vanyima1126.workers.dev`，数据库内容不公开，也不依赖 GitHub 表格或客户端令牌。桌面应用只有在用户切换到“云端真实数据”并主动开启附近发现后才上传匿名位置；mock 模式完全保留且不联网。
