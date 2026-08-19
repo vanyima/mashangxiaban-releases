@@ -53,7 +53,7 @@ function renderRelease(release, index) {
   </article>`;
 }
 
-fetch('changelog.json')
+fetch('changelog.json', { cache: 'no-store' })
   .then((response) => { if (!response.ok) throw new Error('更新日志加载失败'); return response.json(); })
   .then((releases) => {
     if (!Array.isArray(releases) || !releases.length) throw new Error('更新日志为空');

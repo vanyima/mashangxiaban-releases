@@ -3,15 +3,9 @@
     "version": "2.5.2",
     "publishedAt": "2026-08-19T16:48:21Z",
     "notes": [
-      "工位雷达真实模式支持匿名“递杯水 / 摸鱼暗号 / 辛苦了”，收件箱支持未读、距离显示和真实回复。",
-      "真实通信使用 Cloudflare Worker 与私有 D1 数据库；限制发送频率，消息保留 30 天，不向客户端返回对方经纬度。",
-      "修复 Windows 定位可能卡在“正在连接云端”的问题，增加定位阶段、云端超时、重新尝试及明确的权限检查步骤。",
-      "Windows 定位失败时弹出三项权限引导并打开系统位置设置；Mac 定位失败同样提供系统设置引导。",
-      "Mock 模式启动时默认开启附近发现；进入真实模式时默认关闭，只有用户主动开启才读取位置。",
-      "Mock 数据新增 40 米、90 米示例，直接展示 50 米内与 100 米内醒目标记。",
-      "放大雷达、工友卡片、异常说明和操作按钮文字；近距离标签调整到名字右侧，并错开中心雷达标签避免遮挡。",
-      "右上角通知铃铛取消持续高亮状态。",
-      "macOS 安装包适用于 Apple Silicon；Windows 安装包适用于 64 位 Windows 10 / 11。"
+      "工位雷达真实模式新增匿名打招呼与收件箱，可向附近工友发送信号并回复。",
+      "真实通信接入云端服务，消息保留 30 天且不会公开精确位置。",
+      "优化跨平台定位与雷达体验，并修复已知问题。"
     ],
     "artifacts": {
       "windows": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.5.2/mashangxiaban-2.5.2-Windows-x64.exe",
@@ -22,13 +16,9 @@
     "version": "2.5.1",
     "publishedAt": "2026-08-19T16:16:20Z",
     "notes": [
-      "工位雷达新增“查看真实数据 / 查看 Mock 数据”，每次启动默认显示 Mock，不读取定位。",
-      "真实数据由 Cloudflare Worker 与私有数据库提供，多台设备可共享匿名位置，无需用户配置凭证。",
-      "定位不可用时自动打开 macOS 定位服务设置，返回应用后自动重试。",
-      "雷达中心精简为“我”；点击雷达光点会高亮右侧对应工友。",
-      "50 米内与 100 米内的工友增加醒目标记。",
-      "保留原有 Mock 数据、互动与应用其他功能。",
-      "macOS 安装包适用于 Apple Silicon；Windows 安装包适用于 64 位 Windows 10 / 11。"
+      "工位雷达新增 Mock 与真实数据模式，可随时切换体验。",
+      "新增真实附近发现，多台设备可共享匿名位置。",
+      "优化定位授权、近距离标记与雷达操作，并修复已知问题。"
     ],
     "artifacts": {
       "windows": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.5.1/mashangxiaban-2.5.1-Windows-x64.exe",
@@ -41,10 +31,8 @@
     "notes": [
       "新增「工位雷达」：匿名发现附近打工人，可切换 1 / 3 / 5 公里范围并发送轻量信号。",
       "新增「我要退休」：按当前年龄与计划退休年龄生成倒计时，并可随机穿越 26 种退休生活。",
-      "周六、周日打卡全部计入加班时长；周末关闭开机自动打卡，必须手动打卡。",
-      "通知权限引导仅在首次安装后展示一次，清空应用数据后才会再次出现。",
-      "优化退休场景的定位、文案、随机抽取与视觉表现。",
-      "> macOS 版本适用于 Apple Silicon；Windows 版本适用于 64 位 Windows 10 / 11。"
+      "新增周末加班统计，周六、周日工时会计入考勤。",
+      "优化通知与退休体验，并修复已知问题。"
     ],
     "artifacts": {
       "windows": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.5.0/mashangxiaban-2.5.0-Windows-x64.exe",
@@ -55,13 +43,10 @@
     "version": "2.4.12",
     "publishedAt": "2026-08-13T16:37:46Z",
     "notes": [
-      "上下班时间均支持修改，下班日期可在今天与明天之间切换。",
+      "支持修改上下班时间，并可设置跨日下班。",
       "新增桌面宠物，可在设置中开启或关闭，并与上班时长和马生健康值联动。",
-      "桌宠新增工作、午饭、临近下班收包及加班后的多种动画与丰富文案。",
-      "桌宠支持注视鼠标、点击、连击、拖动、右键关闭等互动，并优化动画静止节奏。",
-      "修复点击桌宠意外打开主应用、桌宠与主页形象重叠或重影等问题。",
-      "修复考勤簿重复数据显示，并优先展示用户已有数据。",
-      "优化通知引导、下班小结、待办功能及应用图标的加班时长显示。"
+      "桌宠新增工作、午饭、临近下班与加班状态。",
+      "优化考勤、通知和桌宠体验，并修复已知问题。"
     ],
     "artifacts": {
       "windows": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.4.12/mashangxiaban-2.4.12-Windows-x64.exe",
@@ -73,9 +58,7 @@
     "publishedAt": "2026-08-13T06:22:04Z",
     "notes": [
       "计划下班时间现在可以直接修改，倒计时与桌面提醒会自动重新排程。",
-      "优化 Windows 与 macOS 的桌面通知开启引导和通知自检流程。",
-      "修复 macOS 旧通知身份可能与新版冲突的问题。",
-      "持续优化应用稳定性与使用体验。"
+      "优化 Windows 与 macOS 通知体验，并修复已知问题。"
     ],
     "artifacts": {
       "windows": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.4.11/mashangxiaban-2.4.11-Windows-x64.exe",
@@ -87,8 +70,8 @@
     "publishedAt": "2026-08-13T03:27:15Z",
     "notes": [
       "新增 Windows x64 版本。",
-      "macOS 与 Windows 均支持应用内检测新版本。",
-      "持续优化应用稳定性与使用体验。"
+      "新增应用内版本检测，支持 Windows 与 macOS。",
+      "优化稳定性并修复已知问题。"
     ],
     "artifacts": {
       "windows": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.4.6/mashangxiaban-2.4.6-Windows-x64.exe",
@@ -99,9 +82,8 @@
     "version": "2.4.5",
     "publishedAt": "2026-08-13T02:53:48Z",
     "notes": [
-      "更新至 2.4.5。",
-      "持续优化应用稳定性与使用体验。",
-      "应用会通过官网更新清单检测后续新版本。"
+      "新增官网版本清单检测。",
+      "优化稳定性并修复已知问题。"
     ],
     "artifacts": {
       "mac": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.4.5/mashangxiaban-2.4.5-macOS-Apple-Silicon.dmg"
@@ -111,9 +93,8 @@
     "version": "2.4.3",
     "publishedAt": "2026-08-12T16:48:54Z",
     "notes": [
-      "更新至 2.4.3。",
-      "持续优化应用稳定性与使用体验。",
-      "应用会通过官网更新清单检测后续新版本。"
+      "接入官网版本清单，为后续自动更新提供支持。",
+      "优化稳定性并修复已知问题。"
     ],
     "artifacts": {
       "mac": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.4.3/mashangxiaban-2.4.3-macOS-Apple-Silicon.dmg"
@@ -123,9 +104,8 @@
     "version": "2.4.2",
     "publishedAt": "2026-08-12T16:40:17Z",
     "notes": [
-      "更新至 2.4.2。",
-      "持续优化应用稳定性与使用体验。",
-      "应用内已接入新版本检测，后续有更新时会主动提示。"
+      "新增版本主动提醒，发现新版本时会在应用内提示。",
+      "优化稳定性并修复已知问题。"
     ],
     "artifacts": {
       "mac": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.4.2/mashangxiaban-2.4.2-macOS-Apple-Silicon.dmg"
@@ -135,10 +115,9 @@
     "version": "2.4.1",
     "publishedAt": "2026-08-12T16:17:17Z",
     "notes": [
-      "正式接入 GitHub 自动更新通道。",
-      "启动后自动读取远程版本清单。",
-      "发现新版后可在应用内下载并校验安装包。",
-      "延续 2.4.0 的开市敲钟与桌面通知优化。"
+      "新增 GitHub 自动更新通道。",
+      "支持在应用内发现、下载并校验新版本。",
+      "优化稳定性并修复已知问题。"
     ],
     "artifacts": {
       "mac": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.4.1/mashangxiaban-2.4.1-macOS-Apple-Silicon.dmg"
@@ -148,10 +127,9 @@
     "version": "2.4.0",
     "publishedAt": "2026-08-12T16:10:55Z",
     "notes": [
-      "上班打卡升级为开市敲钟，并加入黄铜钟声。",
-      "自动识别新版，右上角提示并支持校验后下载。",
-      "优化桌面通知权限引导。",
-      "顶部页面切换不再重复播放入场动画。"
+      "新增上班开市敲钟与黄铜钟声。",
+      "新增版本检测与安装包下载。",
+      "优化通知体验并修复已知问题。"
     ],
     "artifacts": {
       "mac": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.4.0/mashangxiaban-2.4.0-macOS-Apple-Silicon.dmg"
