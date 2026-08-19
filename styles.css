@@ -1105,3 +1105,15 @@
   .primary-download [data-download-count],
   .final-platform-downloads [data-download-count] { top:-11px; right:10px; padding:6px 8px; font-size:12px; }
 }
+
+/* 手机自然滚动，避免浏览器在首屏高度变化时自动吸附到第二屏。 */
+@media (max-width:980px) {
+  html { scroll-snap-type:none!important; }
+  main>section { scroll-snap-align:none!important; scroll-snap-stop:normal!important; }
+}
+
+/* 透明度只作用于辅助文字，角标本身保持完全不透明。 */
+.primary-download small { color:rgba(16,19,27,.68); opacity:1; }
+.final-platform-downloads small { color:rgba(255,255,255,.78); opacity:1; }
+.primary-download [data-download-count],
+.final-platform-downloads [data-download-count] { color:#fff; opacity:1; }
