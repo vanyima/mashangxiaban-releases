@@ -1,26 +1,26 @@
 {
-  "version": "2.4.12",
-  "publishedAt": "2026-08-13T16:37:46Z",
+  "version": "2.5.0",
+  "publishedAt": "2026-08-19T14:53:43Z",
   "artifacts": {
     "darwin-arm64": {
-      "downloadUrl": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.4.12/mashangxiaban-2.4.12-macOS-Apple-Silicon.dmg",
-      "sha256": "431a2385188895fcf067871e498a022e435cf77156633aa3ea192f755039d73b"
+      "downloadUrl": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.5.0/mashangxiaban-2.5.0-macOS-Apple-Silicon.dmg",
+      "sha256": "e1d6918629bc9e90c8196b32f4d0eb5ec1fe7bf40e43d6e5730d3d245e473adf"
     },
     "win32-x64": {
-      "downloadUrl": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.4.12/mashangxiaban-2.4.12-Windows-x64.exe",
-      "sha256": "df8e543a9f6ff9e8935437a286d4ad7bed37a7856dd7dbeb343cdbda2d6b037f"
+      "downloadUrl": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.5.0/mashangxiaban-2.5.0-Windows-x64.exe",
+      "sha256": "495d6b9e1c4d20bd74458669827859b2031a14650de9278df8a313afe65afcbb"
     }
   },
   "platform": "darwin-arm64",
-  "downloadUrl": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.4.12/mashangxiaban-2.4.12-macOS-Apple-Silicon.dmg",
-  "sha256": "431a2385188895fcf067871e498a022e435cf77156633aa3ea192f755039d73b",
+  "downloadUrl": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.5.0/mashangxiaban-2.5.0-macOS-Apple-Silicon.dmg",
+  "sha256": "e1d6918629bc9e90c8196b32f4d0eb5ec1fe7bf40e43d6e5730d3d245e473adf",
   "notes": [
-    "上下班时间均支持修改，下班日期可在今天与明天之间切换。",
-    "新增桌面宠物，可在设置中开启或关闭，并与上班时长和马生健康值联动。",
-    "桌宠新增工作、午饭、临近下班收包及加班后的多种动画与丰富文案。",
-    "桌宠支持注视鼠标、点击、连击、拖动、右键关闭等互动，并优化动画静止节奏。",
-    "修复点击桌宠意外打开主应用、桌宠与主页形象重叠或重影等问题。",
-    "修复考勤簿重复数据显示，并优先展示用户已有数据。",
-    "优化通知引导、下班小结、待办功能及应用图标的加班时长显示。"
+    "## 马上下班 2.5.0",
+    "新增「工位雷达」：匿名发现附近打工人，可切换 1 / 3 / 5 公里范围并发送轻量信号。",
+    "新增「我要退休」：按当前年龄与计划退休年龄生成倒计时，并可随机穿越 26 种退休生活。",
+    "周六、周日打卡全部计入加班时长；周末关闭开机自动打卡，必须手动打卡。",
+    "通知权限引导仅在首次安装后展示一次，清空应用数据后才会再次出现。",
+    "优化退休场景的定位、文案、随机抽取与视觉表现。",
+    "> macOS 版本适用于 Apple Silicon；Windows 版本适用于 64 位 Windows 10 / 11。"
   ]
 }
