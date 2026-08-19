@@ -1037,3 +1037,18 @@
 .site-nav .nav-meta { margin-left:4px; background:transparent; color:#747b8d; }
 .site-nav nav a.is-boinging { animation:nav-boing-simple .42s cubic-bezier(.2,1.5,.3,1); }
 @keyframes nav-boing-simple { 0%{transform:scale(1)} 35%{transform:scale(.88)} 68%{transform:scale(1.07)} 100%{transform:scale(1)} }
+
+/* 默认只留粗体文字；悬停与当前栏目才出现官网标志性的硬边框。 */
+.site-nav nav { gap:6px; }
+.site-nav nav a,
+.site-nav .nav-feature,
+.site-nav .nav-meta { padding:9px 11px; border:2px solid transparent; border-radius:2px; background:transparent; color:var(--ink); box-shadow:none; font-family:var(--body); font-size:13px; font-weight:900; letter-spacing:0; }
+.site-nav nav a:hover { border-color:var(--ink); background:white; box-shadow:3px 3px 0 var(--ink); transform:translate(-1px,-1px); }
+.site-nav nav a:active { border-color:var(--ink); background:var(--yellow); box-shadow:1px 1px 0 var(--ink); transform:translate(1px,1px) scale(.95); }
+.site-nav nav a.is-current { padding:9px 11px; border:2px solid var(--ink); background:var(--yellow); color:var(--ink); box-shadow:3px 3px 0 var(--ink); }
+.site-nav .nav-meta { margin-left:4px; color:#626a7d; font-size:12px; }
+
+@media (max-width:1180px) and (min-width:981px) {
+  .site-nav nav a,.site-nav .nav-feature,.site-nav .nav-meta { padding-inline:7px; font-size:12px; }
+  .site-nav nav a.is-current { padding-inline:7px; }
+}
