@@ -1072,3 +1072,36 @@
   .site-nav-v2 nav a.top-nav-link { padding:9px 7px!important; font-size:12px!important; }
   .site-nav-v2 nav a.top-nav-link.nav-meta { font-size:11px!important; }
 }
+
+/* 下载次数作为按钮角标展示，醒目但不挤占平台与系统信息。 */
+.primary-download,
+.final-platform-downloads>a { position:relative; overflow:visible; }
+.primary-download small,
+.final-platform-downloads small { opacity:.72; }
+.primary-download [data-download-count],
+.final-platform-downloads [data-download-count] {
+  position:absolute;
+  z-index:4;
+  top:-14px;
+  right:13px;
+  display:block;
+  padding:7px 10px;
+  border:2px solid var(--ink);
+  background:var(--red);
+  color:white;
+  box-shadow:3px 3px 0 var(--ink);
+  font:950 13px/1 var(--mono);
+  font-style:normal;
+  white-space:nowrap;
+  opacity:1;
+  transform:rotate(2deg);
+}
+.platform-download-mac [data-download-count],
+.final-download-mac [data-download-count] { background:var(--blue); }
+
+@media (max-width:650px) {
+  .platform-downloads,
+  .final-platform-downloads { gap:22px; }
+  .primary-download [data-download-count],
+  .final-platform-downloads [data-download-count] { top:-11px; right:10px; padding:6px 8px; font-size:12px; }
+}
