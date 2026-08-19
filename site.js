@@ -156,6 +156,29 @@ const reveal = new IntersectionObserver((entries) => entries.forEach((entry) => 
 }), { threshold:.2 });
 observed.forEach((node) => reveal.observe(node));
 
+/* 顶部功能导航：点击时给图标和标签一个短促的 Q 弹反馈。 */
+document.querySelectorAll('.site-nav nav a').forEach((link) => {
+  link.addEventListener('click', () => {
+    link.classList.remove('is-boinging');
+    void link.offsetWidth;
+    link.classList.add('is-boinging');
+    setTimeout(() => link.classList.remove('is-boinging'), 560);
+  });
+});
+
+const navSections = [...document.querySelectorAll('.site-nav .nav-feature[href^="#"]')]
+  .map((link) => ({ link, section:document.querySelector(link.getAttribute('href')) }))
+  .filter((item) => item.section);
+if (navSections.length) {
+  const navHighlight = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      navSections.forEach(({ link, section }) => link.classList.toggle('is-current', section === entry.target));
+    });
+  }, { rootMargin:'-24% 0px -60% 0px', threshold:0 });
+  navSections.forEach(({ section }) => navHighlight.observe(section));
+}
+
 /* 通知演示区的两条语音互斥播放，避免同时播报。 */
 const voiceTracks = [...document.querySelectorAll('.voice-track')];
 const voiceAudios = voiceTracks.map((track) => track.dataset.audioTarget ? document.querySelector(`#${track.dataset.audioTarget}`) : null);

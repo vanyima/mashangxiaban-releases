@@ -920,3 +920,74 @@
   .retirement-age-demo { grid-template-columns:auto 1fr auto; }
   .retirement-age-demo small:nth-of-type(2) { grid-column:1; }
 }
+
+/* 顶部功能导航：功能入口为一组，更新日志作为资料入口独立分组。 */
+.site-nav { grid-template-columns:auto minmax(0,1fr) auto; column-gap:clamp(20px,3vw,48px); }
+.site-nav nav { justify-self:center; align-items:center; gap:4px; min-width:0; }
+.site-nav nav a { position:relative; display:flex; align-items:center; gap:6px; padding:7px 8px; border:2px solid transparent; border-radius:12px; line-height:1; white-space:nowrap; text-decoration:none; transition:background .18s ease,border-color .18s ease,transform .18s cubic-bezier(.22,1.7,.36,1); }
+.site-nav nav a:hover { border-color:var(--ink); background:white; text-decoration:none; transform:translateY(-2px) rotate(-1deg); }
+.site-nav nav a:active { transform:translateY(2px) scale(.86); }
+.site-nav nav a.is-current { border-color:var(--ink); background:var(--yellow); box-shadow:3px 3px 0 var(--ink); }
+.site-nav .nav-icon { display:grid; width:23px; height:23px; place-items:center; border:1px solid rgba(16,19,27,.25); border-radius:8px; background:white; font-size:14px; transform-origin:50% 80%; }
+.site-nav .nav-meta { margin-left:6px; padding-inline:10px; border-color:rgba(16,19,27,.28); background:rgba(255,255,255,.46); color:#5c6379; font-size:11px; font-family:var(--mono); }
+.site-nav .nav-meta .nav-icon { width:20px; height:20px; border:0; background:transparent; font-size:13px; }
+.nav-divider { width:2px; height:27px; margin-inline:8px 4px; background:var(--ink); opacity:.28; }
+.site-nav nav a.is-boinging { animation:nav-boing .56s cubic-bezier(.2,1.6,.28,1); }
+.site-nav nav a.is-boinging .nav-icon { animation:nav-icon-pop .56s cubic-bezier(.2,1.8,.28,1); }
+@keyframes nav-boing { 0%{transform:scale(1)} 24%{transform:scale(.78) translateY(3px)} 55%{transform:scale(1.16) translateY(-4px)} 76%{transform:scale(.96)} 100%{transform:scale(1)} }
+@keyframes nav-icon-pop { 0%{transform:scale(1) rotate(0)} 38%{transform:scale(.72) rotate(-12deg)} 66%{transform:scale(1.34) rotate(10deg)} 100%{transform:scale(1) rotate(0)} }
+
+/* 修复新功能章节：只保留一次顶部偏移，并让两块内容完整落在一屏内。 */
+@media (min-width:981px) {
+  #radar,#retirement,#health,#evidence { scroll-margin-top:0; }
+  .radar-zone,.retirement-zone { height:calc(100svh - 76px); min-height:620px; overflow:hidden; }
+  .radar-zone { grid-template-columns:minmax(330px,.72fr) minmax(500px,1.28fr); gap:clamp(30px,4.5vw,72px); padding:clamp(24px,4vh,42px) clamp(30px,6vw,90px); }
+  .radar-copy h2 { margin:15px 0 17px; font-size:clamp(40px,4.25vw,62px); }
+  .radar-copy p { font-size:14px; line-height:1.68; }
+  .radar-copy ul { gap:7px; margin-top:19px; }
+  .radar-copy li { font-size:12px; }
+  .radar-demo { max-height:100%; }
+  .radar-demo-head,.radar-demo-foot { padding:11px 15px; font-size:9px; }
+  .radar-scope { min-height:0; height:clamp(390px,60vh,470px); }
+  .radar-demo-foot span b { font-size:14px; }
+  .retirement-zone { grid-template-columns:minmax(0,1.1fr) minmax(500px,.9fr); }
+  .retirement-visual { min-height:0; height:100%; }
+  .retirement-copy { height:100%; padding:clamp(30px,4.6vh,50px) clamp(34px,4.2vw,62px); }
+  .retirement-copy h2 { margin:14px 0 17px; font-size:clamp(36px,3.55vw,50px); line-height:1.01; }
+  .retirement-copy p { font-size:13px; line-height:1.65; }
+  .retirement-copy .retirement-poem { margin-top:10px; font-size:clamp(17px,1.5vw,22px); line-height:1.9; font-weight:850; }
+  .retirement-age-demo { gap:8px; margin-top:21px; padding:11px 13px; box-shadow:5px 5px 0 var(--ink); }
+  .retirement-age-demo b { font-size:clamp(27px,2.4vw,36px); }
+  .retirement-copy ul { gap:6px; margin-top:18px; }
+  .retirement-copy li { font-size:12px; }
+}
+
+@media (max-width:1180px) and (min-width:981px) {
+  .site-nav { column-gap:14px; padding-inline:22px; }
+  .logo small { display:none; }
+  .site-nav nav a { gap:4px; padding-inline:5px; font-size:11px; }
+  .site-nav .nav-icon { width:21px; height:21px; font-size:12px; }
+  .nav-divider { margin-inline:4px 1px; }
+}
+
+@media (max-width:980px) {
+  .site-nav { height:118px; grid-template-columns:1fr auto; grid-template-rows:64px 51px; padding:0 18px; }
+  .site-nav nav { display:flex; grid-column:1 / -1; width:calc(100vw - 36px); height:51px; justify-self:stretch; justify-content:flex-start; overflow-x:auto; scrollbar-width:none; }
+  .site-nav nav::-webkit-scrollbar { display:none; }
+  .site-nav nav a { flex:0 0 auto; padding:6px 8px; }
+  .site-nav .nav-meta { margin-left:4px; }
+  .nav-divider { flex:0 0 2px; }
+  #radar,#retirement,#health,#evidence,#companion { scroll-margin-top:118px; }
+}
+
+@media (max-width:650px) {
+  .site-nav { height:112px; grid-template-rows:61px 48px; padding-inline:14px; }
+  .site-nav nav { width:calc(100vw - 28px); height:48px; gap:2px; font-size:11px; }
+  .site-nav nav a { gap:4px; padding:5px 7px; }
+  .site-nav .nav-icon { width:20px; height:20px; font-size:12px; }
+  #radar,#retirement,#health,#evidence,#companion { scroll-margin-top:112px; }
+}
+
+@media (prefers-reduced-motion:reduce) {
+  .site-nav nav a,.site-nav .nav-icon { animation:none!important; transition:none; }
+}
