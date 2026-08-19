@@ -991,3 +991,38 @@
 @media (prefers-reduced-motion:reduce) {
   .site-nav nav a,.site-nav .nav-icon { animation:none!important; transition:none; }
 }
+
+/* 雷达距离是卡片的第二视觉层级；近距离信号用红黄警示贴特别标记。 */
+.radar-signal { min-width:148px; padding:12px 14px 11px; }
+.radar-signal b { font-size:14px; }
+.radar-signal .radar-distance { display:flex; align-items:baseline; gap:5px; margin-top:7px; color:var(--blue); font-family:var(--mono); opacity:1; }
+.radar-distance strong { font-size:27px; line-height:.9; letter-spacing:-.06em; }
+.radar-distance em { font-size:11px; font-style:normal; font-weight:950; }
+.radar-signal.signal-near { padding-top:22px; border-color:var(--ink); background:var(--yellow); box-shadow:7px 7px 0 var(--red); }
+.signal-near .near-badge { position:absolute; top:-12px; right:-9px; padding:5px 7px; border:2px solid var(--ink); background:var(--red); color:white; font:950 9px/1 var(--mono); letter-spacing:.04em; transform:rotate(3deg); }
+.signal-near .radar-distance { color:var(--red); }
+.signal-near::before { content:''; position:absolute; left:-9px; top:50%; width:10px; height:10px; border:2px solid var(--ink); border-radius:50%; background:var(--red); animation:near-ping 1.4s ease-out infinite; }
+@keyframes near-ping { 0%,100%{box-shadow:0 0 0 0 rgba(255,76,62,.65)} 65%{box-shadow:0 0 0 9px rgba(255,76,62,0)} }
+
+/* 导航图标改为品牌贴纸字章，替代与页面视觉不一致的系统 emoji。 */
+.site-nav .nav-icon { border:2px solid var(--ink); border-radius:7px; background:var(--yellow); color:var(--ink); box-shadow:2px 2px 0 var(--ink); font:950 11px/1 var(--mono); }
+.site-nav .nav-icon-today { transform:rotate(-4deg); }
+.site-nav .nav-icon-radar { background:#7ee7ff; transform:rotate(3deg); }
+.site-nav .nav-icon-retire { background:var(--red); color:white; transform:rotate(-3deg); }
+.site-nav .nav-icon-health { background:#ffb7c8; transform:rotate(4deg); }
+.site-nav .nav-icon-book { background:white; transform:rotate(-2deg); }
+.site-nav .nav-meta .nav-icon-log { width:20px; height:20px; border:1px solid currentColor; border-radius:4px; background:transparent; color:inherit; box-shadow:none; transform:none; font-size:9px; }
+
+@media (max-width:650px) {
+  .radar-signal { min-width:120px; padding:9px 10px; }
+  .radar-signal.signal-near { padding-top:18px; }
+  .radar-distance strong { font-size:22px; }
+  .radar-distance em { font-size:9px; }
+}
+
+@media (prefers-reduced-motion:reduce) { .signal-near::before { animation:none; } }
+
+/* 退休生活水印：藏在黄色文案页背后，像一本未来旅行手册的封面字。 */
+.retirement-copy { position:relative; isolation:isolate; overflow:hidden; }
+.retirement-copy>* { position:relative; z-index:1; }
+.retirement-copy::after { content:'退休生活'; position:absolute; z-index:0; right:-.08em; bottom:-.13em; color:var(--ink); font-size:clamp(90px,11vw,180px); font-weight:950; line-height:.8; letter-spacing:-.11em; white-space:nowrap; opacity:.065; transform:rotate(-5deg); transform-origin:right bottom; pointer-events:none; }

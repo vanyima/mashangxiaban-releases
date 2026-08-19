@@ -7,13 +7,13 @@
   <title>马上下班｜专治无偿加班嘴替</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="preload" as="image" href="screenshots/today-640.webp" imagesrcset="screenshots/today-640.webp 640w, screenshots/today-960.webp 960w, screenshots/today-1240.webp 1240w" imagesizes="(max-width: 650px) 320px, 55vw" fetchpriority="high">
-  <link rel="stylesheet" href="styles.css?v=20260819-nav2">
+  <link rel="stylesheet" href="styles.css?v=20260819-radar4">
 </head>
 <body>
   <div class="cursor-stamp" aria-hidden="true">撤</div>
   <header class="site-nav">
     <a class="logo" href="#top" aria-label="马上下班首页"><img src="assets/app-icon.png" srcset="assets/app-icon-96.webp 96w, assets/app-icon.webp 192w" sizes="(max-width: 650px) 40px, 48px" alt="" fetchpriority="high" decoding="async"><span><b>马上下班</b><small>OFF DUTY COMPANION</small></span></a>
-    <nav aria-label="页面导航"><a class="nav-feature" href="#companion"><span class="nav-icon" aria-hidden="true">☀️</span><span>今日陪伴</span></a><a class="nav-feature" href="#radar"><span class="nav-icon" aria-hidden="true">📡</span><span>工位雷达</span></a><a class="nav-feature" href="#retirement"><span class="nav-icon" aria-hidden="true">🎈</span><span>我要退休</span></a><a class="nav-feature" href="#health"><span class="nav-icon" aria-hidden="true">💗</span><span>马生健康</span></a><a class="nav-feature" href="#evidence"><span class="nav-icon" aria-hidden="true">📒</span><span>考勤簿</span></a><span class="nav-divider" aria-hidden="true"></span><a class="nav-meta" href="changelog.html"><span class="nav-icon" aria-hidden="true">📝</span><span>更新日志</span></a></nav>
+    <nav aria-label="页面导航"><a class="nav-feature" href="#companion"><span class="nav-icon nav-icon-today" aria-hidden="true">今</span><span>今日陪伴</span></a><a class="nav-feature" href="#radar"><span class="nav-icon nav-icon-radar" aria-hidden="true">雷</span><span>工位雷达</span></a><a class="nav-feature" href="#health"><span class="nav-icon nav-icon-health" aria-hidden="true">健</span><span>马生健康</span></a><a class="nav-feature" href="#retirement"><span class="nav-icon nav-icon-retire" aria-hidden="true">退</span><span>我要退休</span></a><a class="nav-feature" href="#evidence"><span class="nav-icon nav-icon-book" aria-hidden="true">勤</span><span>考勤簿</span></a><span class="nav-divider" aria-hidden="true"></span><a class="nav-meta" href="changelog.html"><span class="nav-icon nav-icon-log" aria-hidden="true">更</span><span>更新日志</span></a></nav>
     <a class="nav-download" href="#download">立马下载 ↘</a>
   </header>
 
@@ -80,8 +80,17 @@
       <div class="radar-copy"><span class="section-index">03 / 工位雷达</span><h2><span class="headline-line">附近还有谁，</span><span class="headline-line">也在偷偷等下班？</span></h2><p>主动开启附近发现，用匿名工位代号扫描同一片区域里的打工人。只显示大致距离与状态，不展示精确位置，也不记录行动轨迹。</p><ul><li>1 / 3 / 5 公里范围自由切换</li><li>递杯水、摸鱼暗号、辛苦了：只发轻量匿名信号</li><li>关闭发现后立即隐身；示例模式可先体验完整界面</li></ul></div>
       <div class="radar-demo" aria-label="工位雷达匿名附近发现示意图">
         <div class="radar-demo-head"><span>WORKER SIGNAL RECEIVER</span><b>3 KM</b></div>
-        <div class="radar-scope"><i></i><i></i><i></i><span class="radar-sweep"></span><strong class="radar-self">我</strong><button class="radar-signal signal-a" type="button"><b>摸鱼海獭</b><small>0.8 km</small></button><button class="radar-signal signal-b" type="button"><b>报表刺猬</b><small>1.6 km</small></button><button class="radar-signal signal-c" type="button"><b>工位候鸟</b><small>2.4 km</small></button></div>
+        <div class="radar-scope"><i></i><i></i><i></i><span class="radar-sweep"></span><strong class="radar-self">我</strong><button class="radar-signal signal-a signal-near" type="button"><span class="near-badge">就在附近</span><b>摸鱼海獭</b><small class="radar-distance"><strong>50</strong><em>米</em></small></button><button class="radar-signal signal-b" type="button"><b>报表刺猬</b><small class="radar-distance"><strong>1</strong><em>公里</em></small></button><button class="radar-signal signal-c" type="button"><b>工位候鸟</b><small class="radar-distance"><strong>2.4</strong><em>公里</em></small></button></div>
         <div class="radar-demo-foot"><span><b>03</b> 附近信号</span><span><b>02</b> 正在摸鱼</span><em>精确位置已隐藏</em></div>
+      </div>
+    </section>
+
+    <section class="health-zone" id="health">
+      <div class="health-intro"><span class="section-index">04 / 马生健康</span><h2><span class="headline-line">你每加一次班，</span><span class="headline-line">马替你掉一格血。</span></h2><p>你嘴上说“就一会儿”，身体可是一分钟都没忘。从活人微死到病床 ICU，再卷下去，马歇歇没等到年终奖，先等到了一块碑。</p></div>
+      <div class="health-gallery">
+        <figure class="health-card yellow"><span>15—25h</span><img src="screenshots/health-with-data-hero.png" srcset="screenshots/health-with-data-hero-320.webp 320w, screenshots/health-with-data-hero.webp 600w" sizes="(max-width: 650px) 112px, (max-width: 980px) 70vw, 30vw" alt="过劳生病状态：马歇歇与生命值" loading="lazy" decoding="async"><figcaption>过劳生病</figcaption></figure>
+        <figure class="health-card red"><span>40—50h</span><img src="screenshots/health-icu-hero.png" srcset="screenshots/health-icu-hero-320.webp 320w, screenshots/health-icu-hero.webp 600w" sizes="(max-width: 650px) 112px, (max-width: 980px) 70vw, 30vw" alt="癌症警报状态：ICU 病床与生命值" loading="lazy" decoding="async"><figcaption>癌症警报</figcaption></figure>
+        <figure class="health-card black"><span>50h+</span><img src="screenshots/health-death-hero.png" srcset="screenshots/health-death-hero-320.webp 320w, screenshots/health-death-hero.webp 600w" sizes="(max-width: 650px) 112px, (max-width: 980px) 70vw, 30vw" alt="猝死结局：墓碑与生命值" loading="lazy" decoding="async"><figcaption>猝死结局</figcaption></figure>
       </div>
     </section>
 
@@ -90,16 +99,7 @@
         <img src="screenshots/retirement-norway.png" srcset="screenshots/retirement-norway-640.webp 640w, screenshots/retirement-norway-960.webp 960w, screenshots/retirement-norway-1240.webp 1240w" sizes="(max-width: 650px) 100vw, 58vw" alt="马歇歇背对画面拍摄挪威峡湾雪城与大桥" loading="lazy" decoding="async">
         <span class="retirement-location">📍 挪威 · 特罗姆瑟</span><blockquote>灯火落进峡湾，余生慢慢按下快门。</blockquote>
       </div>
-      <div class="retirement-copy"><span class="section-index">04 / 我要退休</span><h2><span class="headline-line">等忙完这一生，</span><span class="headline-line">就去看世界发光。</span></h2><p class="retirement-poem">风会替你翻过群山，<br>时间终于只属于自己。</p></div>
-    </section>
-
-    <section class="health-zone" id="health">
-      <div class="health-intro"><span class="section-index">05 / 马生健康</span><h2><span class="headline-line">你每加一次班，</span><span class="headline-line">马替你掉一格血。</span></h2><p>你嘴上说“就一会儿”，身体可是一分钟都没忘。从活人微死到病床 ICU，再卷下去，马歇歇没等到年终奖，先等到了一块碑。</p></div>
-      <div class="health-gallery">
-        <figure class="health-card yellow"><span>15—25h</span><img src="screenshots/health-with-data-hero.png" srcset="screenshots/health-with-data-hero-320.webp 320w, screenshots/health-with-data-hero.webp 600w" sizes="(max-width: 650px) 112px, (max-width: 980px) 70vw, 30vw" alt="过劳生病状态：马歇歇与生命值" loading="lazy" decoding="async"><figcaption>过劳生病</figcaption></figure>
-        <figure class="health-card red"><span>40—50h</span><img src="screenshots/health-icu-hero.png" srcset="screenshots/health-icu-hero-320.webp 320w, screenshots/health-icu-hero.webp 600w" sizes="(max-width: 650px) 112px, (max-width: 980px) 70vw, 30vw" alt="癌症警报状态：ICU 病床与生命值" loading="lazy" decoding="async"><figcaption>癌症警报</figcaption></figure>
-        <figure class="health-card black"><span>50h+</span><img src="screenshots/health-death-hero.png" srcset="screenshots/health-death-hero-320.webp 320w, screenshots/health-death-hero.webp 600w" sizes="(max-width: 650px) 112px, (max-width: 980px) 70vw, 30vw" alt="猝死结局：墓碑与生命值" loading="lazy" decoding="async"><figcaption>猝死结局</figcaption></figure>
-      </div>
+      <div class="retirement-copy"><span class="section-index">05 / 我要退休</span><h2><span class="headline-line">等忙完这一生，</span><span class="headline-line">就去看世界发光。</span></h2><p class="retirement-poem">风会替你翻过群山，<br>时间终于只属于自己。</p></div>
     </section>
 
     <section class="showcase showcase-paper showcase-single evidence-personas" id="evidence">
@@ -130,6 +130,6 @@
   </main>
 
   <footer><a class="logo" href="#top"><img src="assets/app-icon.png" srcset="assets/app-icon-96.webp 96w, assets/app-icon.webp 192w" sizes="48px" alt="" loading="lazy" decoding="async"><span><b>马上下班</b><small>© 2026 OFF DUTY DEPARTMENT</small></span></a><p>工作只是工作，晚上才是你的。</p><div class="footer-links"><a href="changelog.html">更新日志</a><a href="#top">回到工位顶部 ↑</a></div></footer>
-  <script src="site.js?v=20260819-nav2"></script>
+  <script src="site.js?v=20260819-radar4"></script>
 </body>
 </html>
