@@ -27,7 +27,6 @@
 .release-published time{display:grid;gap:3px;color:#69718d;font-family:var(--mono);font-weight:800;line-height:1}
 .release-published time b{color:var(--ink);font-size:10px;letter-spacing:-.03em}
 .release-published time em{font-size:14px;font-style:normal;letter-spacing:.035em}
-.release-published time small{font-size:7px;letter-spacing:.08em}
 .after-midnight-tag{width:max-content;display:inline-flex;align-items:center;gap:5px;padding:5px 7px;border:2px solid var(--ink);background:var(--red);color:var(--white);font:950 8px/1 var(--mono);letter-spacing:.04em;box-shadow:2px 2px 0 var(--ink);transform:rotate(-1deg)}
 .after-midnight-tag i{font-size:11px;font-style:normal}
 .after-midnight-tag[data-night-shift="deep"]{background:var(--blue)}

@@ -29,23 +29,26 @@ function formatPublishedAt(value) {
   };
 }
 
-function getAfterMidnightTag(hour) {
+function getAfterMidnightTag(hour, releaseIndex) {
   if (!Number.isInteger(hour) || hour < 0 || hour >= 6) return null;
-  if (hour < 2) return { symbol: '☾', label: '马还没睡', tone: 'moon' };
-  if (hour < 4) return { symbol: '✦', label: '夜班修马', tone: 'deep' };
-  return { symbol: '☀', label: '太阳接班', tone: 'dawn' };
+  const tags = [
+    { symbol: '☾', label: '马还没睡', tone: 'moon' },
+    { symbol: '✦', label: '夜班修马', tone: 'deep' },
+    { symbol: '☀', label: '太阳接班', tone: 'dawn' },
+  ];
+  return tags[releaseIndex % tags.length];
 }
 
 function renderRelease(release, index) {
   const publishedAt = formatPublishedAt(release.publishedAt);
-  const afterMidnightTag = getAfterMidnightTag(publishedAt.hour);
+  const afterMidnightTag = getAfterMidnightTag(publishedAt.hour, index);
   const notes = release.notes.map((note) => `<li>${escapeHtml(note)}</li>`).join('');
   const windows = index === 0 && release.artifacts?.windows ? `<a href="${escapeHtml(release.artifacts.windows)}"><b>Windows</b><span>x64 安装包 ↓</span></a>` : '';
   const mac = index === 0 && release.artifacts?.mac ? `<a href="${escapeHtml(release.artifacts.mac)}"><b>macOS</b><span>Apple 芯片 ↓</span></a>` : '';
   const downloads = windows || mac ? `<div class="release-downloads" aria-label="最新版本安装包">${windows}${mac}</div>` : '';
-  const nightTag = afterMidnightTag ? `<span class="after-midnight-tag" data-night-shift="${afterMidnightTag.tone}" title="北京时间凌晨发布"><i aria-hidden="true">${afterMidnightTag.symbol}</i>${afterMidnightTag.label}</span>` : '';
+  const nightTag = afterMidnightTag ? `<span class="after-midnight-tag" data-night-shift="${afterMidnightTag.tone}" title="凌晨发布"><i aria-hidden="true">${afterMidnightTag.symbol}</i>${afterMidnightTag.label}</span>` : '';
   return `<article class="release-card${index === 0 ? ' is-latest' : ''}">
-    <div class="release-meta"><span class="release-kind">${index === 0 ? 'LATEST / 最新' : 'ARCHIVE / 存档'}</span><strong>V${escapeHtml(release.version)}</strong><div class="release-published"><time datetime="${escapeHtml(release.publishedAt)}"><b>${publishedAt.date}</b><em>${publishedAt.time}</em><small>北京时间</small></time>${nightTag}</div></div>
+    <div class="release-meta"><span class="release-kind">${index === 0 ? 'LATEST / 最新' : 'ARCHIVE / 存档'}</span><strong>V${escapeHtml(release.version)}</strong><div class="release-published"><time datetime="${escapeHtml(release.publishedAt)}"><b>${publishedAt.date}</b><em>${publishedAt.time}</em></time>${nightTag}</div></div>
     <div class="release-content"><h3>${index === 0 ? '这匹马，刚刚更新。' : '那次，马又进化了一点。'}</h3><ul>${notes}</ul>${downloads}</div>
   </article>`;
 }
