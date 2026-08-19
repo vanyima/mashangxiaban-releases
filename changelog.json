@@ -1,5 +1,24 @@
 [
   {
+    "version": "2.5.2",
+    "publishedAt": "2026-08-19T16:48:21Z",
+    "notes": [
+      "工位雷达真实模式支持匿名“递杯水 / 摸鱼暗号 / 辛苦了”，收件箱支持未读、距离显示和真实回复。",
+      "真实通信使用 Cloudflare Worker 与私有 D1 数据库；限制发送频率，消息保留 30 天，不向客户端返回对方经纬度。",
+      "修复 Windows 定位可能卡在“正在连接云端”的问题，增加定位阶段、云端超时、重新尝试及明确的权限检查步骤。",
+      "Windows 定位失败时弹出三项权限引导并打开系统位置设置；Mac 定位失败同样提供系统设置引导。",
+      "Mock 模式启动时默认开启附近发现；进入真实模式时默认关闭，只有用户主动开启才读取位置。",
+      "Mock 数据新增 40 米、90 米示例，直接展示 50 米内与 100 米内醒目标记。",
+      "放大雷达、工友卡片、异常说明和操作按钮文字；近距离标签调整到名字右侧，并错开中心雷达标签避免遮挡。",
+      "右上角通知铃铛取消持续高亮状态。",
+      "macOS 安装包适用于 Apple Silicon；Windows 安装包适用于 64 位 Windows 10 / 11。"
+    ],
+    "artifacts": {
+      "windows": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.5.2/mashangxiaban-2.5.2-Windows-x64.exe",
+      "mac": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.5.2/mashangxiaban-2.5.2-macOS-Apple-Silicon.dmg"
+    }
+  },
+  {
     "version": "2.5.1",
     "publishedAt": "2026-08-19T16:16:20Z",
     "notes": [
