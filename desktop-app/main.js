@@ -5,7 +5,7 @@ const { execFile } = require('child_process');
 const { createHash, randomUUID } = require('crypto');
 const { Readable } = require('stream');
 const { expectedExtension, platformKey, resolveUpdateArtifact } = require('./update-manifest');
-const { createGitHubRadarStore } = require('./radar-github');
+const { createCloudflareRadarStore } = require('./radar-cloudflare');
 
 let mainWindow;
 let petWindow;
@@ -69,11 +69,9 @@ function getRadarDeviceId() {
 function getRadarStore() {
   if (radarStore) return radarStore;
   const packageInfo = require('./package.json');
-  radarStore = createGitHubRadarStore({
+  radarStore = createCloudflareRadarStore({
     fetchImpl: (url, options) => net.fetch(url, options),
     config: packageInfo.radarDataSource,
-    // Deliberately main-process-only. Never return or forward this value to the renderer.
-    token: String(process.env.MASHANGXIABAN_RADAR_GITHUB_TOKEN || '').trim(),
     deviceId: getRadarDeviceId(),
     appVersion: app.getVersion()
   });
@@ -1477,6 +1475,7 @@ async function runQaSmoke() {
       cardCount: document.querySelectorAll('.radar-person').length,
       interactionToast: document.querySelector('.toast')?.textContent || '',
       mockVisible: getComputedStyle(document.querySelector('.radar-mock')).display !== 'none',
+      compactSelfMarker: document.querySelector('.radar-self > strong')?.textContent === '我',
       discoveryOn: document.querySelector('#radar-discovery-toggle').getAttribute('aria-pressed') === 'true',
       activeRadius: document.querySelector('[data-radar-radius].is-active')?.dataset.radarRadius
     };
@@ -1511,6 +1510,10 @@ async function runQaSmoke() {
   })()`);
   await wait(180);
   await capture('radar-1km');
+  radarUi.blipSelection = await mainWindow.webContents.executeJavaScript(`(() => {
+    document.querySelector('.radar-blip').click();
+    return { selectedBlipCount:document.querySelectorAll('.radar-blip.is-selected').length, selectedCardCount:document.querySelectorAll('.radar-person.is-selected').length, nearbyTabVisible:!document.querySelector('#radar-people').hidden };
+  })()`);
   radarUi.inbox = await mainWindow.webContents.executeJavaScript(`(() => {
     document.querySelector('[data-radar-tab="inbox"]').click();
     return { visible:!document.querySelector('#radar-inbox').hidden, messageCount:document.querySelectorAll('.radar-message').length, unreadCount:document.querySelectorAll('.radar-message.is-unread').length };
@@ -1733,6 +1736,22 @@ app.whenReady().then(() => {
   ipcMain.handle('desktop:set-always-on-top', (_event, enabled) => {
     if (mainWindow) mainWindow.setAlwaysOnTop(Boolean(enabled), 'floating');
     return Boolean(enabled);
+  });
+  ipcMain.handle('desktop:open-location-settings', async () => {
+    const settingsUrl = process.platform === 'darwin'
+      ? 'x-apple.systempreferences:com.apple.preference.security?Privacy_LocationServices'
+      : process.platform === 'win32' ? 'ms-settings:privacy-location' : '';
+    if (!settingsUrl) return { ok: false, reason: 'unsupported-platform' };
+    try {
+      if (process.platform === 'darwin') {
+        await new Promise((resolve, reject) => execFile('/usr/bin/open', [settingsUrl], (error) => error ? reject(error) : resolve()));
+      } else {
+        await shell.openExternal(settingsUrl);
+      }
+      return { ok: true };
+    } catch (error) {
+      return { ok: false, reason: error?.message || 'settings-open-failed' };
+    }
   });
 
   ipcMain.handle('desktop:notify', (_event, payload) => showImmediateNotification(payload));

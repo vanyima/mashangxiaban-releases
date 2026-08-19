@@ -1,13 +1,13 @@
 {
   "name": "xiaban-countdown",
-  "version": "2.5.0",
+  "version": "2.5.1",
   "description": "一款懂打工人精神状态的下班倒计时桌面应用",
   "updateManifestUrl": "https://vanyima.github.io/mashangxiaban-releases/latest.json",
   "updateManifestHint": "发布官网后填写完整 HTTPS 地址，例如 https://你的域名/latest.json",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "check": "node --check app.js && node --check main.js && node --check preload.js && node --check radar-github.js && node --check update-manifest.js && node scripts/radar-github.test.js",
+    "check": "node --check app.js && node --check main.js && node --check preload.js && node --check radar-cloudflare.js && node --check update-manifest.js && node scripts/radar-cloudflare.test.js",
     "build:mac": "electron-builder --mac dmg --arm64",
     "build:win": "electron-builder --win nsis --x64"
   },
@@ -23,7 +23,7 @@
     "files": [
       "index.html",
       "app.js",
-      "radar-github.js",
+      "radar-cloudflare.js",
       "main.js",
       "preload.js",
       "pet.html",
@@ -100,10 +100,7 @@
     }
   },
   "radarDataSource": {
-    "owner": "vanyima",
-    "repo": "mashangxiaban-releases",
-    "branch": "main",
-    "path": "data/radar-users.csv",
-    "readUrl": "https://raw.githubusercontent.com/vanyima/mashangxiaban-releases/main/data/radar-users.csv"
+    "type": "cloudflare-d1",
+    "endpoint": "https://mashangxiaban-radar.vanyima1126.workers.dev"
   }
 }

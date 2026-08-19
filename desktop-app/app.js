@@ -229,12 +229,32 @@ const radarRealState = {
   status: 'idle',
   people: [],
   reason: '',
-  source: 'vanyima/mashangxiaban-releases/data/radar-users.csv',
-  writeConfigured: false,
+  source: 'Cloudflare 私有数据库',
+  writeConfigured: true,
   lastPosition: null
 };
 let radarSyncInFlight = false;
 let radarRefreshTimer = null;
+let radarSelectedPersonKey = '';
+let radarLocationSettingsAwaitingFocus = false;
+
+function radarPersonKey(person) {
+  return String(person?.id || person?.name || '');
+}
+
+function radarProximity(person) {
+  if (['within-50m', 'within-100m'].includes(person?.proximity)) return person.proximity;
+  const distanceKm = Number(person?.distanceKm);
+  if (Number.isFinite(distanceKm) && distanceKm <= .05) return 'within-50m';
+  if (Number.isFinite(distanceKm) && distanceKm <= .1) return 'within-100m';
+  return '';
+}
+
+function radarProximityLabel(proximity) {
+  if (proximity === 'within-50m') return '就在身边 · 50米内';
+  if (proximity === 'within-100m') return '很近 · 100米内';
+  return '';
+}
 
 function radarPresence() {
   if (currentState === 'overtime') return { status:'加班中', copy:'工位续费中，晚饭正在失温。', tone:'late' };
@@ -246,9 +266,9 @@ function radarPresence() {
 function radarEmptyCopy(mode, discovery, radius) {
   if (!discovery) return ['附近发现尚未开启', '点击上方开关；只有真实数据模式会读取并同步定位。'];
   if (mode === 'mock') return [`${radius}km 内暂时没信号`, '可以扩大扫描范围，或者安心独享这片摸鱼区。'];
-  if (radarRealState.status === 'loading') return ['正在连接共享表格', '正在更新匿名位置并获取附近工友，请稍候。'];
+  if (radarRealState.status === 'loading') return ['正在连接云端', '正在更新匿名位置并获取附近工友，请稍候。'];
   if (radarRealState.status === 'denied') return ['没有定位权限', '请在系统设置中允许“马上下班”使用位置后再试。'];
-  if (radarRealState.status === 'error') return ['真实数据暂时不可用', radarRealState.reason || '请检查网络与 GitHub 数据源配置后重试。'];
+  if (radarRealState.status === 'error') return ['真实数据暂时不可用', radarRealState.reason || '请检查网络后重试。'];
   return [`${radius}km 内暂时没有在线工友`, '仅显示最近 30 分钟主动开启附近发现的匿名用户。'];
 }
 
@@ -259,24 +279,24 @@ function renderRadar(mode = localStorage.getItem(STORAGE.radarMode) || 'mock') {
   const radius = radarRadius();
   const sourcePeople = nextMode === 'mock' ? radarMockPeople : radarRealState.people;
   const people = discovery ? sourcePeople.filter((person) => person.distanceKm <= radius) : [];
+  if (radarSelectedPersonKey && !people.some((person) => radarPersonKey(person) === radarSelectedPersonKey)) radarSelectedPersonKey = '';
   localStorage.setItem(STORAGE.radarMode, nextMode);
   els.radarShell.dataset.mode = nextMode;
   els.radarShell.dataset.discovery = discovery ? 'on' : 'off';
   els.radarShell.dataset.syncStatus = nextMode === 'real' ? radarRealState.status : 'mock';
-  els.radarModeLabel.textContent = nextMode === 'mock' ? '本地示例数据' : 'GitHub 真实数据';
-  els.radarModeToggle.textContent = nextMode === 'mock' ? '切换到真实数据' : '切换到示例数据';
+  els.radarModeLabel.textContent = nextMode === 'mock' ? '本地示例数据' : '云端真实数据';
+  els.radarModeToggle.textContent = nextMode === 'mock' ? '查看真实数据' : '查看 Mock 数据';
   const radarName = deviceRadarName();
   els.radarSelfName.textContent = radarName;
   if (document.activeElement !== els.radarNameInput) els.radarNameInput.value = radarName;
   els.radarDiscoveryToggle.setAttribute('aria-pressed', String(discovery));
   els.radarDiscoveryToggle.querySelector('strong').textContent = '附近发现';
-  if (!discovery) els.radarDiscoveryStatus.textContent = nextMode === 'mock' ? '本地示例关闭 · 不读取真实位置' : '关闭时不读取位置，也不会出现在共享表格';
+  if (!discovery) els.radarDiscoveryStatus.textContent = nextMode === 'mock' ? '本地示例关闭 · 不读取真实位置' : '关闭时不读取位置，也不会出现在云端';
   else if (nextMode === 'mock') els.radarDiscoveryStatus.textContent = '本地示例已开启 · 不读取、不上传真实位置';
-  else if (radarRealState.status === 'loading') els.radarDiscoveryStatus.textContent = '正在更新位置并读取 GitHub 共享表格…';
+  else if (radarRealState.status === 'loading') els.radarDiscoveryStatus.textContent = '正在更新位置并查询云端工友…';
   else if (radarRealState.status === 'denied') els.radarDiscoveryStatus.textContent = '定位未授权 · 未上传任何位置';
-  else if (!radarRealState.writeConfigured) els.radarDiscoveryStatus.textContent = '定位已开启 · GitHub 只读（未配置写入令牌）';
-  else if (radarRealState.status === 'error') els.radarDiscoveryStatus.textContent = '定位已开启 · GitHub 同步失败';
-  else els.radarDiscoveryStatus.textContent = '定位已开启 · 已同步 GitHub 共享表格';
+  else if (radarRealState.status === 'error') els.radarDiscoveryStatus.textContent = '定位已开启 · 云端同步失败';
+  else els.radarDiscoveryStatus.textContent = '定位已开启 · 已同步云端真实数据';
   els.radarRangeLabel.textContent = `扫描范围 · ${radius} KM`;
   document.querySelectorAll('[data-radar-radius]').forEach((button) => {
     const active = Number(button.dataset.radarRadius) === radius;
@@ -286,20 +306,20 @@ function renderRadar(mode = localStorage.getItem(STORAGE.radarMode) || 'mock') {
   els.radarNearbyCount.textContent = String(people.length);
   els.radarMoyuCount.textContent = String(people.filter((person) => person.tone === 'moyu').length);
   els.radarWorkingCount.textContent = String(people.filter((person) => person.tone !== 'moyu').length);
-  els.radarBlips.innerHTML = people.map((person) => `<button class="radar-blip" type="button" data-person="${escapeHTML(person.name)}" data-tone="${escapeHTML(person.tone)}" style="--x:${Number(person.x)}%;--y:${Number(person.y)}%" aria-label="${escapeHTML(person.name)}，${escapeHTML(person.status)}，${escapeHTML(person.distance)}"><i></i><span>${escapeHTML(person.distance)}</span></button>`).join('');
+  els.radarBlips.innerHTML = people.map((person) => { const key = radarPersonKey(person); const proximity = radarProximity(person); return `<button class="radar-blip${key === radarSelectedPersonKey ? ' is-selected' : ''}" type="button" data-person-key="${escapeHTML(key)}" data-proximity="${escapeHTML(proximity)}" data-tone="${escapeHTML(person.tone)}" style="--x:${Number(person.x)}%;--y:${Number(person.y)}%" aria-pressed="${key === radarSelectedPersonKey}" aria-label="${escapeHTML(person.name)}，${escapeHTML(radarProximityLabel(proximity) || person.distance)}"><i></i><span>${escapeHTML(radarProximityLabel(proximity) || person.distance)}</span></button>`; }).join('');
   const [emptyTitle, emptyCopy] = radarEmptyCopy(nextMode, discovery, radius);
   els.radarPeople.innerHTML = people.length
-    ? people.map((person) => `<article class="radar-person"><div class="radar-person-top"><strong class="radar-person-name">${escapeHTML(person.name)} · ${escapeHTML(person.status)}</strong><span class="radar-distance">${escapeHTML(person.distance)}</span></div><p>${escapeHTML(person.copy)}</p>${nextMode === 'mock' ? `<div class="radar-person-actions"><button type="button" data-radar-action="递杯水" data-person="${escapeHTML(person.name)}">递杯水</button><button type="button" data-radar-action="摸鱼暗号" data-person="${escapeHTML(person.name)}">摸鱼暗号</button><button type="button" data-radar-action="辛苦了" data-person="${escapeHTML(person.name)}">辛苦了</button></div>` : ''}</article>`).join('')
+    ? people.map((person) => { const key = radarPersonKey(person); const proximity = radarProximity(person); const proximityLabel = radarProximityLabel(proximity); return `<article class="radar-person${key === radarSelectedPersonKey ? ' is-selected' : ''}" data-person-key="${escapeHTML(key)}">${proximityLabel ? `<span class="radar-proximity" data-proximity="${escapeHTML(proximity)}">${escapeHTML(proximityLabel)}</span>` : ''}<div class="radar-person-top"><strong class="radar-person-name">${escapeHTML(person.name)} · ${escapeHTML(person.status)}</strong><span class="radar-distance">${escapeHTML(person.distance)}</span></div><p>${escapeHTML(person.copy)}</p>${nextMode === 'mock' ? `<div class="radar-person-actions"><button type="button" data-radar-action="递杯水" data-person="${escapeHTML(person.name)}">递杯水</button><button type="button" data-radar-action="摸鱼暗号" data-person="${escapeHTML(person.name)}">摸鱼暗号</button><button type="button" data-radar-action="辛苦了" data-person="${escapeHTML(person.name)}">辛苦了</button></div>` : ''}</article>`; }).join('')
     : `<div class="radar-list-empty"><strong>${escapeHTML(emptyTitle)}</strong><span>${escapeHTML(emptyCopy)}</span></div>`;
   els.radarInbox.innerHTML = nextMode === 'mock'
     ? radarMockMessages.map((message) => `<article class="radar-message${message.unread ? ' is-unread' : ''}"><span class="radar-message-icon">${message.icon}</span><div><div class="radar-message-meta"><strong>${message.from}</strong><time>${message.time}</time></div><p>${message.text}</p><button type="button" data-radar-reply="${message.from}">回个信号</button></div></article>`).join('')
-    : '<div class="radar-list-empty"><strong>真实数据暂无收件箱</strong><span>GitHub 表格只共享匿名位置与在线状态，不存储互动消息。</span></div>';
+    : '<div class="radar-list-empty"><strong>真实数据暂无收件箱</strong><span>云端仅共享匿名位置与在线状态，不存储互动消息。</span></div>';
   const inboxBadge = document.querySelector('[data-radar-tab="inbox"] b');
   if (inboxBadge) inboxBadge.textContent = nextMode === 'mock' ? '3' : '0';
   const privacy = document.querySelector('.radar-privacy');
   if (privacy) privacy.textContent = nextMode === 'mock'
-    ? '本地示例模式完全不读取定位。切换到真实数据并主动开启后，才连接 GitHub 共享表格。'
-    : '真实数据将坐标约化到约 110 米精度；仅显示 30 分钟内在线用户，关闭发现后会从共享表格移除。';
+    ? '本地示例模式完全不读取定位。查看真实数据并主动开启后，才连接云端。'
+    : '真实数据在云端约化到约 10 米网格并私密保存，用于 50/100 米近距离标记；不会向其他设备返回经纬度。';
   renderRadarFeed();
 }
 
@@ -310,10 +330,10 @@ function getRadarPosition() {
 }
 
 function radarFailureCopy(reason) {
-  if (reason === 'write-not-configured') return '已读取共享表格，但此设备未配置 GitHub 写入令牌，因此不会出现在其他设备上。';
-  if (/github-read-404/.test(reason)) return 'GitHub 共享表格尚不存在或路径配置不正确。';
-  if (/github-(read|write)-401|github-(read|write)-403/.test(reason)) return 'GitHub 凭证无效或缺少 Contents 写权限。';
-  return '无法连接 GitHub 共享表格，请检查网络后重试。';
+  if (/invalid-location/.test(reason)) return '系统返回的位置无效，请关闭后重新开启定位。';
+  if (/cloudflare-429|too-many-requests/.test(reason)) return '同步过于频繁，请稍等片刻后重试。';
+  if (/cloudflare-5\d\d|server-error/.test(reason)) return '云端服务暂时繁忙，请稍后重试。';
+  return '无法连接云端真实数据，请检查网络后重试。';
 }
 
 async function refreshRealRadar({ announce = false } = {}) {
@@ -340,16 +360,21 @@ async function refreshRealRadar({ announce = false } = {}) {
     });
     radarRealState.people = Array.isArray(result?.people) ? result.people : [];
     radarRealState.writeConfigured = Boolean(result?.writeConfigured);
-    radarRealState.status = result?.ok ? 'ready' : (radarRealState.people.length ? 'readonly' : 'error');
+    radarRealState.status = result?.ok ? 'ready' : 'error';
     radarRealState.reason = result?.ok ? '' : radarFailureCopy(String(result?.reason || ''));
     renderRadar('real');
-    if (announce) showToast(result?.ok ? '真实数据已同步' : '真实数据已只读连接', result?.ok ? `已更新位置，并找到 ${radarRealState.people.length} 位附近工友。` : radarRealState.reason);
+    if (announce) showToast(result?.ok ? '真实数据已同步' : '真实数据同步失败', result?.ok ? `已更新位置，并找到 ${radarRealState.people.length} 位附近工友。` : radarRealState.reason);
   } catch (error) {
     radarRealState.people = [];
-    radarRealState.status = error?.code === 1 ? 'denied' : 'error';
-    radarRealState.reason = error?.code === 1 ? '系统未授予定位权限。' : '定位暂时不可用，请检查系统定位服务。';
+    radarRealState.status = 'denied';
+    radarRealState.reason = error?.code === 1 ? '系统未授予定位权限。' : '系统定位服务未开启或暂时不可用。';
     renderRadar('real');
-    if (announce) showToast('定位没有开启', radarRealState.reason);
+    if (announce && window.desktop?.openLocationSettings) {
+      const settingsResult = await window.desktop.openLocationSettings();
+      radarLocationSettingsAwaitingFocus = Boolean(settingsResult?.ok);
+      if (settingsResult?.ok) showToast('已打开定位设置', '请开启“定位服务”并允许“马上下班”，返回应用后会自动重试。');
+      else showToast('无法自动打开定位设置', '请前往“系统设置 → 隐私与安全性 → 定位服务”手动开启。');
+    } else if (announce) showToast('定位没有开启', radarRealState.reason);
   } finally {
     radarSyncInFlight = false;
   }
@@ -362,7 +387,7 @@ async function hideRealRadarPresence({ announce = false } = {}) {
   if (!window.desktop?.hideRadarSelf) return;
   const result = await window.desktop.hideRadarSelf();
   radarRealState.writeConfigured = Boolean(result?.writeConfigured);
-  if (announce && !result?.ok && result?.reason !== 'write-not-configured') showToast('本机已关闭附近发现', '共享表格暂时未能移除记录；记录超过 30 分钟后会自动离线。');
+  if (announce && !result?.ok) showToast('本机已关闭附近发现', '云端暂时未能删除记录；记录超过 30 分钟后会自动离线。');
 }
 
 async function toggleRadarDiscovery() {
@@ -1599,6 +1624,10 @@ els.restore.addEventListener('click', () => { els.notification.classList.remove(
 window.addEventListener('resize', () => { if (currentState === 'off') fitOffSummaryDuration(); });
 window.addEventListener('focus', () => {
   tick();
+  if (radarLocationSettingsAwaitingFocus) {
+    radarLocationSettingsAwaitingFocus = false;
+    window.setTimeout(() => refreshRealRadar(), 500);
+  }
   if (notificationSettingsAwaitingFocus) {
     notificationSettingsAwaitingFocus = false;
     notificationNeedsSettings = false;
@@ -1609,7 +1638,11 @@ window.addEventListener('focus', () => {
   }
   renderNotificationExperience({ reveal: true });
 });
-document.addEventListener('visibilitychange', () => { if (!document.hidden) tick(); });
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) return;
+  tick();
+  if (localStorage.getItem(STORAGE.radarMode) === 'real' && localStorage.getItem(STORAGE.radarDiscovery) === 'on') refreshRealRadar();
+});
 const previewMinutes = [120, 600, 1200, 1920, 2700, 3300];
 document.querySelectorAll('.health-stage-button').forEach((button) => button.addEventListener('click', () => {
   const index = Number(button.dataset.healthStage);
@@ -1658,7 +1691,11 @@ els.radarPeople?.addEventListener('click', (event) => {
 els.radarBlips?.addEventListener('click', (event) => {
   const blip = event.target.closest('.radar-blip');
   if (!blip) return;
-  els.radarPeople.querySelector(`[data-person="${CSS.escape(blip.dataset.person)}"]`)?.closest('.radar-person')?.scrollIntoView({ behavior:'smooth', block:'nearest' });
+  radarSelectedPersonKey = blip.dataset.personKey || '';
+  renderRadarFeed('nearby');
+  els.radarBlips.querySelectorAll('.radar-blip').forEach((item) => { const selected = item === blip; item.classList.toggle('is-selected', selected); item.setAttribute('aria-pressed', String(selected)); });
+  els.radarPeople.querySelectorAll('.radar-person').forEach((card) => card.classList.toggle('is-selected', card.dataset.personKey === radarSelectedPersonKey));
+  els.radarPeople.querySelector(`[data-person-key="${CSS.escape(radarSelectedPersonKey)}"]`)?.scrollIntoView({ behavior:'smooth', block:'center' });
 });
 els.radarInbox?.addEventListener('click', (event) => {
   const button = event.target.closest('[data-radar-reply]');
@@ -2158,6 +2195,9 @@ document.addEventListener('pointerdown', async () => { const context = getAudioC
 
 els.planTime.value = '';
 els.startTime.value = '';
+// 每次启动都从不联网的 Mock 雷达开始，避免沿用上次真实定位状态。
+localStorage.setItem(STORAGE.radarMode, 'mock');
+localStorage.setItem(STORAGE.radarDiscovery, 'off');
 renderSoundState(); renderVentCount(); window.desktop?.setSoundEnabled?.(soundEnabled);
 renderLedgerMode(hasUserLedgerData() ? 'user' : 'mock'); renderRadar(); renderHealth(); renderTodos(); renderRetirementPlan(); applyState(getState().name); tick(); renderNotificationExperience(); runBootLoader();
 window.desktop?.getRadarConfig?.().then((config) => {

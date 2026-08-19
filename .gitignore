@@ -1,5 +1,7 @@
 .DS_Store
 .playwright-cli/
+.wrangler/
+cloudflare/.wrangler/
 output/
 downloads/
 release-asset/

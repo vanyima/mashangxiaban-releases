@@ -874,6 +874,13 @@
     .radar-person-actions { display: flex; flex-wrap: wrap; gap: 5px; }
     .radar-person-actions button { min-height: 27px; padding: 0 8px; border: 1px solid var(--ink); background: #eee8da; color: var(--ink); font-size: 8px; font-weight: 900; cursor: pointer; }
     .radar-person-actions button:hover { background: var(--yellow); }
+    .radar-blip[data-proximity="within-50m"] i { background: #fff; box-shadow: 0 0 0 8px rgba(255,76,67,.45),0 0 28px rgba(255,76,67,1); animation-duration: .65s; }
+    .radar-blip[data-proximity="within-100m"] i { background: var(--yellow); box-shadow: 0 0 0 8px rgba(255,225,52,.32),0 0 24px rgba(255,225,52,.95); animation-duration: .9s; }
+    .radar-blip.is-selected { z-index: 10; }
+    .radar-blip.is-selected i { outline: 3px solid var(--white); outline-offset: 5px; transform: scale(1.15); }
+    .radar-person.is-selected { border-color: var(--red); background: #fff5b5; box-shadow: inset 5px 0 0 var(--red),0 0 0 2px var(--yellow); }
+    .radar-proximity { display: inline-block; margin: 0 0 7px; padding: 3px 6px; border: 1px solid var(--ink); background: var(--yellow); color: var(--ink); font: 950 7px/1 var(--mono); }
+    .radar-proximity[data-proximity="within-50m"] { background: var(--red); color: var(--white); }
     .radar-privacy { margin: auto 12px 12px; padding-top: 10px; border-top: 1px dashed rgba(17,19,26,.35); color: var(--muted); font-size: 8px; line-height: 1.5; }
     .radar-real-view { min-height: 500px; display: grid; place-items: center; margin-top: 20px; padding: 38px; border: 2px dashed rgba(255,255,255,.45); text-align: center; }
     .radar-real-view h3 { margin: 0; font: 950 30px/1 var(--display); }
@@ -1108,6 +1115,8 @@
     .radar-message.is-unread { background: #fff5b5; box-shadow: inset 3px 0 0 var(--red); }
     .radar-message-icon { border: 2px solid var(--ink); background: var(--yellow); color: var(--ink); }
     .radar-real-view { border: 2px dashed rgba(17,19,26,.5); border-radius: 0; background: transparent; }
+    .radar-self { z-index: 5; width: 34px; height: 34px; min-width: 0; padding: 0; display: grid; place-items: center; border: 2px solid var(--ink); border-radius: 50%; background: var(--yellow); box-shadow: 0 0 0 5px rgba(255,225,52,.18),2px 2px 0 #020a25; transform: translate(-50%,-50%); }
+    .radar-self strong { margin: 0; color: var(--ink); font: 950 12px/1 var(--display); }
     .radar-real-view button { border: 2px solid var(--ink); border-radius: 0; background: var(--yellow); color: var(--ink); box-shadow: 4px 4px 0 var(--ink); }
     .radar-name-dice:focus-visible,.radar-name-save:focus-visible,.radar-mode-toggle:focus-visible,.radar-radius button:focus-visible,.radar-feed-tabs button:focus-visible { outline: 3px solid var(--yellow); outline-offset: 3px; }
 
@@ -1600,7 +1609,7 @@
         <header class="radar-head">
           <div><span class="radar-kicker">WORKER SIGNAL / 匿名工位电波</span><div class="radar-title-line"><h2>附近工友雷达</h2><button class="radar-discovery-toggle" id="radar-discovery-toggle" type="button" aria-pressed="false"><span class="radar-switch" aria-hidden="true"><i></i></span><span><strong>附近发现</strong><small id="radar-discovery-status">关闭时不读取位置，也不会出现在别人附近</small></span></button></div><p>看看附近谁在搬砖、摸鱼或开会神游，只显示匿名工牌和模糊距离。</p></div>
           <div class="radar-head-actions">
-            <div class="radar-mode-actions"><span class="radar-demo-label" id="radar-mode-label">本地示例数据</span><button class="radar-mode-toggle" id="radar-mode-toggle" type="button">切换到真实数据</button></div>
+            <div class="radar-mode-actions"><span class="radar-demo-label" id="radar-mode-label">本地示例数据</span><button class="radar-mode-toggle" id="radar-mode-toggle" type="button">查看真实数据</button></div>
           </div>
         </header>
 
@@ -1619,14 +1628,14 @@
           <div class="radar-layout">
             <section class="radar-board" aria-label="附近匿名用户雷达图">
               <div class="radar-board-head"><span id="radar-range-label">扫描范围 · 5 KM</span><span class="radar-mini-stats"><span><b id="radar-nearby-count">0</b> 附近</span><span><b id="radar-moyu-count">0</b> 摸鱼</span><span><b id="radar-working-count">0</b> 搬砖</span></span><b class="radar-live">● LIVE</b></div>
-              <div class="radar-field"><i class="radar-ring"></i><i class="radar-ring"></i><i class="radar-ring"></i><i class="radar-axis"></i><i class="radar-sweep"></i><div id="radar-blips"></div><div class="radar-self"><small>我的匿名工牌</small><strong id="radar-self-name">工位隐身术士·17</strong></div></div>
+              <div class="radar-field"><i class="radar-ring"></i><i class="radar-ring"></i><i class="radar-ring"></i><i class="radar-axis"></i><i class="radar-sweep"></i><div id="radar-blips"></div><div class="radar-self" aria-label="我的位置"><strong>我</strong><span id="radar-self-name" hidden>工位隐身术士·17</span></div></div>
               <div class="radar-disabled"><strong>附近发现已关闭</strong><span>开启后才会扫描附近工友</span></div>
             </section>
             <aside class="radar-feed">
               <div class="radar-feed-tabs" role="tablist"><button class="is-active" type="button" role="tab" data-radar-tab="nearby" aria-selected="true">附近工友</button><button type="button" role="tab" data-radar-tab="inbox" aria-selected="false">收件箱 <b>3</b></button></div>
               <div class="radar-people" id="radar-people" role="tabpanel"></div>
               <div class="radar-inbox" id="radar-inbox" role="tabpanel" hidden></div>
-              <p class="radar-privacy">本地示例模式完全不读取定位。切换到真实数据并主动开启后，才连接 GitHub 共享表格。</p>
+              <p class="radar-privacy">本地示例模式完全不读取定位。查看真实数据并主动开启后，才连接云端。</p>
             </aside>
           </div>
         </div>

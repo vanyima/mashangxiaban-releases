@@ -46,6 +46,7 @@ contextBridge.exposeInMainWorld('desktop', {
   getRadarConfig: () => ipcRenderer.invoke('radar:get-config'),
   syncRadarLocation: (payload) => ipcRenderer.invoke('radar:sync-location', payload),
   hideRadarSelf: () => ipcRenderer.invoke('radar:hide-self'),
+  openLocationSettings: () => ipcRenderer.invoke('desktop:open-location-settings'),
   getPetSettings: () => ipcRenderer.invoke('pet:get-settings'),
   setPetEnabled: (enabled) => ipcRenderer.invoke('pet:set-enabled', enabled),
   resetPetPosition: () => ipcRenderer.invoke('pet:reset-position'),

@@ -1,0 +1,16 @@
+name = "mashangxiaban-radar"
+main = "radar-worker.js"
+compatibility_date = "2026-08-19"
+preview_urls = false
+
+[observability]
+enabled = true
+
+[observability.logs]
+enabled = true
+
+[[d1_databases]]
+binding = "RADAR_DB"
+database_name = "mashangxiaban-radar-db"
+database_id = "2485f56a-01e1-4458-a618-6c4e3f470488"
+migrations_dir = "migrations"
