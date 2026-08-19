@@ -1026,3 +1026,14 @@
 .retirement-copy { position:relative; isolation:isolate; overflow:hidden; }
 .retirement-copy>* { position:relative; z-index:1; }
 .retirement-copy::after { content:'退休生活'; position:absolute; z-index:0; right:-.08em; bottom:-.13em; color:var(--ink); font-size:clamp(90px,11vw,180px); font-weight:950; line-height:.8; letter-spacing:-.11em; white-space:nowrap; opacity:.065; transform:rotate(-5deg); transform-origin:right bottom; pointer-events:none; }
+
+/* 顶部导航收成统一的文字标签；功能入口与更新日志同一语法、不同分组。 */
+.site-nav nav a,
+.site-nav .nav-feature,
+.site-nav .nav-meta { gap:0; padding:8px 11px; border:1px solid rgba(16,19,27,.26); border-radius:9px; background:rgba(255,255,255,.48); color:#555d72; box-shadow:none; font:800 11px/1 var(--mono); letter-spacing:.01em; }
+.site-nav nav a:hover { border-color:var(--ink); background:white; transform:translateY(-1px); }
+.site-nav nav a:active { transform:translateY(1px) scale(.94); }
+.site-nav nav a.is-current { border:2px solid var(--ink); padding:7px 10px; background:var(--yellow); color:var(--ink); box-shadow:3px 3px 0 var(--ink); }
+.site-nav .nav-meta { margin-left:4px; background:transparent; color:#747b8d; }
+.site-nav nav a.is-boinging { animation:nav-boing-simple .42s cubic-bezier(.2,1.5,.3,1); }
+@keyframes nav-boing-simple { 0%{transform:scale(1)} 35%{transform:scale(.88)} 68%{transform:scale(1.07)} 100%{transform:scale(1)} }
