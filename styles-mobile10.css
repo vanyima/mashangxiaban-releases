@@ -1117,3 +1117,6 @@
 .final-platform-downloads small { color:rgba(255,255,255,.78); opacity:1; }
 .primary-download [data-download-count],
 .final-platform-downloads [data-download-count] { color:#fff; opacity:1; }
+
+/* 图标透明留白使用品牌黑填充，避免透出页面米白色。 */
+.logo img { background:var(--ink); }
