@@ -1,0 +1,109 @@
+{
+  "name": "xiaban-countdown",
+  "version": "2.5.0",
+  "description": "一款懂打工人精神状态的下班倒计时桌面应用",
+  "updateManifestUrl": "https://vanyima.github.io/mashangxiaban-releases/latest.json",
+  "updateManifestHint": "发布官网后填写完整 HTTPS 地址，例如 https://你的域名/latest.json",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "check": "node --check app.js && node --check main.js && node --check preload.js && node --check radar-github.js && node --check update-manifest.js && node scripts/radar-github.test.js",
+    "build:mac": "electron-builder --mac dmg --arm64",
+    "build:win": "electron-builder --win nsis --x64"
+  },
+  "devDependencies": {
+    "electron": "37.10.3",
+    "electron-builder": "^26.0.12",
+    "sharp": "^0.35.3"
+  },
+  "build": {
+    "appId": "com.mashangxiaban.companion",
+    "productName": "马上下班",
+    "asar": true,
+    "files": [
+      "index.html",
+      "app.js",
+      "radar-github.js",
+      "main.js",
+      "preload.js",
+      "pet.html",
+      "pet.css",
+      "pet.js",
+      "pet-preload.js",
+      "pet-copy.js",
+      "update-manifest.js",
+      "mascot/ma-xiexie-sheet-v1.png",
+      "mascot/ma-xiexie-animated-v2.webp",
+      "mascot/ma-xiexie-packing-v2/*.png",
+      "mascot/ma-xiexie-working-v2/*.png",
+      "mascot/ma-xiexie-lunch-v2/*.png",
+      "mascot/ma-xiexie-working-gaze-v2/*.png",
+      "mascot/ma-xiexie-packed-gaze-v2/*.png",
+      "mascot/ma-xiexie-tired-gaze-v2/*.png",
+      "mascot/ma-xiexie-angry-gaze-v2/*.png",
+      "mascot/ma-xiexie-angry-v2/*.png",
+      "mascot/ma-xiexie-collapse-v2/*.png",
+      "assets/ma-default-sideeye-v1.png",
+      "assets/ma-health-0-v1.png",
+      "assets/ma-health-1-v1.png",
+      "assets/ma-health-2-v1.png",
+      "assets/ma-health-3-v1.png",
+      "assets/ma-health-4-v1.png",
+      "assets/ma-health-4-v2.png",
+      "assets/retirement/*.png",
+      "audio/xiaban-qingzhuyi-v1.wav",
+      "app-icon.png",
+      "package.json"
+    ],
+    "mac": {
+      "icon": "app-icon.png",
+      "identity": "-",
+      "hardenedRuntime": false,
+      "extendInfo": {
+        "NSUserNotificationAlertStyle": "alert",
+        "NSLocationWhenInUseUsageDescription": "用于发现附近同样主动开启定位的匿名打工人；不会展示精确位置或行动轨迹。"
+      },
+      "category": "public.app-category.productivity",
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "arm64"
+          ]
+        }
+      ]
+    },
+    "win": {
+      "icon": "app-icon.png",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "artifactName": "马上下班-Setup-${version}-${arch}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "马上下班",
+      "uninstallDisplayName": "马上下班"
+    },
+    "dmg": {
+      "title": "马上下班",
+      "artifactName": "马上下班-${version}-${arch}.${ext}"
+    }
+  },
+  "radarDataSource": {
+    "owner": "vanyima",
+    "repo": "mashangxiaban-releases",
+    "branch": "main",
+    "path": "data/radar-users.csv",
+    "readUrl": "https://raw.githubusercontent.com/vanyima/mashangxiaban-releases/main/data/radar-users.csv"
+  }
+}

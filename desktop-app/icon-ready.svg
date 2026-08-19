@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <rect width="1024" height="1024" rx="226" fill="#1f45d8"/>
+  <path d="M78 300h130M62 427h105M816 300h130M857 427h105" stroke="#f5dc45" stroke-width="34" stroke-linecap="round"/>
+  <circle cx="512" cy="532" r="337" fill="#f5dc45" stroke="#171715" stroke-width="44"/>
+  <path d="M252 350c68-40 136-38 202 6M570 356c67-44 135-45 202-3" fill="none" stroke="#171715" stroke-width="35" stroke-linecap="round"/>
+  <path d="m368 426 22 54 58 4-45 37 14 56-49-31-49 31 14-56-45-37 58-4Z" fill="#fffefa" stroke="#171715" stroke-width="22" stroke-linejoin="round"/>
+  <path d="m656 426 22 54 58 4-45 37 14 56-49-31-49 31 14-56-45-37 58-4Z" fill="#fffefa" stroke="#171715" stroke-width="22" stroke-linejoin="round"/>
+  <path d="M340 662c101 133 243 133 344 0Z" fill="#fffefa" stroke="#171715" stroke-width="35" stroke-linejoin="round"/>
+  <path d="M384 696h256M454 696v75M568 696v75" stroke="#171715" stroke-width="20"/>
+  <circle cx="261" cy="632" r="35" fill="#ef4938" opacity=".8"/>
+  <circle cx="763" cy="632" r="35" fill="#ef4938" opacity=".8"/>
+  <path d="m846 726 23 55 56 23-56 22-23 56-22-56-56-22 56-23Z" fill="#f6f4ea" stroke="#171715" stroke-width="13"/>
+</svg>

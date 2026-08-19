@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <rect width="1024" height="1024" rx="226" fill="#536895"/>
+  <path d="M95 190 210 70M814 82l106 132M80 760l112 106M841 846l94-115" stroke="#91a0be" stroke-width="31" stroke-linecap="round" opacity=".7"/>
+  <circle cx="512" cy="554" r="333" fill="#d1c36a" stroke="#171715" stroke-width="44"/>
+  <path d="M284 441c58-41 117-39 167-5M573 436c53-34 110-35 168 4" fill="none" stroke="#171715" stroke-width="34" stroke-linecap="round"/>
+  <path d="M301 520c48 35 99 35 145 0M578 520c48 35 99 35 145 0" fill="none" stroke="#171715" stroke-width="29" stroke-linecap="round"/>
+  <path d="M432 703c53-43 111-43 164 0" fill="none" stroke="#171715" stroke-width="35" stroke-linecap="round"/>
+  <path d="M744 521c0 0 56 69 25 111-18 25-62 20-72-9-13-37 47-102 47-102Z" fill="#b9d9ff" stroke="#171715" stroke-width="17"/>
+  <g transform="rotate(-8 512 255)">
+    <path d="M402 122h220l-11 267-99-33-100 33Z" fill="#f6f4ea" stroke="#171715" stroke-width="25" stroke-linejoin="round"/>
+    <text x="512" y="297" text-anchor="middle" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="138" font-weight="900" fill="#ef4938">衰</text>
+  </g>
+</svg>

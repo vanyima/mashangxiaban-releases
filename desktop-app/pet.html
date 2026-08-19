@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>马歇歇桌面宠物</title>
+  <link rel="stylesheet" href="pet.css">
+</head>
+<body data-stage="ready" data-health-level="0">
+  <main class="pet-window" id="pet-window" aria-label="马歇歇桌面宠物">
+    <section class="speech-wrap" aria-live="polite" aria-atomic="true">
+      <div class="speech-bubble" id="speech-bubble" role="status" hidden>
+        <span id="speech-copy"></span>
+      </div>
+    </section>
+
+    <div class="pet-stage" id="pet-stage">
+      <button class="pet-hit-area" id="pet" type="button"
+        aria-label="马歇歇。点击互动，拖动可以移动，右键打开菜单。"
+        aria-describedby="interaction-help">
+        <span class="pet-shadow" aria-hidden="true"></span>
+        <canvas class="pet-sprite" id="pet-sprite" width="384" height="416" aria-hidden="true"></canvas>
+        <span class="offline-marker" aria-hidden="true">
+          <b>今日离线</b><small>请让马生充会儿电</small>
+        </span>
+        <span class="action-mark" id="action-mark" aria-hidden="true"></span>
+      </button>
+
+      <button class="help-chip" id="help-chip" type="button" aria-label="查看桌宠互动提示">玩法 ?</button>
+      <p class="sr-only" id="interaction-help">靠近会被注视；点击、双击、画圈或快速划过会触发不同反应。拖动可以移动桌宠，右键可以关闭。</p>
+    </div>
+  </main>
+  <script src="pet-copy.js"></script>
+  <script src="pet.js"></script>
+</body>
+</html>
