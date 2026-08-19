@@ -1,5 +1,22 @@
 [
   {
+    "version": "2.5.1",
+    "publishedAt": "2026-08-19T16:16:20Z",
+    "notes": [
+      "工位雷达新增“查看真实数据 / 查看 Mock 数据”，每次启动默认显示 Mock，不读取定位。",
+      "真实数据由 Cloudflare Worker 与私有数据库提供，多台设备可共享匿名位置，无需用户配置凭证。",
+      "定位不可用时自动打开 macOS 定位服务设置，返回应用后自动重试。",
+      "雷达中心精简为“我”；点击雷达光点会高亮右侧对应工友。",
+      "50 米内与 100 米内的工友增加醒目标记。",
+      "保留原有 Mock 数据、互动与应用其他功能。",
+      "macOS 安装包适用于 Apple Silicon；Windows 安装包适用于 64 位 Windows 10 / 11。"
+    ],
+    "artifacts": {
+      "windows": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.5.1/mashangxiaban-2.5.1-Windows-x64.exe",
+      "mac": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.5.1/mashangxiaban-2.5.1-macOS-Apple-Silicon.dmg"
+    }
+  },
+  {
     "version": "2.5.0",
     "publishedAt": "2026-08-19T14:53:43Z",
     "notes": [

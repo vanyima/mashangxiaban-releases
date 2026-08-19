@@ -1,26 +1,27 @@
 {
-  "version": "2.5.0",
-  "publishedAt": "2026-08-19T14:53:43Z",
+  "version": "2.5.1",
+  "publishedAt": "2026-08-19T16:16:20Z",
   "artifacts": {
     "darwin-arm64": {
-      "downloadUrl": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.5.0/mashangxiaban-2.5.0-macOS-Apple-Silicon.dmg",
-      "sha256": "e1d6918629bc9e90c8196b32f4d0eb5ec1fe7bf40e43d6e5730d3d245e473adf"
+      "downloadUrl": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.5.1/mashangxiaban-2.5.1-macOS-Apple-Silicon.dmg",
+      "sha256": "2d0aded42b55891229e5cb2e1197d736cf73ed4f6a5e774fadbffcd3984b6865"
     },
     "win32-x64": {
-      "downloadUrl": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.5.0/mashangxiaban-2.5.0-Windows-x64.exe",
-      "sha256": "495d6b9e1c4d20bd74458669827859b2031a14650de9278df8a313afe65afcbb"
+      "downloadUrl": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.5.1/mashangxiaban-2.5.1-Windows-x64.exe",
+      "sha256": "a91bdc08a7a02a992b2b9c5f88cd1e2197a4422a92df61d8bf4c83a6ff6503e6"
     }
   },
   "platform": "darwin-arm64",
-  "downloadUrl": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.5.0/mashangxiaban-2.5.0-macOS-Apple-Silicon.dmg",
-  "sha256": "e1d6918629bc9e90c8196b32f4d0eb5ec1fe7bf40e43d6e5730d3d245e473adf",
+  "downloadUrl": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.5.1/mashangxiaban-2.5.1-macOS-Apple-Silicon.dmg",
+  "sha256": "2d0aded42b55891229e5cb2e1197d736cf73ed4f6a5e774fadbffcd3984b6865",
   "notes": [
-    "## 马上下班 2.5.0",
-    "新增「工位雷达」：匿名发现附近打工人，可切换 1 / 3 / 5 公里范围并发送轻量信号。",
-    "新增「我要退休」：按当前年龄与计划退休年龄生成倒计时，并可随机穿越 26 种退休生活。",
-    "周六、周日打卡全部计入加班时长；周末关闭开机自动打卡，必须手动打卡。",
-    "通知权限引导仅在首次安装后展示一次，清空应用数据后才会再次出现。",
-    "优化退休场景的定位、文案、随机抽取与视觉表现。",
-    "> macOS 版本适用于 Apple Silicon；Windows 版本适用于 64 位 Windows 10 / 11。"
+    "## 马上下班 2.5.1",
+    "工位雷达新增“查看真实数据 / 查看 Mock 数据”，每次启动默认显示 Mock，不读取定位。",
+    "真实数据由 Cloudflare Worker 与私有数据库提供，多台设备可共享匿名位置，无需用户配置凭证。",
+    "定位不可用时自动打开 macOS 定位服务设置，返回应用后自动重试。",
+    "雷达中心精简为“我”；点击雷达光点会高亮右侧对应工友。",
+    "50 米内与 100 米内的工友增加醒目标记。",
+    "保留原有 Mock 数据、互动与应用其他功能。",
+    "macOS 安装包适用于 Apple Silicon；Windows 安装包适用于 64 位 Windows 10 / 11。"
   ]
 }
