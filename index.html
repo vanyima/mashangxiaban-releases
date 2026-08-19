@@ -13,7 +13,7 @@
   <div class="cursor-stamp" aria-hidden="true">撤</div>
   <header class="site-nav">
     <a class="logo" href="#top" aria-label="马上下班首页"><img src="assets/app-icon.png" srcset="assets/app-icon-96.webp 96w, assets/app-icon.webp 192w" sizes="(max-width: 650px) 40px, 48px" alt="" fetchpriority="high" decoding="async"><span><b>马上下班</b><small>OFF DUTY COMPANION</small></span></a>
-    <nav aria-label="页面导航"><a href="#companion">今日陪伴</a><a href="#health">马生健康</a><a href="#evidence">考勤簿</a><a href="changelog.html">更新日志</a></nav>
+    <nav aria-label="页面导航"><a href="#companion">今日陪伴</a><a href="#radar">工位雷达</a><a href="#retirement">退休生活</a><a href="#health">马生健康</a><a href="#evidence">考勤簿</a><a href="changelog.html">更新日志</a></nav>
     <a class="nav-download" href="#download">立马下载 ↘</a>
   </header>
 
@@ -76,8 +76,25 @@
       </div>
     </section>
 
+    <section class="radar-zone" id="radar">
+      <div class="radar-copy"><span class="section-index">03 / 工位雷达</span><h2><span class="headline-line">附近还有谁，</span><span class="headline-line">也在偷偷等下班？</span></h2><p>主动开启附近发现，用匿名工位代号扫描同一片区域里的打工人。只显示大致距离与状态，不展示精确位置，也不记录行动轨迹。</p><ul><li>1 / 3 / 5 公里范围自由切换</li><li>递杯水、摸鱼暗号、辛苦了：只发轻量匿名信号</li><li>关闭发现后立即隐身；示例模式可先体验完整界面</li></ul></div>
+      <div class="radar-demo" aria-label="工位雷达匿名附近发现示意图">
+        <div class="radar-demo-head"><span>WORKER SIGNAL RECEIVER</span><b>3 KM</b></div>
+        <div class="radar-scope"><i></i><i></i><i></i><span class="radar-sweep"></span><strong class="radar-self">我</strong><button class="radar-signal signal-a" type="button"><b>摸鱼海獭</b><small>0.8 km</small></button><button class="radar-signal signal-b" type="button"><b>报表刺猬</b><small>1.6 km</small></button><button class="radar-signal signal-c" type="button"><b>工位候鸟</b><small>2.4 km</small></button></div>
+        <div class="radar-demo-foot"><span><b>03</b> 附近信号</span><span><b>02</b> 正在摸鱼</span><em>精确位置已隐藏</em></div>
+      </div>
+    </section>
+
+    <section class="retirement-zone" id="retirement">
+      <div class="retirement-visual">
+        <img src="screenshots/retirement-cappadocia.png" srcset="screenshots/retirement-cappadocia-640.webp 640w, screenshots/retirement-cappadocia-960.webp 960w, screenshots/retirement-cappadocia-1240.webp 1240w" sizes="(max-width: 650px) 100vw, 58vw" alt="马歇歇在卡帕多奇亚看热气球升空的退休生活预演" loading="lazy" decoding="async">
+        <span class="retirement-location">📍 土耳其 · 卡帕多奇亚</span><blockquote>风从峡谷醒来，热气球飘向天光。</blockquote>
+      </div>
+      <div class="retirement-copy"><span class="section-index">04 / 我要退休</span><h2><span class="headline-line">先算离工位多远，</span><span class="headline-line">再穿越去退休生活。</span></h2><p>输入现在年龄和计划退休年龄，就能看到大约还有多少天永久下班。想提前看看未来？每次打开盲盒，马歇歇都会穿越到一种新的退休生活。</p><div class="retirement-age-demo"><small>现在年龄</small><b>27</b><i>→</i><small>计划退休</small><b>35</b></div><ul><li>30 / 35 / 40 岁快捷选择，不要求填写生日</li><li>26 个退休场景随机抽取，一轮内不重复</li><li>关闭预演后，倒计时仍会一直保留</li></ul></div>
+    </section>
+
     <section class="health-zone" id="health">
-      <div class="health-intro"><span class="section-index">03 / 马生健康</span><h2><span class="headline-line">你每加一次班，</span><span class="headline-line">马替你掉一格血。</span></h2><p>你嘴上说“就一会儿”，身体可是一分钟都没忘。从活人微死到病床 ICU，再卷下去，马歇歇没等到年终奖，先等到了一块碑。</p></div>
+      <div class="health-intro"><span class="section-index">05 / 马生健康</span><h2><span class="headline-line">你每加一次班，</span><span class="headline-line">马替你掉一格血。</span></h2><p>你嘴上说“就一会儿”，身体可是一分钟都没忘。从活人微死到病床 ICU，再卷下去，马歇歇没等到年终奖，先等到了一块碑。</p></div>
       <div class="health-gallery">
         <figure class="health-card yellow"><span>15—25h</span><img src="screenshots/health-with-data-hero.png" srcset="screenshots/health-with-data-hero-320.webp 320w, screenshots/health-with-data-hero.webp 600w" sizes="(max-width: 650px) 112px, (max-width: 980px) 70vw, 30vw" alt="过劳生病状态：马歇歇与生命值" loading="lazy" decoding="async"><figcaption>过劳生病</figcaption></figure>
         <figure class="health-card red"><span>40—50h</span><img src="screenshots/health-icu-hero.png" srcset="screenshots/health-icu-hero-320.webp 320w, screenshots/health-icu-hero.webp 600w" sizes="(max-width: 650px) 112px, (max-width: 980px) 70vw, 30vw" alt="癌症警报状态：ICU 病床与生命值" loading="lazy" decoding="async"><figcaption>癌症警报</figcaption></figure>
@@ -87,7 +104,7 @@
 
     <section class="showcase showcase-paper showcase-single evidence-personas" id="evidence">
       <header class="showcase-head evidence-head">
-        <div><span class="section-index">04 / 考勤簿 + 打工人格</span><h2><span class="headline-line">记录日均工时，</span><span class="headline-line">自动领取你的打工人格。</span></h2></div>
+        <div><span class="section-index">06 / 考勤簿 + 打工人格</span><h2><span class="headline-line">记录日均工时，</span><span class="headline-line">自动领取你的打工人格。</span></h2></div>
         <p>几点被工位捕获，几点终于恢复自由，这里都记着。马歇歇还会根据你的日均工时，自动识别一枚打工人格——不是荣誉，是工伤昵称。</p>
         <div class="persona-board" aria-label="日均工时对应的打工人格示例">
           <span class="persona-label">工时越长，人格越离谱</span>
@@ -108,7 +125,7 @@
 
     <section class="download-final" id="download">
       <div class="download-horse"><img src="assets/horse.png" srcset="assets/horse-480.webp 480w, assets/horse.webp 900w" sizes="(max-width: 650px) 240px, (max-width: 980px) 70vw, 42vw" alt="斜眼看你的马歇歇" loading="lazy" decoding="async"><span>你都看到这了，<br>还不准备下班？</span></div>
-      <div class="download-copy"><span class="section-index">05 / 现在开始</span><h2 class="final-night-title"><span>公司已经拥有你的白天，</span><span>美丽的你值得享受美丽的夜晚。</span></h2><p>免费下载 Windows x64 或 macOS Apple 芯片版。不需要账号，考勤只留在你的电脑里——放心，老板看不到你几点跑路。</p><div class="final-platform-downloads"><a href="https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.4.12/mashangxiaban-2.4.12-Windows-x64.exe"><span><b>下载 Windows 版 2.4.12</b><small>Windows 10 / 11 · x64 · <em data-download-count="windows">0 次下载</em></small></span><strong>↓</strong></a><a class="final-download-mac" href="https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.4.12/mashangxiaban-2.4.12-macOS-Apple-Silicon.dmg"><span><b>下载 macOS 版 2.4.12</b><small>macOS · Apple Silicon · <em data-download-count="mac">0 次下载</em></small></span><strong>↓</strong></a></div><div class="checksum"><span>Windows SHA-256 · df8e543a9f6ff9e8935437a286d4ad7bed37a7856dd7dbeb343cdbda2d6b037f</span><span>macOS SHA-256 · 431a2385188895fcf067871e498a022e435cf77156633aa3ea192f755039d73b</span></div></div>
+      <div class="download-copy"><span class="section-index">07 / 现在开始</span><h2 class="final-night-title"><span>公司已经拥有你的白天，</span><span>美丽的你值得享受美丽的夜晚。</span></h2><p>免费下载 Windows x64 或 macOS Apple 芯片版。不需要账号，考勤只留在你的电脑里——放心，老板看不到你几点跑路。</p><div class="final-platform-downloads"><a href="https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.4.12/mashangxiaban-2.4.12-Windows-x64.exe"><span><b>下载 Windows 版 2.4.12</b><small>Windows 10 / 11 · x64 · <em data-download-count="windows">0 次下载</em></small></span><strong>↓</strong></a><a class="final-download-mac" href="https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.4.12/mashangxiaban-2.4.12-macOS-Apple-Silicon.dmg"><span><b>下载 macOS 版 2.4.12</b><small>macOS · Apple Silicon · <em data-download-count="mac">0 次下载</em></small></span><strong>↓</strong></a></div><div class="checksum"><span>Windows SHA-256 · df8e543a9f6ff9e8935437a286d4ad7bed37a7856dd7dbeb343cdbda2d6b037f</span><span>macOS SHA-256 · 431a2385188895fcf067871e498a022e435cf77156633aa3ea192f755039d73b</span></div></div>
     </section>
   </main>
 

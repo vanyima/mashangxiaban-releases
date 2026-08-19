@@ -148,7 +148,7 @@ if (matchMedia('(pointer:fine)').matches) {
   document.addEventListener('mouseleave', () => stamp.style.opacity = '0');
 }
 
-const observed = document.querySelectorAll('.feature-copy,.health-card,.download-copy');
+const observed = document.querySelectorAll('.feature-copy,.radar-copy,.retirement-copy,.health-card,.download-copy');
 const reveal = new IntersectionObserver((entries) => entries.forEach((entry) => {
   if (!entry.isIntersecting) return;
   entry.target.animate([{ opacity:0, transform:'translateY(28px)' }, { opacity:1, transform:'translateY(0)' }], { duration:560, fill:'both', easing:'cubic-bezier(.2,.8,.2,1)' });

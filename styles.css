@@ -840,3 +840,83 @@
   .final-platform-downloads>a { padding:16px 17px; }
   .checksum { display:none; }
 }
+
+/* 新功能：工位雷达与退休生活。两屏沿用官网的黑边、硬阴影与高饱和主色。 */
+#radar,#retirement,#health,#evidence { scroll-margin-top:76px; }
+.site-nav nav { gap:clamp(12px,1.45vw,24px); }
+.radar-zone {
+  min-height:100vh;
+  display:grid;
+  grid-template-columns:minmax(340px,.78fr) minmax(500px,1.22fr);
+  align-items:center;
+  gap:clamp(34px,6vw,96px);
+  padding:clamp(92px,10vw,150px) clamp(24px,7vw,112px);
+  border-bottom:3px solid var(--ink);
+  background:#10131b;
+  color:white;
+  overflow:hidden;
+}
+.radar-copy { max-width:590px; }
+.radar-copy .section-index { color:#aeb7d9; }
+.radar-copy h2,.retirement-copy h2 { margin:18px 0 20px; font-size:clamp(42px,5vw,78px); line-height:.98; letter-spacing:-.065em; }
+.radar-copy p,.retirement-copy p { max-width:620px; font-size:clamp(16px,1.35vw,20px); line-height:1.75; }
+.radar-copy ul,.retirement-copy ul { display:grid; gap:10px; margin:27px 0 0; padding:0; list-style:none; }
+.radar-copy li,.retirement-copy li { position:relative; padding-left:22px; font-size:14px; line-height:1.55; }
+.radar-copy li::before,.retirement-copy li::before { content:'＋'; position:absolute; left:0; color:var(--yellow); font-weight:900; }
+.radar-demo { border:3px solid white; background:#171c29; box-shadow:13px 13px 0 var(--blue); }
+.radar-demo-head,.radar-demo-foot { display:flex; align-items:center; justify-content:space-between; gap:18px; padding:15px 18px; font:800 11px/1.2 var(--mono); letter-spacing:.07em; }
+.radar-demo-head { border-bottom:2px solid white; }
+.radar-demo-head b { padding:7px 10px; background:var(--yellow); color:var(--ink); }
+.radar-scope { position:relative; min-height:clamp(390px,46vw,650px); overflow:hidden; background:radial-gradient(circle at 50% 50%,rgba(46,217,255,.13),transparent 54%),linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px); background-size:auto,34px 34px,34px 34px; }
+.radar-scope>i { position:absolute; inset:50% auto auto 50%; border:1px solid rgba(117,220,255,.42); border-radius:50%; transform:translate(-50%,-50%); }
+.radar-scope>i:nth-child(1) { width:28%; aspect-ratio:1; }
+.radar-scope>i:nth-child(2) { width:58%; aspect-ratio:1; }
+.radar-scope>i:nth-child(3) { width:88%; aspect-ratio:1; }
+.radar-sweep { position:absolute; inset:6%; border-radius:50%; background:conic-gradient(from -22deg,transparent 0 77%,rgba(72,215,255,.46) 91%,transparent 100%); animation:radar-spin 7s linear infinite; }
+@keyframes radar-spin { to { transform:rotate(360deg); } }
+.radar-self { position:absolute; left:50%; top:50%; display:grid; width:54px; aspect-ratio:1; place-items:center; border:4px solid var(--yellow); border-radius:50%; background:var(--blue); color:white; transform:translate(-50%,-50%); box-shadow:0 0 0 8px rgba(255,225,43,.15); }
+.radar-signal { position:absolute; min-width:122px; padding:10px 12px; border:2px solid var(--ink); background:white; color:var(--ink); text-align:left; box-shadow:5px 5px 0 var(--yellow); }
+.radar-signal b,.radar-signal small { display:block; }
+.radar-signal b { font-size:13px; }
+.radar-signal small { margin-top:4px; color:#67708e; font:800 9px var(--mono); }
+.signal-a { left:15%; top:24%; }.signal-b { right:10%; top:38%; }.signal-c { left:23%; bottom:15%; }
+.radar-demo-foot { border-top:2px solid white; }
+.radar-demo-foot span { color:#b9c3e2; }.radar-demo-foot span b { color:var(--yellow); font-size:17px; }.radar-demo-foot em { color:#7fe7ff; font-style:normal; }
+
+.retirement-zone { min-height:100vh; display:grid; grid-template-columns:minmax(520px,1.22fr) minmax(360px,.78fr); border-bottom:3px solid var(--ink); background:#f4efe2; overflow:hidden; }
+.retirement-visual { position:relative; min-height:720px; border-right:3px solid var(--ink); overflow:hidden; }
+.retirement-visual::after { content:''; position:absolute; inset:0; background:linear-gradient(180deg,rgba(7,9,17,.08) 42%,rgba(7,9,17,.62)); pointer-events:none; }
+.retirement-visual img { width:100%; height:100%; object-fit:cover; }
+.retirement-location,.retirement-visual blockquote { position:absolute; z-index:1; border:2px solid var(--ink); box-shadow:5px 5px 0 var(--ink); }
+.retirement-location { left:clamp(20px,4vw,56px); top:clamp(24px,5vw,66px); padding:10px 14px; background:var(--yellow); font:900 12px var(--mono); }
+.retirement-visual blockquote { right:clamp(20px,4vw,56px); bottom:clamp(24px,5vw,66px); max-width:430px; margin:0; padding:17px 20px; background:white; color:var(--ink); font-size:clamp(17px,1.55vw,24px); font-weight:900; line-height:1.45; }
+.retirement-copy { display:flex; flex-direction:column; justify-content:center; padding:clamp(64px,7vw,112px) clamp(28px,5vw,76px); background:var(--yellow); }
+.retirement-copy li::before { color:var(--red); }
+.retirement-age-demo { display:grid; grid-template-columns:auto 1fr auto auto 1fr; align-items:end; gap:10px; margin:30px 0 2px; padding:16px 18px; border:3px solid var(--ink); background:white; box-shadow:7px 7px 0 var(--ink); }
+.retirement-age-demo small { align-self:center; font:800 9px var(--mono); color:#69718d; }
+.retirement-age-demo b { font:900 clamp(28px,3vw,44px)/1 var(--mono); }
+.retirement-age-demo i { align-self:center; color:var(--red); font-size:27px; font-style:normal; font-weight:900; }
+
+@media (prefers-reduced-motion:reduce) { .radar-sweep { animation:none; } }
+@media (max-width:980px) {
+  .site-nav nav { gap:10px; }
+  .radar-zone { grid-template-columns:1fr; padding:90px 7vw; }
+  .radar-demo { width:min(720px,100%); }
+  .retirement-zone { grid-template-columns:1fr; }
+  .retirement-visual { min-height:62vw; border-right:0; border-bottom:3px solid var(--ink); }
+}
+@media (max-width:650px) {
+  #radar,#retirement,#health,#evidence { scroll-margin-top:66px; }
+  .radar-zone { min-height:auto; gap:30px; padding:74px 20px 58px; }
+  .radar-copy h2,.retirement-copy h2 { font-size:42px; }
+  .radar-scope { min-height:390px; }
+  .radar-signal { min-width:105px; padding:8px; }
+  .radar-signal b { font-size:11px; }
+  .radar-demo-foot { flex-wrap:wrap; }
+  .retirement-visual { min-height:72vw; }
+  .retirement-location { top:18px; left:16px; padding:8px 10px; font-size:9px; }
+  .retirement-visual blockquote { right:16px; bottom:18px; max-width:80%; padding:12px 14px; font-size:15px; }
+  .retirement-copy { padding:58px 20px 64px; }
+  .retirement-age-demo { grid-template-columns:auto 1fr auto; }
+  .retirement-age-demo small:nth-of-type(2) { grid-column:1; }
+}
