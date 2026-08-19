@@ -1464,12 +1464,17 @@ async function runQaSmoke() {
     const keys = ['ma-xiexie-radar-mode-v1','ma-xiexie-radar-discovery-v1','ma-xiexie-radar-radius-v1','ma-xiexie-radar-name-v1'];
     window.__qaRadarBackup = Object.fromEntries(keys.map(key => [key, localStorage.getItem(key)]));
     document.querySelector('[data-page=radar]').click();
+    const startupDefaults = {
+      mode: document.querySelector('#radar-shell').dataset.mode,
+      discoveryOn: document.querySelector('#radar-discovery-toggle').getAttribute('aria-pressed') === 'true'
+    };
     localStorage.setItem('ma-xiexie-radar-discovery-v1', 'on');
     localStorage.setItem('ma-xiexie-radar-radius-v1', '5');
     renderRadar('mock');
     const firstAction = document.querySelector('#radar-people [data-radar-action]');
     firstAction.click();
     const result = {
+      startupDefaults,
       anonymousName: document.querySelector('#radar-self-name').textContent,
       blipCount: document.querySelectorAll('.radar-blip').length,
       cardCount: document.querySelectorAll('.radar-person').length,
@@ -1478,6 +1483,12 @@ async function runQaSmoke() {
       compactSelfMarker: document.querySelector('.radar-self > strong')?.textContent === '我',
       discoveryOn: document.querySelector('#radar-discovery-toggle').getAttribute('aria-pressed') === 'true',
       activeRadius: document.querySelector('[data-radar-radius].is-active')?.dataset.radarRadius
+    };
+    result.proximityMarkers = {
+      within50mBlips: document.querySelectorAll('.radar-blip[data-proximity="within-50m"]').length,
+      within100mBlips: document.querySelectorAll('.radar-blip[data-proximity="within-100m"]').length,
+      within50mCards: document.querySelectorAll('.radar-proximity[data-proximity="within-50m"]').length,
+      within100mCards: document.querySelectorAll('.radar-proximity[data-proximity="within-100m"]').length
     };
     const nameInput = document.querySelector('#radar-name-input');
     nameInput.value = '今晚不加班·01';
@@ -1523,7 +1534,19 @@ async function runQaSmoke() {
   await mainWindow.webContents.executeJavaScript("document.querySelector('#radar-mode-toggle').click()");
   await wait(250);
   radarUi.realDataVisible = await mainWindow.webContents.executeJavaScript("getComputedStyle(document.querySelector('.radar-data-view')).display !== 'none'");
+  radarUi.realDiscoveryOff = await mainWindow.webContents.executeJavaScript(`({
+    stored:localStorage.getItem('ma-xiexie-radar-discovery-v1'),
+    pressed:document.querySelector('#radar-discovery-toggle').getAttribute('aria-pressed')
+  })`);
   await capture('radar-real-empty');
+  radarUi.mockDiscoveryOn = await mainWindow.webContents.executeJavaScript(`(async () => {
+    await switchRadarMode('mock');
+    return {
+      stored:localStorage.getItem('ma-xiexie-radar-discovery-v1'),
+      pressed:document.querySelector('#radar-discovery-toggle').getAttribute('aria-pressed'),
+      visiblePeople:document.querySelectorAll('#radar-people .radar-person').length
+    };
+  })()`);
   await mainWindow.webContents.executeJavaScript(`(() => {
     Object.entries(window.__qaRadarBackup || {}).forEach(([key,value]) => value === null ? localStorage.removeItem(key) : localStorage.setItem(key,value));
     document.querySelector('[data-page=health]').click();
@@ -1733,11 +1756,7 @@ app.whenReady().then(() => {
   const allowedRendererPermissions = new Set(['notifications', 'geolocation']);
   session.defaultSession.setPermissionCheckHandler((_webContents, permission) => allowedRendererPermissions.has(permission));
   session.defaultSession.setPermissionRequestHandler((_webContents, permission, callback) => callback(allowedRendererPermissions.has(permission)));
-  ipcMain.handle('desktop:set-always-on-top', (_event, enabled) => {
-    if (mainWindow) mainWindow.setAlwaysOnTop(Boolean(enabled), 'floating');
-    return Boolean(enabled);
-  });
-  ipcMain.handle('desktop:open-location-settings', async () => {
+  const openLocationSettings = async () => {
     const settingsUrl = process.platform === 'darwin'
       ? 'x-apple.systempreferences:com.apple.preference.security?Privacy_LocationServices'
       : process.platform === 'win32' ? 'ms-settings:privacy-location' : '';
@@ -1752,6 +1771,26 @@ app.whenReady().then(() => {
     } catch (error) {
       return { ok: false, reason: error?.message || 'settings-open-failed' };
     }
+  };
+  ipcMain.handle('desktop:set-always-on-top', (_event, enabled) => {
+    if (mainWindow) mainWindow.setAlwaysOnTop(Boolean(enabled), 'floating');
+    return Boolean(enabled);
+  });
+  ipcMain.handle('desktop:open-location-settings', openLocationSettings);
+  ipcMain.handle('desktop:show-location-guide', async () => {
+    if (process.platform !== 'win32') return openLocationSettings();
+    const result = await dialog.showMessageBox(mainWindow, {
+      type: 'info',
+      title: '开启 Windows 定位权限',
+      message: '请在同一个“位置”设置页面开启 3 个选项',
+      detail: '1. 定位服务\n2. 允许应用访问你的位置\n3. 向下滚动，开启“允许桌面应用访问你的位置”\n\n完成后返回马上下班，应用会自动重新尝试。',
+      buttons: ['打开定位设置', '暂不开启'],
+      defaultId: 0,
+      cancelId: 1,
+      noLink: true
+    });
+    if (result.response !== 0) return { ok: false, canceled: true };
+    return openLocationSettings();
   });
 
   ipcMain.handle('desktop:notify', (_event, payload) => showImmediateNotification(payload));
@@ -1803,6 +1842,8 @@ app.whenReady().then(() => {
   });
   ipcMain.handle('radar:sync-location', (_event, payload = {}) => getRadarStore().syncLocation(payload));
   ipcMain.handle('radar:hide-self', () => getRadarStore().hideSelf());
+  ipcMain.handle('radar:send-signal', (_event, payload = {}) => getRadarStore().sendSignal(payload));
+  ipcMain.handle('radar:mark-messages-read', () => getRadarStore().markMessagesRead());
   ipcMain.handle('pet:get-settings', () => ({ ...readPetSettings() }));
   ipcMain.handle('pet:set-enabled', (_event, enabled) => setPetEnabled(typeof enabled === 'object' ? enabled?.enabled : enabled));
   ipcMain.handle('pet:reset-position', () => resetPetPosition());

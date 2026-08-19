@@ -147,8 +147,8 @@ const epitaphs = [
 ];
 
 const radarMockPeople = Object.freeze([
-  { name:'Excel在逃单元格·07', status:'摸鱼中', copy:'正在用条件格式假装很忙。', distance:'约 300m', distanceKm:.3, x:41, y:42, tone:'moyu' },
-  { name:'键盘带薪呼吸员·53', status:'搬砖中', copy:'敲得很响，进度保持神秘。', distance:'约 800m', distanceKm:.8, x:61, y:38, tone:'work' },
+  { name:'Excel在逃单元格·07', status:'摸鱼中', copy:'正在用条件格式假装很忙。', distance:'约 40m', distanceKm:.04, x:48, y:47, tone:'moyu' },
+  { name:'键盘带薪呼吸员·53', status:'搬砖中', copy:'敲得很响，进度保持神秘。', distance:'约 90m', distanceKm:.09, x:54, y:45, tone:'work' },
   { name:'会议静音艺术家·21', status:'开会神游', copy:'摄像头关了，灵魂也顺便关了。', distance:'约 1.6km', distanceKm:1.6, x:72, y:29, tone:'moyu' },
   { name:'咖啡续命合伙人·44', status:'搬砖中', copy:'第三杯已经不是饮料，是外接电源。', distance:'约 2.7km', distanceKm:2.7, x:77, y:69, tone:'work' },
   { name:'需求第八版受害者·18', status:'加班中', copy:'嘴上说最后一版，文件名写着 final_8。', distance:'约 4.2km', distanceKm:4.2, x:26, y:73, tone:'late' },
@@ -156,11 +156,18 @@ const radarMockPeople = Object.freeze([
 ]);
 
 const radarMockMessages = Object.freeze([
-  { from:'Excel在逃单元格·07', icon:'水', text:'给你递了一杯赛博温水：忙归忙，先喝两口。', time:'刚刚', unread:true },
-  { from:'会议静音艺术家·21', icon:'鱼', text:'向你发送摸鱼暗号：老板来了就咳嗽。', time:'6 分钟前', unread:true },
-  { from:'下班撤退预备役·66', icon:'撤', text:'对你说：今天也要把完整的自己带回家。', time:'18 分钟前', unread:true },
-  { from:'咖啡续命合伙人·44', icon:'咖', text:'回应了你的“辛苦了”：收到，电量勉强续上。', time:'31 分钟前', unread:false }
+  { from:'Excel在逃单元格·07', icon:'水', text:'给你递了一杯赛博温水：忙归忙，先喝两口。', time:'刚刚', distance:'约 40 米', unread:true },
+  { from:'会议静音艺术家·21', icon:'鱼', text:'向你发送摸鱼暗号：老板来了就咳嗽。', time:'6 分钟前', distance:'约 1.6 公里', unread:true },
+  { from:'下班撤退预备役·66', icon:'撤', text:'对你说：今天也要把完整的自己带回家。', time:'18 分钟前', distance:'约 2.1 公里', unread:true },
+  { from:'咖啡续命合伙人·44', icon:'咖', text:'回应了你的“辛苦了”：收到，电量勉强续上。', time:'31 分钟前', distance:'约 2.7 公里', unread:false }
 ]);
+
+const radarSignalCopy = Object.freeze({
+  water: { label:'递杯水', icon:'水', text:'给你递了一杯赛博温水：忙归忙，先喝两口。' },
+  moyu: { label:'摸鱼暗号', icon:'鱼', text:'向你发送摸鱼暗号：老板来了就咳嗽。' },
+  encourage: { label:'辛苦了', icon:'撑', text:'对你说：辛苦了，今天也要把完整的自己带回家。' },
+  reply: { label:'回个信号', icon:'收', text:'回了一个“收到”，你的工位电波已送达。' }
+});
 
 // 24 × 24 = 576 种基础搭配，再附加两位设备号；覆盖职场、松弛、文艺、社恐、赛博等气质。
 const radarNameHeads = Object.freeze([
@@ -228,7 +235,10 @@ function renderRadarFeed(tab = els.radarShell?.dataset.feed || 'nearby') {
 const radarRealState = {
   status: 'idle',
   people: [],
+  messages: [],
+  unreadCount: 0,
   reason: '',
+  errorCode: '',
   source: 'Cloudflare 私有数据库',
   writeConfigured: true,
   lastPosition: null
@@ -239,7 +249,25 @@ let radarSelectedPersonKey = '';
 let radarLocationSettingsAwaitingFocus = false;
 
 function radarPersonKey(person) {
-  return String(person?.id || person?.name || '');
+  return String(person?.peerId || person?.id || person?.name || '');
+}
+
+function radarMessageTime(value) {
+  const timestamp = new Date(value).getTime();
+  if (!Number.isFinite(timestamp)) return '';
+  const minutes = Math.max(0, Math.floor((Date.now() - timestamp) / 60000));
+  if (minutes < 1) return '刚刚';
+  if (minutes < 60) return `${minutes} 分钟前`;
+  if (minutes < 1440) return `${Math.floor(minutes / 60)} 小时前`;
+  return new Date(timestamp).toLocaleDateString('zh-CN', { month:'numeric', day:'numeric' });
+}
+
+function radarMessageDistance(message) {
+  if (message?.distanceMeters == null) return '距离暂不可用';
+  const meters = Number(message?.distanceMeters);
+  if (!Number.isFinite(meters)) return '距离暂不可用';
+  if (meters < 1000) return `约 ${Math.max(10, meters)} 米`;
+  return `约 ${(meters / 1000).toFixed(1)} 公里`;
 }
 
 function radarProximity(person) {
@@ -266,10 +294,40 @@ function radarPresence() {
 function radarEmptyCopy(mode, discovery, radius) {
   if (!discovery) return ['附近发现尚未开启', '点击上方开关；只有真实数据模式会读取并同步定位。'];
   if (mode === 'mock') return [`${radius}km 内暂时没信号`, '可以扩大扫描范围，或者安心独享这片摸鱼区。'];
-  if (radarRealState.status === 'loading') return ['正在连接云端', '正在更新匿名位置并获取附近工友，请稍候。'];
-  if (radarRealState.status === 'denied') return ['没有定位权限', '请在系统设置中允许“马上下班”使用位置后再试。'];
+  if (radarRealState.status === 'locating') return ['正在获取系统位置', 'Windows 首次定位可能需要几秒，请稍候。'];
+  if (radarRealState.status === 'syncing') return ['位置已获取，正在连接云端', '正在上传匿名位置并获取附近工友。'];
+  if (radarRealState.status === 'denied') return ['没有定位权限', radarRealState.reason || '请在系统设置中允许“马上下班”使用位置后再试。'];
+  if (radarRealState.status === 'location-error') return ['系统暂时无法定位', radarRealState.reason || '请检查系统定位设置后重试。'];
   if (radarRealState.status === 'error') return ['真实数据暂时不可用', radarRealState.reason || '请检查网络后重试。'];
   return [`${radius}km 内暂时没有在线工友`, '仅显示最近 30 分钟主动开启附近发现的匿名用户。'];
+}
+
+function radarTroubleshootingSteps() {
+  if (!['denied', 'location-error', 'error'].includes(radarRealState.status)) return [];
+  if (['denied', 'location-error'].includes(radarRealState.status)) {
+    if (window.desktop?.platform === 'win32') return [
+      '打开 Windows 设置 → 隐私和安全性 → 位置',
+      '开启“定位服务”和“允许应用访问你的位置”',
+      '继续向下开启“允许桌面应用访问你的位置”',
+      '完全关闭并重新打开马上下班，再点“重新尝试”'
+    ];
+    return [
+      '打开系统设置 → 隐私与安全性 → 定位服务',
+      '开启“定位服务”，并允许“马上下班”使用位置',
+      '如果列表中没有马上下班，请完全退出应用后重新打开',
+      '返回应用后点击“重新尝试”'
+    ];
+  }
+  if (/cloudflare-timeout/.test(radarRealState.errorCode)) return [
+    '确认电脑能够正常打开网页',
+    '公司或校园网络可能拦截云端地址，可换手机热点测试',
+    '网络恢复后点击“重新尝试”'
+  ];
+  return [
+    '确认电脑已连接互联网',
+    '换一个网络或手机热点后重试',
+    '若其他设备也失败，请稍后再试'
+  ];
 }
 
 function renderRadar(mode = localStorage.getItem(STORAGE.radarMode) || 'mock') {
@@ -293,8 +351,10 @@ function renderRadar(mode = localStorage.getItem(STORAGE.radarMode) || 'mock') {
   els.radarDiscoveryToggle.querySelector('strong').textContent = '附近发现';
   if (!discovery) els.radarDiscoveryStatus.textContent = nextMode === 'mock' ? '本地示例关闭 · 不读取真实位置' : '关闭时不读取位置，也不会出现在云端';
   else if (nextMode === 'mock') els.radarDiscoveryStatus.textContent = '本地示例已开启 · 不读取、不上传真实位置';
-  else if (radarRealState.status === 'loading') els.radarDiscoveryStatus.textContent = '正在更新位置并查询云端工友…';
+  else if (radarRealState.status === 'locating') els.radarDiscoveryStatus.textContent = '正在获取系统位置…';
+  else if (radarRealState.status === 'syncing') els.radarDiscoveryStatus.textContent = '位置已获取 · 正在连接云端…';
   else if (radarRealState.status === 'denied') els.radarDiscoveryStatus.textContent = '定位未授权 · 未上传任何位置';
+  else if (radarRealState.status === 'location-error') els.radarDiscoveryStatus.textContent = '系统定位失败 · 未上传任何位置';
   else if (radarRealState.status === 'error') els.radarDiscoveryStatus.textContent = '定位已开启 · 云端同步失败';
   else els.radarDiscoveryStatus.textContent = '定位已开启 · 已同步云端真实数据';
   els.radarRangeLabel.textContent = `扫描范围 · ${radius} KM`;
@@ -308,29 +368,49 @@ function renderRadar(mode = localStorage.getItem(STORAGE.radarMode) || 'mock') {
   els.radarWorkingCount.textContent = String(people.filter((person) => person.tone !== 'moyu').length);
   els.radarBlips.innerHTML = people.map((person) => { const key = radarPersonKey(person); const proximity = radarProximity(person); return `<button class="radar-blip${key === radarSelectedPersonKey ? ' is-selected' : ''}" type="button" data-person-key="${escapeHTML(key)}" data-proximity="${escapeHTML(proximity)}" data-tone="${escapeHTML(person.tone)}" style="--x:${Number(person.x)}%;--y:${Number(person.y)}%" aria-pressed="${key === radarSelectedPersonKey}" aria-label="${escapeHTML(person.name)}，${escapeHTML(radarProximityLabel(proximity) || person.distance)}"><i></i><span>${escapeHTML(radarProximityLabel(proximity) || person.distance)}</span></button>`; }).join('');
   const [emptyTitle, emptyCopy] = radarEmptyCopy(nextMode, discovery, radius);
+  const canRetry = nextMode === 'real' && discovery && ['denied', 'location-error', 'error'].includes(radarRealState.status);
+  const troubleshootingSteps = canRetry ? radarTroubleshootingSteps() : [];
+  const troubleshooting = troubleshootingSteps.length ? `<ol class="radar-troubleshooting">${troubleshootingSteps.map((step) => `<li>${escapeHTML(step)}</li>`).join('')}</ol>` : '';
   els.radarPeople.innerHTML = people.length
-    ? people.map((person) => { const key = radarPersonKey(person); const proximity = radarProximity(person); const proximityLabel = radarProximityLabel(proximity); return `<article class="radar-person${key === radarSelectedPersonKey ? ' is-selected' : ''}" data-person-key="${escapeHTML(key)}">${proximityLabel ? `<span class="radar-proximity" data-proximity="${escapeHTML(proximity)}">${escapeHTML(proximityLabel)}</span>` : ''}<div class="radar-person-top"><strong class="radar-person-name">${escapeHTML(person.name)} · ${escapeHTML(person.status)}</strong><span class="radar-distance">${escapeHTML(person.distance)}</span></div><p>${escapeHTML(person.copy)}</p>${nextMode === 'mock' ? `<div class="radar-person-actions"><button type="button" data-radar-action="递杯水" data-person="${escapeHTML(person.name)}">递杯水</button><button type="button" data-radar-action="摸鱼暗号" data-person="${escapeHTML(person.name)}">摸鱼暗号</button><button type="button" data-radar-action="辛苦了" data-person="${escapeHTML(person.name)}">辛苦了</button></div>` : ''}</article>`; }).join('')
-    : `<div class="radar-list-empty"><strong>${escapeHTML(emptyTitle)}</strong><span>${escapeHTML(emptyCopy)}</span></div>`;
+    ? people.map((person) => { const key = radarPersonKey(person); const proximity = radarProximity(person); const proximityLabel = radarProximityLabel(proximity); const target = nextMode === 'real' ? ` data-peer-id="${escapeHTML(person.peerId)}"` : ''; return `<article class="radar-person${key === radarSelectedPersonKey ? ' is-selected' : ''}" data-person-key="${escapeHTML(key)}"><div class="radar-person-top"><div class="radar-person-titleline"><strong class="radar-person-name">${escapeHTML(person.name)} · ${escapeHTML(person.status)}</strong>${proximityLabel ? `<span class="radar-proximity" data-proximity="${escapeHTML(proximity)}">${escapeHTML(proximityLabel)}</span>` : ''}</div><span class="radar-distance">${escapeHTML(person.distance)}</span></div><p>${escapeHTML(person.copy)}</p><div class="radar-person-actions"><button type="button" data-radar-action="递杯水" data-radar-signal="water" data-person="${escapeHTML(person.name)}"${target}>递杯水</button><button type="button" data-radar-action="摸鱼暗号" data-radar-signal="moyu" data-person="${escapeHTML(person.name)}"${target}>摸鱼暗号</button><button type="button" data-radar-action="辛苦了" data-radar-signal="encourage" data-person="${escapeHTML(person.name)}"${target}>辛苦了</button></div></article>`; }).join('')
+    : `<div class="radar-list-empty"><strong>${escapeHTML(emptyTitle)}</strong><span>${escapeHTML(emptyCopy)}</span>${troubleshooting}${canRetry ? '<button class="radar-retry" type="button" data-radar-retry>重新尝试</button>' : ''}</div>`;
   els.radarInbox.innerHTML = nextMode === 'mock'
-    ? radarMockMessages.map((message) => `<article class="radar-message${message.unread ? ' is-unread' : ''}"><span class="radar-message-icon">${message.icon}</span><div><div class="radar-message-meta"><strong>${message.from}</strong><time>${message.time}</time></div><p>${message.text}</p><button type="button" data-radar-reply="${message.from}">回个信号</button></div></article>`).join('')
-    : '<div class="radar-list-empty"><strong>真实数据暂无收件箱</strong><span>云端仅共享匿名位置与在线状态，不存储互动消息。</span></div>';
+    ? radarMockMessages.map((message) => `<article class="radar-message${message.unread ? ' is-unread' : ''}"><span class="radar-message-icon">${message.icon}</span><div><div class="radar-message-meta"><strong>${message.from}</strong><time>${message.time}</time></div><span class="radar-message-distance">${message.distance}</span><p>${message.text}</p><button type="button" data-radar-reply="${message.from}">回个信号</button></div></article>`).join('')
+    : (radarRealState.messages.length ? radarRealState.messages.map((message) => { const signal = radarSignalCopy[message.type] || radarSignalCopy.encourage; return `<article class="radar-message${message.unread ? ' is-unread' : ''}"><span class="radar-message-icon">${escapeHTML(signal.icon)}</span><div><div class="radar-message-meta"><strong>${escapeHTML(message.from)}</strong><time>${escapeHTML(radarMessageTime(message.createdAt))}</time></div><span class="radar-message-distance">${escapeHTML(radarMessageDistance(message))}</span><p>${escapeHTML(signal.text)}</p><button type="button" data-radar-reply="${escapeHTML(message.from)}" data-peer-id="${escapeHTML(message.fromDeviceId)}">回个信号</button></div></article>`; }).join('') : '<div class="radar-list-empty"><strong>收件箱还没有信号</strong><span>附近工友发来的匿名招呼会出现在这里。</span></div>');
   const inboxBadge = document.querySelector('[data-radar-tab="inbox"] b');
-  if (inboxBadge) inboxBadge.textContent = nextMode === 'mock' ? '3' : '0';
+  if (inboxBadge) inboxBadge.textContent = String(nextMode === 'mock' ? 3 : radarRealState.unreadCount);
   const privacy = document.querySelector('.radar-privacy');
   if (privacy) privacy.textContent = nextMode === 'mock'
     ? '本地示例模式完全不读取定位。查看真实数据并主动开启后，才连接云端。'
-    : '真实数据在云端约化到约 10 米网格并私密保存，用于 50/100 米近距离标记；不会向其他设备返回经纬度。';
+    : '真实数据在云端约化到约 10 米网格并私密保存；消息保留 30 天，只返回约化距离，不返回对方经纬度。';
   renderRadarFeed();
 }
 
 function getRadarPosition() {
-  return new Promise((resolve, reject) => navigator.geolocation.getCurrentPosition(resolve, reject, {
-    enableHighAccuracy:false, timeout:10000, maximumAge:300000
-  }));
+  return new Promise((resolve, reject) => {
+    let settled = false;
+    const guardTimeout = window.setTimeout(() => {
+      if (settled) return;
+      settled = true;
+      reject(Object.assign(new Error('location-timeout'), { code:3 }));
+    }, 12000);
+    const finish = (callback, value) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(guardTimeout);
+      callback(value);
+    };
+    navigator.geolocation.getCurrentPosition(
+      (position) => finish(resolve, position),
+      (error) => finish(reject, error),
+      { enableHighAccuracy:false, timeout:10000, maximumAge:300000 }
+    );
+  });
 }
 
 function radarFailureCopy(reason) {
   if (/invalid-location/.test(reason)) return '系统返回的位置无效，请关闭后重新开启定位。';
+  if (/cloudflare-timeout/.test(reason)) return '连接云端超时，请按下方步骤检查网络后重试。';
   if (/cloudflare-429|too-many-requests/.test(reason)) return '同步过于频繁，请稍等片刻后重试。';
   if (/cloudflare-5\d\d|server-error/.test(reason)) return '云端服务暂时繁忙，请稍后重试。';
   return '无法连接云端真实数据，请检查网络后重试。';
@@ -345,12 +425,15 @@ async function refreshRealRadar({ announce = false } = {}) {
     return;
   }
   radarSyncInFlight = true;
-  radarRealState.status = 'loading';
+  radarRealState.status = 'locating';
   radarRealState.reason = '';
+  radarRealState.errorCode = '';
   renderRadar('real');
   try {
     const position = await getRadarPosition();
     radarRealState.lastPosition = { latitude:position.coords.latitude, longitude:position.coords.longitude };
+    radarRealState.status = 'syncing';
+    renderRadar('real');
     const presence = radarPresence();
     const result = await window.desktop.syncRadarLocation({
       ...radarRealState.lastPosition,
@@ -359,20 +442,33 @@ async function refreshRealRadar({ announce = false } = {}) {
       ...presence
     });
     radarRealState.people = Array.isArray(result?.people) ? result.people : [];
+    radarRealState.messages = Array.isArray(result?.messages) ? result.messages : [];
+    radarRealState.unreadCount = Number(result?.unreadCount) || 0;
     radarRealState.writeConfigured = Boolean(result?.writeConfigured);
+    const failureCode = String(result?.reason || '');
     radarRealState.status = result?.ok ? 'ready' : 'error';
-    radarRealState.reason = result?.ok ? '' : radarFailureCopy(String(result?.reason || ''));
+    radarRealState.errorCode = result?.ok ? '' : failureCode;
+    radarRealState.reason = result?.ok ? '' : radarFailureCopy(failureCode);
     renderRadar('real');
     if (announce) showToast(result?.ok ? '真实数据已同步' : '真实数据同步失败', result?.ok ? `已更新位置，并找到 ${radarRealState.people.length} 位附近工友。` : radarRealState.reason);
   } catch (error) {
     radarRealState.people = [];
-    radarRealState.status = 'denied';
-    radarRealState.reason = error?.code === 1 ? '系统未授予定位权限。' : '系统定位服务未开启或暂时不可用。';
+    const denied = error?.code === 1;
+    radarRealState.status = denied ? 'denied' : 'location-error';
+    radarRealState.errorCode = denied ? 'location-denied' : String(error?.message || 'location-unavailable');
+    radarRealState.reason = denied
+      ? '系统未授予定位权限。'
+      : (window.desktop?.platform === 'win32'
+        ? '请在 Windows“位置”设置中开启定位服务、应用位置权限和桌面应用位置权限。'
+        : '系统定位服务未开启或暂时不可用。');
     renderRadar('real');
     if (announce && window.desktop?.openLocationSettings) {
-      const settingsResult = await window.desktop.openLocationSettings();
+      const settingsResult = window.desktop?.platform === 'win32' && window.desktop?.showLocationGuide
+        ? await window.desktop.showLocationGuide()
+        : await window.desktop.openLocationSettings();
       radarLocationSettingsAwaitingFocus = Boolean(settingsResult?.ok);
-      if (settingsResult?.ok) showToast('已打开定位设置', '请开启“定位服务”并允许“马上下班”，返回应用后会自动重试。');
+      if (settingsResult?.ok) showToast('已打开定位设置', window.desktop?.platform === 'win32' ? '请开启定位服务、允许应用访问位置、允许桌面应用访问位置；返回应用后会自动重试。' : '请开启“定位服务”并允许“马上下班”，返回应用后会自动重试。');
+      else if (settingsResult?.canceled) showToast('暂未打开定位设置', '需要开启三个 Windows 定位选项后，其他设备才能看到你。');
       else showToast('无法自动打开定位设置', '请前往“系统设置 → 隐私与安全性 → 定位服务”手动开启。');
     } else if (announce) showToast('定位没有开启', radarRealState.reason);
   } finally {
@@ -408,6 +504,36 @@ async function toggleRadarDiscovery() {
   }
   localStorage.setItem(STORAGE.radarDiscovery, 'on');
   await refreshRealRadar({ announce:true });
+}
+
+function radarSendFailureCopy(reason) {
+  if (/recipient-offline|recipient-unavailable/.test(reason)) return '对方已经离线，这次信号没能送达。';
+  if (/too-many-requests|cloudflare-429/.test(reason)) return '信号发得太快了，等一分钟再试。';
+  if (/sender-not-visible/.test(reason)) return '请先开启真实数据的“附近发现”。';
+  return '云端暂时没收到信号，请稍后重试。';
+}
+
+async function sendRealRadarSignal({ type, toDeviceId, toName, button }) {
+  if (!window.desktop?.sendRadarSignal || !toDeviceId) return showToast('无法发送', '真实通信需要在桌面应用中运行。');
+  if (localStorage.getItem(STORAGE.radarDiscovery) !== 'on') return showToast('附近发现未开启', '开启后才能向附近工友发送信号。');
+  if (button) button.disabled = true;
+  const signal = radarSignalCopy[type] || radarSignalCopy.encourage;
+  try {
+    const result = await window.desktop.sendRadarSignal({ toDeviceId, fromName:deviceRadarName(), type });
+    if (!result?.ok) return showToast('信号发送失败', radarSendFailureCopy(String(result?.reason || '')));
+    showToast(`${signal.label}已发出`, `${toName || '对方'} 会在真实收件箱收到这条工位电波。`);
+  } finally {
+    if (button) button.disabled = false;
+  }
+}
+
+async function markRealRadarInboxRead() {
+  if (!radarRealState.unreadCount || !window.desktop?.markRadarMessagesRead) return;
+  const result = await window.desktop.markRadarMessagesRead();
+  if (!result?.ok) return;
+  radarRealState.unreadCount = 0;
+  radarRealState.messages = radarRealState.messages.map((message) => ({ ...message, unread:false }));
+  renderRadar('real');
 }
 
 let currentState = 'ready';
@@ -1652,16 +1778,20 @@ document.querySelectorAll('.health-stage-button').forEach((button) => button.add
 els.healthPreviewReset.addEventListener('click', renderHealth);
 
 els.dataModeToggle.addEventListener('click', () => renderLedgerMode(els.ledger.dataset.mode === 'mock' ? 'user' : 'mock'));
-els.radarModeToggle?.addEventListener('click', async () => {
-  const nextMode = els.radarShell.dataset.mode === 'mock' ? 'real' : 'mock';
+async function switchRadarMode(nextMode) {
+  const mode = nextMode === 'real' ? 'real' : 'mock';
   if (els.radarShell.dataset.mode === 'real' && localStorage.getItem(STORAGE.radarDiscovery) === 'on') {
     localStorage.setItem(STORAGE.radarDiscovery, 'off');
     await hideRealRadarPresence();
   }
-  localStorage.setItem(STORAGE.radarDiscovery, 'off');
-  renderRadar(nextMode);
+  // Mock 不读取位置，默认展示示例工友；真实模式始终等待用户主动授权。
+  localStorage.setItem(STORAGE.radarDiscovery, mode === 'mock' ? 'on' : 'off');
+  renderRadar(mode);
+}
+els.radarModeToggle?.addEventListener('click', () => {
+  switchRadarMode(els.radarShell.dataset.mode === 'mock' ? 'real' : 'mock');
 });
-els.radarShowMock?.addEventListener('click', () => { localStorage.setItem(STORAGE.radarDiscovery, 'off'); renderRadar('mock'); });
+els.radarShowMock?.addEventListener('click', () => switchRadarMode('mock'));
 els.radarDiscoveryToggle?.addEventListener('click', toggleRadarDiscovery);
 els.radarNameSave?.addEventListener('click', () => {
   if (!saveRadarName(els.radarNameInput.value)) return;
@@ -1682,10 +1812,21 @@ document.querySelectorAll('[data-radar-radius]').forEach((button) => button.addE
   renderRadar();
   if (els.radarShell.dataset.mode === 'real' && localStorage.getItem(STORAGE.radarDiscovery) === 'on') refreshRealRadar();
 }));
-document.querySelectorAll('[data-radar-tab]').forEach((button) => button.addEventListener('click', () => renderRadarFeed(button.dataset.radarTab)));
+document.querySelectorAll('[data-radar-tab]').forEach((button) => button.addEventListener('click', async () => {
+  renderRadarFeed(button.dataset.radarTab);
+  if (button.dataset.radarTab === 'inbox' && els.radarShell.dataset.mode === 'real') await markRealRadarInboxRead();
+}));
 els.radarPeople?.addEventListener('click', (event) => {
+  if (event.target.closest('[data-radar-retry]')) {
+    refreshRealRadar({ announce:true });
+    return;
+  }
   const button = event.target.closest('[data-radar-action]');
   if (!button) return;
+  if (els.radarShell.dataset.mode === 'real') {
+    sendRealRadarSignal({ type:button.dataset.radarSignal, toDeviceId:button.dataset.peerId, toName:button.dataset.person, button });
+    return;
+  }
   showToast(`${button.dataset.radarAction}已发出`, `${button.dataset.person} 收到了一条匿名工位电波。示例模式不会真的发送。`);
 });
 els.radarBlips?.addEventListener('click', (event) => {
@@ -1700,6 +1841,10 @@ els.radarBlips?.addEventListener('click', (event) => {
 els.radarInbox?.addEventListener('click', (event) => {
   const button = event.target.closest('[data-radar-reply]');
   if (!button) return;
+  if (els.radarShell.dataset.mode === 'real') {
+    sendRealRadarSignal({ type:'reply', toDeviceId:button.dataset.peerId, toName:button.dataset.radarReply, button });
+    return;
+  }
   showToast('匿名信号已回复', `已向 ${button.dataset.radarReply} 回了一个“收到”。示例模式不会真的发送。`);
 });
 let clearArmed = false; let clearTimer;
@@ -1779,7 +1924,7 @@ function renderNotificationExperience({ reveal = false } = {}) {
   els.notificationOnboarding?.setAttribute('aria-hidden', String(!notificationPromptVisible));
   els.notificationShortcut?.classList.toggle('is-ready', ready);
   els.notificationShortcut?.classList.toggle('is-off', !ready);
-  els.notificationShortcut?.setAttribute('aria-pressed', String(ready));
+  els.notificationShortcut?.removeAttribute('aria-pressed');
   setTopAction(els.notificationShortcut, ready ? '今天已验证 · 再测一次' : '桌面通知待确认', ready);
 
   if (els.notificationEnable) {
@@ -2195,9 +2340,9 @@ document.addEventListener('pointerdown', async () => { const context = getAudioC
 
 els.planTime.value = '';
 els.startTime.value = '';
-// 每次启动都从不联网的 Mock 雷达开始，避免沿用上次真实定位状态。
+// 每次启动都展示已开启附近发现的 Mock 雷达；Mock 不读取位置也不联网。
 localStorage.setItem(STORAGE.radarMode, 'mock');
-localStorage.setItem(STORAGE.radarDiscovery, 'off');
+localStorage.setItem(STORAGE.radarDiscovery, 'on');
 renderSoundState(); renderVentCount(); window.desktop?.setSoundEnabled?.(soundEnabled);
 renderLedgerMode(hasUserLedgerData() ? 'user' : 'mock'); renderRadar(); renderHealth(); renderTodos(); renderRetirementPlan(); applyState(getState().name); tick(); renderNotificationExperience(); runBootLoader();
 window.desktop?.getRadarConfig?.().then((config) => {

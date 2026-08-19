@@ -157,7 +157,7 @@
     .update-check.has-update::before { content: "NEW"; position: absolute; right: -9px; top: -9px; z-index: 3; min-width: 27px; height: 16px; display: grid; place-items: center; padding: 0 4px; border: 2px solid var(--ink); border-radius: 999px; background: var(--red); color: var(--white); box-shadow: 2px 2px 0 var(--ink); font: 950 7px/1 var(--mono); letter-spacing: .03em; animation: update-nudge 1.4s ease-in-out infinite; }
     .update-check.is-downloading { --update-progress: 0deg; background: conic-gradient(var(--yellow) var(--update-progress), rgba(255,255,255,.12) 0); }
     .update-check.is-downloading svg { animation: update-spin 1s linear infinite; }
-    .notification-shortcut.is-ready { border-color: var(--yellow); background: var(--yellow); color: var(--ink); }
+    .notification-shortcut.is-ready { border-color: rgba(255,255,255,.72); background: transparent; color: inherit; }
     .notification-shortcut.is-off { border-color: rgba(255,255,255,.72); }
     .notification-shortcut.is-off::before { content: "!"; position: absolute; right: -7px; top: -7px; z-index: 3; width: 18px; height: 18px; display: grid; place-items: center; border: 2px solid var(--ink); border-radius: 50%; background: var(--red); color: var(--white); box-shadow: 2px 2px 0 var(--ink); font: 950 10px/1 var(--display); animation: notification-nudge 1.5s ease-in-out infinite; }
     .notification-shortcut.is-testing svg { animation: notification-ring .48s ease-in-out infinite alternate; transform-origin: 50% 10%; }
@@ -940,12 +940,16 @@
     .radar-list-empty { min-height: 280px; display: grid; place-content: center; gap: 7px; padding: 25px; text-align: center; }
     .radar-list-empty strong { font-size: 15px; }
     .radar-list-empty span { max-width: 240px; color: var(--muted); font-size: 9px; line-height: 1.5; }
+    .radar-troubleshooting { width: min(100%, 310px); margin: 8px auto 0; padding: 10px 12px 10px 27px; border: 1px dashed var(--ink); background: rgba(255,225,52,.16); text-align: left; }
+    .radar-troubleshooting li { margin: 4px 0; color: var(--ink); font-size: 8px; font-weight: 800; line-height: 1.5; }
+    .radar-list-empty .radar-retry { justify-self: center; margin-top: 8px; min-height: 32px; padding: 0 12px; border: 2px solid var(--ink); background: var(--yellow); color: var(--ink); box-shadow: 3px 3px 0 var(--ink); font-size: 9px; font-weight: 950; cursor: pointer; }
     .radar-message { display: grid; grid-template-columns: 34px 1fr; gap: 9px; padding: 11px 8px; border-bottom: 1px solid rgba(17,19,26,.2); }
     .radar-message.is-unread { background: #fff5b5; box-shadow: inset 3px 0 0 var(--red); }
     .radar-message-icon { width: 32px; height: 32px; display: grid; place-items: center; border: 2px solid var(--ink); border-radius: 50%; background: var(--yellow); font-size: 10px; font-weight: 950; }
     .radar-message-meta { display: flex; justify-content: space-between; gap: 8px; }
     .radar-message-meta strong { font-size: 10px; }
     .radar-message-meta time { color: var(--muted); font: 800 8px/1 var(--mono); }
+    .radar-message-distance { display: inline-block; margin-top: 4px; color: #2959cc; font: 900 8px/1 var(--mono); }
     .radar-message p { margin: 5px 0 7px; color: var(--muted); font-size: 9px; line-height: 1.45; }
     .radar-message button { min-height: 26px; padding: 0 8px; border: 1px solid var(--ink); background: var(--white); color: var(--ink); font-size: 8px; font-weight: 900; cursor: pointer; }
     .radar-message button:hover { background: var(--yellow); }
@@ -1132,6 +1136,50 @@
     .radar-title-line .radar-discovery-toggle[aria-pressed="true"] .radar-switch i { transform: translateX(15px); }
     .radar-controls { grid-template-columns: minmax(430px,1.35fr) minmax(330px,.65fr); }
     .radar-radius div { grid-template-columns: repeat(3,1fr); }
+
+    /* Radar readability: keep the instrument-panel style without micro type. */
+    .radar-identity { grid-template-columns: 48px minmax(180px,1fr) 48px 68px; grid-template-rows: 48px auto; gap: 5px 10px; padding: 12px 14px; }
+    .radar-identity::before { font-size: 8px; }
+    .radar-identity-avatar { width: 44px; height: 44px; font-size: 14px; }
+    .radar-identity label > span { margin-bottom: 5px; font-size: 10px; }
+    .radar-identity input { font-size: 15px; line-height: 1.35; }
+    .radar-identity small { font-size: 10px; line-height: 1.45; }
+    .radar-name-dice,.radar-name-save { height: 42px; }
+    .radar-name-save { font-size: 11px; }
+    .radar-demo-label { font-size: 11px; line-height: 1.25; }
+    .radar-mode-toggle { min-height: 42px; padding: 0 15px; font-size: 12px; line-height: 1.2; }
+    .radar-title-line .radar-discovery-toggle strong { font-size: 12px; }
+    .radar-radius { padding-top: 12px; padding-bottom: 23px; }
+    .radar-radius legend { font-size: 11px; line-height: 1.2; }
+    .radar-radius button { min-height: 46px; font-size: 12px; }
+    .radar-radius::after { bottom: 6px; font-size: 8px; letter-spacing: .08em; }
+    .radar-board-head { font-size: 13px; line-height: 1.25; }
+    .radar-mini-stats { gap: 18px; padding: 7px 12px; }
+    .radar-mini-stats b { font-size: 15px; }
+    .radar-blip { gap: 7px; }
+    .radar-blip i { width: 16px; height: 16px; }
+    .radar-blip span { max-width: 160px; padding: 6px 9px; font-size: 11px; line-height: 1.25; }
+    .radar-blip[data-proximity="within-50m"] span { transform: translate(-58%,8px); }
+    .radar-blip[data-proximity="within-100m"] span { transform: translate(58%,-5px); }
+    .radar-feed-tabs button { min-height: 52px; font-size: 13px; }
+    .radar-feed-tabs b { min-width: 21px; height: 21px; font-size: 10px; }
+    .radar-list-empty { gap: 11px; padding: 28px; }
+    .radar-list-empty strong { font-size: 20px; line-height: 1.25; }
+    .radar-list-empty span { max-width: 360px; font-size: 12px; font-weight: 750; line-height: 1.65; }
+    .radar-troubleshooting { width: min(100%, 390px); padding: 13px 16px 13px 34px; }
+    .radar-troubleshooting li { margin: 6px 0; font-size: 11px; line-height: 1.6; }
+    .radar-list-empty .radar-retry { min-height: 42px; padding: 0 17px; font-size: 12px; }
+    .radar-person-top { align-items: center; }
+    .radar-person-titleline { min-width: 0; display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+    .radar-proximity { flex: 0 0 auto; margin: 0; padding: 5px 8px; font-size: 10px; }
+    .radar-person-name { font-size: 12px; line-height: 1.35; }
+    .radar-distance { font-size: 11px; }
+    .radar-person p { font-size: 11px; line-height: 1.55; }
+    .radar-person-actions button,.radar-message button { min-height: 32px; font-size: 10px; }
+    .radar-message-meta strong { font-size: 12px; }
+    .radar-message-meta time,.radar-message-distance { font-size: 10px; }
+    .radar-message p { font-size: 11px; line-height: 1.55; }
+    .radar-privacy { font-size: 10px; line-height: 1.6; }
 
     .retirement-page { min-height: calc(100vh - 72px); padding: clamp(18px,3vh,34px) 38px; contain: none; color: var(--ink); background: #efe8d8; }
     .retirement-shell { position: relative; width: min(1320px,100%); min-height: min(650px,calc(100vh - 120px)); display: grid; grid-template-columns: minmax(300px,.86fr) minmax(400px,1.14fr); margin: 0 auto; border: 3px solid var(--ink); overflow: hidden; background: #f7f1e4; box-shadow: 11px 11px 0 var(--ink); }
@@ -1339,7 +1387,7 @@
       </nav>
       <div class="top-actions">
         <div class="top-status"><span class="status-dot"></span><span id="top-status-text">肉身已到岗 · 灵魂登录中</span></div>
-        <button class="top-icon-button notification-shortcut is-off" id="notification-shortcut" type="button" aria-pressed="false" aria-label="桌面通知未开启" data-tooltip="桌面通知未开启"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9Z"/><path d="M10 21h4"/></svg></button>
+        <button class="top-icon-button notification-shortcut is-off" id="notification-shortcut" type="button" aria-label="桌面通知未开启" data-tooltip="桌面通知未开启"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9Z"/><path d="M10 21h4"/></svg></button>
         <button class="top-icon-button update-check" id="update-check" type="button" aria-label="检查更新" data-tooltip="检查更新"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg></button>
         <div class="settings-wrap">
           <button class="top-icon-button notification-settings" id="settings-toggle" type="button" aria-expanded="false" aria-label="打开设置菜单" data-tooltip="设置"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-2.8 2.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6v.2h-4V21a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1L4.2 17l.1-.1a1.7 1.7 0 0 0 .3-1.9A1.7 1.7 0 0 0 3 14H2.8v-4H3a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9L4.2 7 7 4.2l.1.1A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-1.6v-.2h4V3a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1L19.8 7l-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.6 1h.2v4H21a1.7 1.7 0 0 0-1.6 1z"/></svg></button>
