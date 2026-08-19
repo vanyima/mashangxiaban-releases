@@ -1,4 +1,30 @@
 const complaintCopies = ['好想下班','不想干了','怎么都找我','催什么催','无语死了','好累啊','好想退休','又来活了','别艾特我','工资呢','饼吃不下','让我静静','明天再说','谁爱干谁干','心已下班','人快碎了','能别改吗','第几版了','我谢谢你','下班要紧'];
+
+/* GitHub Release 记录每个安装包的公开下载次数。 */
+async function refreshDownloadCounts() {
+  const counters = [...document.querySelectorAll('[data-download-count]')];
+  if (!counters.length) return;
+  try {
+    const response = await fetch('https://api.github.com/repos/vanyima/mashangxiaban-releases/releases/latest', {
+      headers: { Accept:'application/vnd.github+json' },
+    });
+    if (!response.ok) throw new Error(`GitHub API ${response.status}`);
+    const release = await response.json();
+    const counts = Object.fromEntries((release.assets || []).map((asset) => [
+      asset.name.toLowerCase().endsWith('.exe') ? 'windows' : asset.name.toLowerCase().endsWith('.dmg') ? 'mac' : '',
+      asset.download_count,
+    ]));
+    counters.forEach((counter) => {
+      const count = counts[counter.dataset.downloadCount];
+      if (!Number.isFinite(count)) return;
+      counter.textContent = `${new Intl.NumberFormat('zh-CN').format(count)} 次下载`;
+    });
+  } catch {
+    counters.forEach((counter) => counter.textContent = '下载次数暂不可用');
+  }
+}
+refreshDownloadCounts();
+
 const muyuButton = document.querySelector('#muyu-button');
 const muyuCopy = document.querySelector('#muyu-copy');
 let lastComplaint = -1;
@@ -129,6 +155,75 @@ const reveal = new IntersectionObserver((entries) => entries.forEach((entry) => 
   reveal.unobserve(entry.target);
 }), { threshold:.2 });
 observed.forEach((node) => reveal.observe(node));
+
+/* 通知演示区的两条语音互斥播放，避免同时播报。 */
+const voiceTracks = [...document.querySelectorAll('.voice-track')];
+const voiceAudios = voiceTracks.map((track) => track.dataset.audioTarget ? document.querySelector(`#${track.dataset.audioTarget}`) : null);
+let activeSpeechTrack = null;
+
+function renderVoiceTrack(activeTrack = null) {
+  voiceTracks.forEach((track) => {
+    const isPlaying = track === activeTrack;
+    track.classList.toggle('is-playing', isPlaying);
+    track.setAttribute('aria-pressed', String(isPlaying));
+    track.setAttribute('aria-label', `${isPlaying ? '暂停' : '播放'}${track.querySelector('.voice-copy b')?.textContent || '语音'}语音`);
+  });
+}
+
+voiceTracks.forEach((track, index) => {
+  const audio = voiceAudios[index];
+  track.addEventListener('click', async () => {
+    if ((audio && !audio.paused) || track === activeSpeechTrack) {
+      audio?.pause();
+      window.speechSynthesis?.cancel();
+      activeSpeechTrack = null;
+      renderVoiceTrack();
+      return;
+    }
+    voiceAudios.forEach((item) => {
+      if (!item || item === audio) return;
+      item.pause();
+      item.currentTime = 0;
+    });
+    window.speechSynthesis?.cancel();
+    activeSpeechTrack = null;
+    try {
+      if (audio) {
+        await audio.play();
+        renderVoiceTrack(track);
+      } else if (track.dataset.speech && 'speechSynthesis' in window) {
+        const speech = new SpeechSynthesisUtterance(track.dataset.speech);
+        speech.lang = 'zh-CN';
+        speech.rate = .98;
+        speech.pitch = 1.02;
+        speech.voice = window.speechSynthesis.getVoices().find((voice) => /^zh/i.test(voice.lang)) || null;
+        speech.addEventListener('end', () => {
+          activeSpeechTrack = null;
+          renderVoiceTrack();
+        }, { once:true });
+        speech.addEventListener('error', () => {
+          activeSpeechTrack = null;
+          track.classList.add('is-error');
+          renderVoiceTrack();
+        }, { once:true });
+        activeSpeechTrack = track;
+        window.speechSynthesis.speak(speech);
+        renderVoiceTrack(track);
+      } else {
+        throw new Error('Voice playback is unavailable');
+      }
+    } catch {
+      track.classList.add('is-error');
+      track.setAttribute('aria-label', '语音加载失败，点击重试');
+    }
+  });
+  if (!audio) return;
+  audio.addEventListener('ended', () => {
+    audio.currentTime = 0;
+    renderVoiceTrack();
+  });
+  audio.addEventListener('playing', () => track.classList.remove('is-error'));
+});
 
 /* 桌面端一次滚轮手势只切换一个 Part；手机保留原生触摸惯性。 */
 if (matchMedia('(min-width: 981px) and (pointer: fine)').matches) {

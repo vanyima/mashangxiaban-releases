@@ -610,18 +610,116 @@
 .dock-countdown { right:25%; bottom:9%; }
 .dock-overtime { right:7%; bottom:6%; }
 
+/* 语音试听是通知演示的“小型广播台”，黄/红区分准点与超时。 */
+.voice-console {
+  position:absolute;
+  z-index:4;
+  top:50%;
+  left:50%;
+  width:min(590px,80%);
+  transform:translate(-50%,-8%);
+}
+.voice-console-head {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:7px;
+  color:rgba(255,255,255,.56);
+  font:800 9px/1 var(--mono);
+  letter-spacing:.08em;
+}
+.voice-console-head small { color:var(--yellow); font:inherit; }
+.voice-tracks { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:9px; }
+.voice-track {
+  min-width:0;
+  display:grid;
+  grid-template-columns:36px minmax(0,1fr) auto;
+  align-items:center;
+  gap:10px;
+  padding:12px 13px;
+  border:2px solid var(--ink);
+  background:var(--yellow);
+  color:var(--ink);
+  box-shadow:4px 4px 0 var(--ink);
+  text-align:left;
+  cursor:pointer;
+  transition:transform .16s ease,box-shadow .16s ease,filter .16s ease;
+}
+.voice-track-alert { background:var(--red); color:white; }
+.voice-track:hover { transform:translate(-1px,-1px); box-shadow:6px 6px 0 var(--ink); }
+.voice-track:active,.voice-track.is-playing { transform:translate(3px,3px); box-shadow:1px 1px 0 var(--ink); }
+.voice-track:focus-visible { outline:3px solid white; outline-offset:4px; }
+.voice-track.is-error { filter:grayscale(.8); }
+.voice-play {
+  position:relative;
+  width:34px;
+  height:34px;
+  border:2px solid currentColor;
+  border-radius:50%;
+}
+.voice-play:before {
+  content:"";
+  position:absolute;
+  left:12px;
+  top:8px;
+  border-left:10px solid currentColor;
+  border-block:7px solid transparent;
+}
+.voice-track.is-playing .voice-play:before {
+  left:10px;
+  top:9px;
+  width:10px;
+  height:12px;
+  border:0;
+  border-inline:3px solid currentColor;
+}
+.voice-copy { min-width:0; }
+.voice-copy small,.voice-copy b { display:block; }
+.voice-copy small { margin-bottom:4px; font:800 8px/1 var(--mono); opacity:.62; }
+.voice-copy b { overflow:hidden; font-size:13px; white-space:nowrap; text-overflow:ellipsis; }
+.voice-wave { height:22px; display:flex; align-items:center; gap:2px; opacity:.48; }
+.voice-wave i { width:2px; height:5px; background:currentColor; }
+.voice-wave i:nth-child(2),.voice-wave i:nth-child(4) { height:12px; }
+.voice-wave i:nth-child(3) { height:19px; }
+.voice-track.is-playing .voice-wave i { animation:voice-wave .58s ease-in-out infinite alternate; }
+.voice-track.is-playing .voice-wave i:nth-child(2) { animation-delay:-.35s; }
+.voice-track.is-playing .voice-wave i:nth-child(3) { animation-delay:-.12s; }
+.voice-track.is-playing .voice-wave i:nth-child(4) { animation-delay:-.45s; }
+.voice-track.is-playing .voice-wave i:nth-child(5) { animation-delay:-.22s; }
+@keyframes voice-wave { to { height:20px; } }
+.primary-download em,
+.final-platform-downloads em { color:inherit; font:inherit; font-style:normal; font-weight:900; }
+.notification-demo .system-banner { transform:translateY(-130px); }
+.note-notification { top:70%; }
+.note-icon { bottom:25%; }
+
 @media (max-width: 650px) {
   .showcase-single .carousel-stage { width:100%; }
   .showcase-single .slide img { max-height:42vh; }
-  .notification-demo .system-banner { transform:translateY(-28px); }
+  .notification-demo .system-banner { transform:translateY(-58px); }
   .demo-kicker { top:5%; right:5%; }
-  .demo-note { width:42%; padding:9px 10px; }
+  .demo-note { display:none; }
   .demo-note b { font-size:10px; }
   .demo-note p { font-size:8px; }
   .note-notification { left:5%; top:56%; }
   .note-icon { right:4%; bottom:31%; }
   .dock-countdown { right:29%; bottom:5%; }
   .dock-overtime { right:4%; bottom:3%; }
+  .voice-console { top:49%; width:90%; transform:translate(-50%,-3%); }
+  .voice-console-head { display:none; }
+  .voice-tracks { gap:6px; }
+  .voice-track { grid-template-columns:27px minmax(0,1fr); gap:7px; padding:8px; box-shadow:3px 3px 0 var(--ink); }
+  .voice-play { width:26px; height:26px; }
+  .voice-play:before { left:9px; top:6px; border-left-width:8px; border-block-width:5px; }
+  .voice-track.is-playing .voice-play:before { left:7px; top:6px; width:9px; height:10px; }
+  .voice-copy small { font-size:6px; }
+  .voice-copy b { font-size:9px; }
+  .voice-wave { display:none; }
+}
+
+@media (prefers-reduced-motion:reduce) {
+  .voice-track { transition:none; }
+  .voice-track.is-playing .voice-wave i { animation:none; }
 }
 
 /* 考勤簿改为单图，并用“工伤档案标签”解释工时与打工人格的对应关系。 */

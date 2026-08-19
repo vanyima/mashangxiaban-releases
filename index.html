@@ -25,8 +25,8 @@
         <h1><span class="hero-title-line">任务疯狂轰炸，</span><span class="hero-title-line hero-title-accent">马歇歇催你下班</span></h1>
         <p>生活不止打工的待办，还有凉爽的夜晚。</p>
         <div class="hero-actions platform-downloads">
-          <a class="primary-download" href="https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.4.12/mashangxiaban-2.4.12-Windows-x64.exe"><span>下载 Windows 版</span><small>Windows 10 / 11 · x64 · 99 MB</small><b>↓</b></a>
-          <a class="primary-download platform-download-mac" href="https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.4.12/mashangxiaban-2.4.12-macOS-Apple-Silicon.dmg"><span>下载 macOS 版</span><small>Apple 芯片 · 117 MB</small><b>↓</b></a>
+          <a class="primary-download" href="https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.4.12/mashangxiaban-2.4.12-Windows-x64.exe"><span>下载 Windows 版</span><small>Windows 10 / 11 · x64 · 99 MB · <em data-download-count="windows">0 次下载</em></small><b>↓</b></a>
+          <a class="primary-download platform-download-mac" href="https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.4.12/mashangxiaban-2.4.12-macOS-Apple-Silicon.dmg"><span>下载 macOS 版</span><small>Apple 芯片 · 117 MB · <em data-download-count="mac">0 次下载</em></small><b>↓</b></a>
         </div>
         <div class="hero-foot"><span>不注册</span><span>数据留在本机</span><span>老板无权查看</span><a href="changelog.html">查看更新日志 →</a></div>
       </div>
@@ -57,6 +57,18 @@
         <div class="desktop-time">18:55</div>
         <div class="demo-kicker"><span>正在演示</span><b>下班前 5 分钟</b></div>
         <div class="system-banner"><img src="assets/app-icon.png" srcset="assets/app-icon-96.webp 96w, assets/app-icon.webp 192w" sizes="58px" alt="马上下班应用图标" loading="lazy" decoding="async"><div><small>马上下班 · 现在</small><b>距离下班还有 5 分钟</b><p>每一次多余的双击，都可能成为今晚的新事故。</p></div></div>
+        <div class="voice-console" aria-label="下班提醒语音试听">
+          <div class="voice-console-head"><span>VOICE ALERT / 语音播报</span><small>点击试听</small></div>
+          <div class="voice-tracks">
+            <button class="voice-track" type="button" data-audio-target="checkout-audio" aria-pressed="false" aria-label="播放下班请注意语音">
+              <span class="voice-play" aria-hidden="true"></span><span class="voice-copy"><small>准点下班</small><b>下班请注意</b></span><span class="voice-wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+            </button>
+            <button class="voice-track voice-track-alert" type="button" data-speech="加班已经两小时。红色警报。请马上离开工位。你怎么还在，明天不过了吗？" aria-pressed="false" aria-label="播放超时 2 小时语音">
+              <span class="voice-play" aria-hidden="true"></span><span class="voice-copy"><small>红色警报</small><b>超时 2 小时</b></span><span class="voice-wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+            </button>
+          </div>
+        </div>
+        <audio id="checkout-audio" preload="metadata" src="audio/xiaban-qingzhuyi-v1.wav"></audio>
         <div class="demo-note note-notification"><b>即时通知</b><p>不用打开应用，关键节点会主动弹出提醒。</p></div>
         <div class="dock-icon dock-countdown"><img src="assets/app-icon.png" srcset="assets/app-icon-96.webp 96w, assets/app-icon.webp 192w" sizes="90px" alt="应用图标显示下班倒计时" loading="lazy" decoding="async"><span>05:00</span><small>倒计时</small></div>
         <div class="dock-icon dock-overtime"><img src="assets/app-icon.png" srcset="assets/app-icon-96.webp 96w, assets/app-icon.webp 192w" sizes="90px" alt="应用图标显示加班时长" loading="lazy" decoding="async"><span>+00:09</span><small>已超时</small></div>
@@ -96,7 +108,7 @@
 
     <section class="download-final" id="download">
       <div class="download-horse"><img src="assets/horse.png" srcset="assets/horse-480.webp 480w, assets/horse.webp 900w" sizes="(max-width: 650px) 240px, (max-width: 980px) 70vw, 42vw" alt="斜眼看你的马歇歇" loading="lazy" decoding="async"><span>你都看到这了，<br>还不准备下班？</span></div>
-      <div class="download-copy"><span class="section-index">05 / 现在开始</span><h2 class="final-night-title"><span>公司已经拥有你的白天，</span><span>美丽的你值得享受美丽的夜晚。</span></h2><p>免费下载 Windows x64 或 macOS Apple 芯片版。不需要账号，考勤只留在你的电脑里——放心，老板看不到你几点跑路。</p><div class="final-platform-downloads"><a href="https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.4.12/mashangxiaban-2.4.12-Windows-x64.exe"><span><b>下载 Windows 版 2.4.12</b><small>Windows 10 / 11 · x64</small></span><strong>↓</strong></a><a class="final-download-mac" href="https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.4.12/mashangxiaban-2.4.12-macOS-Apple-Silicon.dmg"><span><b>下载 macOS 版 2.4.12</b><small>macOS · Apple Silicon</small></span><strong>↓</strong></a></div><div class="checksum"><span>Windows SHA-256 · df8e543a9f6ff9e8935437a286d4ad7bed37a7856dd7dbeb343cdbda2d6b037f</span><span>macOS SHA-256 · 431a2385188895fcf067871e498a022e435cf77156633aa3ea192f755039d73b</span></div></div>
+      <div class="download-copy"><span class="section-index">05 / 现在开始</span><h2 class="final-night-title"><span>公司已经拥有你的白天，</span><span>美丽的你值得享受美丽的夜晚。</span></h2><p>免费下载 Windows x64 或 macOS Apple 芯片版。不需要账号，考勤只留在你的电脑里——放心，老板看不到你几点跑路。</p><div class="final-platform-downloads"><a href="https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.4.12/mashangxiaban-2.4.12-Windows-x64.exe"><span><b>下载 Windows 版 2.4.12</b><small>Windows 10 / 11 · x64 · <em data-download-count="windows">0 次下载</em></small></span><strong>↓</strong></a><a class="final-download-mac" href="https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.4.12/mashangxiaban-2.4.12-macOS-Apple-Silicon.dmg"><span><b>下载 macOS 版 2.4.12</b><small>macOS · Apple Silicon · <em data-download-count="mac">0 次下载</em></small></span><strong>↓</strong></a></div><div class="checksum"><span>Windows SHA-256 · df8e543a9f6ff9e8935437a286d4ad7bed37a7856dd7dbeb343cdbda2d6b037f</span><span>macOS SHA-256 · 431a2385188895fcf067871e498a022e435cf77156633aa3ea192f755039d73b</span></div></div>
     </section>
   </main>
 
