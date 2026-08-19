@@ -54,10 +54,21 @@ try {
 }
 
 const releaseNotes = notes.filter((line) => !/^#{1,6}\s/.test(line));
+function summarizeChangelogNotes(lines) {
+  const platformOnly = /(安装包适用于|Apple Silicon|64 位 Windows|Windows 10 \/ 11)/;
+  const maintenance = /^(修复|优化|调整|改进|完善|持续优化|解决|兼容)/;
+  const useful = lines.filter((line) => !platformOnly.test(line));
+  const features = useful.filter((line) => !maintenance.test(line)).slice(0, 3);
+  if (useful.some((line) => maintenance.test(line))) {
+    features.push('优化使用体验并修复已知问题。');
+  }
+  return features.length ? features.slice(0, 4) : ['优化使用体验并修复已知问题。'];
+}
+
 const releaseEntry = {
   version,
   publishedAt: manifest.publishedAt,
-  notes: releaseNotes.length ? releaseNotes : ['版本体验优化。'],
+  notes: summarizeChangelogNotes(releaseNotes),
   artifacts: {
     windows: windows.downloadUrl,
     mac: mac.downloadUrl,
