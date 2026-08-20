@@ -1241,8 +1241,8 @@
   .retirement-shot img { transition:none; }
 }
 
-/* 图标透明留白使用品牌黑填充，避免透出页面米白色。 */
-.logo img { background:var(--ink); }
+/* App 图标本身已经带深色圆角底，不再额外套黑框与硬阴影。 */
+.site-nav .logo img { border:0; border-radius:14px; background:transparent; box-shadow:none; }
 
 /* 退休旅行轨道：完整横图沿弧线巡航，当前画面在中央放大。 */
 .retirement-life-grid.retirement-orbit {
@@ -1328,7 +1328,7 @@
 }
 .retirement-orbit .retirement-shot.is-front { border-color:var(--yellow); box-shadow:0 30px 85px rgba(0,0,0,.6),0 0 0 3px var(--ink),0 0 45px rgba(126,231,255,.24); }
 .retirement-orbit .retirement-shot:focus-visible { outline:4px solid var(--yellow); outline-offset:5px; }
-.retirement-orbit.is-hover-steering .retirement-shot { --orbit-speed:1.55s; }
+.retirement-orbit.is-hover-steering .retirement-shot { --orbit-speed:3.6s; }
 
 .retirement-final-line {
   display:table!important;
@@ -1374,4 +1374,21 @@
 }
 @media (prefers-reduced-motion:reduce) {
   .retirement-orbit .retirement-shot { transition:opacity .2s ease; }
+}
+
+/* 手机端的横向导航会裁切负定位内容，夜更纸条收进按钮内部完整展示。 */
+@media (max-width:980px) {
+  .site-nav-v2 nav a.top-nav-link.nav-changelog {
+    min-width:102px;
+    padding-top:23px!important;
+    padding-bottom:5px!important;
+  }
+  .night-update-tag {
+    top:2px;
+    right:4px;
+    padding:4px 6px;
+    font-size:8px;
+    transform:rotate(2deg);
+    animation:none;
+  }
 }
