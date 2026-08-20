@@ -2,7 +2,7 @@
 .changelog-nav .logo img{border:0;border-radius:14px;background:transparent;box-shadow:none}
 .changelog-nav{position:sticky;background:rgba(245,240,228,.94)}
 .changelog-nav nav .is-current{text-decoration:underline;text-decoration-color:var(--red);text-decoration-thickness:3px;text-underline-offset:5px}
-.changelog-hero{position:relative;min-height:350px;display:grid;grid-template-columns:1fr auto;align-items:center;gap:6vw;padding:46px clamp(24px,7vw,120px);overflow:hidden;background:var(--blue);color:var(--white);border-bottom:3px solid var(--ink)}
+.changelog-hero{position:relative;min-height:350px;display:grid;grid-template-columns:minmax(0,1fr) minmax(240px,.62fr);align-items:center;gap:3vw;padding:46px clamp(24px,7vw,120px);overflow:hidden;background:var(--blue);color:var(--white);border-bottom:3px solid var(--ink)}
 .changelog-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.1) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.1) 1px,transparent 1px);background-size:64px 64px;mask-image:linear-gradient(90deg,#000,transparent 82%)}
 .changelog-hero-copy,.contact-ticket{position:relative;z-index:1}
 .changelog-hero .section-index{color:rgba(255,255,255,.58)}
@@ -21,15 +21,15 @@
 @keyframes night-meme-twitch{0%,78%,100%{transform:translateY(3px) rotate(-3deg)}83%{transform:translateY(0) rotate(2deg)}88%{transform:translateY(3px) rotate(-5deg)}93%{transform:translateY(1px) rotate(-2deg)}}
 .night-face-meme{display:inline-block;margin-left:6px;font-size:34px;line-height:.8;vertical-align:middle;filter:drop-shadow(2px 2px 0 rgba(8,15,34,.72));transform:translateY(3px) rotate(-5deg);transform-origin:center}
 .contact-mx-button{font:inherit}
-.contact-ticket{display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto;align-items:center;gap:10px 18px;width:360px;padding:16px 18px;border:3px solid var(--ink);background:var(--cream);color:var(--ink);text-align:left;box-shadow:9px 9px 0 var(--ink);cursor:pointer;transform:rotate(1.2deg);animation:contact-nudge 3.6s ease-in-out infinite;isolation:isolate}
+.contact-ticket{display:grid;grid-template-columns:1fr;grid-template-rows:auto 1fr auto;align-items:center;gap:12px;width:230px;aspect-ratio:1;padding:18px;border:3px solid var(--ink);background:var(--cream);color:var(--ink);text-align:left;box-shadow:9px 9px 0 var(--ink);cursor:pointer;justify-self:start;transform:rotate(1.2deg);animation:contact-nudge 3.6s ease-in-out infinite;isolation:isolate}
 .contact-ticket::before{content:"";position:absolute;inset:7px;border:1px solid rgba(8,15,34,.18);pointer-events:none;z-index:-1}
 .contact-ticket::after{content:"";position:absolute;right:-9px;top:32px;width:18px;height:48px;border:3px solid var(--ink);border-left:0;background:var(--red);z-index:-2}
 .contact-ticket:hover{animation-play-state:paused;transform:translate(-4px,-5px) rotate(-.4deg) scale(1.045);box-shadow:13px 14px 0 var(--ink)}
 .contact-ticket-kicker{grid-column:1/-1;display:flex;align-items:center;gap:7px;font:950 9px/1 var(--mono);letter-spacing:.12em}
 .contact-ticket-kicker i{width:9px;height:9px;border:2px solid var(--ink);border-radius:50%;background:var(--red);box-shadow:0 0 0 3px rgba(238,69,56,.16);animation:contact-pulse 1.5s ease-out infinite}
-.contact-ticket-main{display:flex;align-items:center;gap:13px;min-width:0;padding-right:8px}
+.contact-ticket-main{display:grid;grid-template-columns:64px 1fr;align-items:center;gap:13px;min-width:0;padding:10px 0 14px;border-bottom:2px solid var(--ink)}
 .contact-ticket-main img{width:64px;height:64px;border:2px solid var(--ink);border-radius:17px;background:var(--yellow);box-shadow:3px 3px 0 var(--ink)}
-.contact-ticket-main strong{font-size:30px;line-height:1;letter-spacing:-.07em;white-space:nowrap}
+.contact-ticket-main strong{font-size:29px;line-height:.94;letter-spacing:-.07em}
 .contact-ticket-action{display:flex;align-items:center;gap:10px;justify-content:space-between;font-size:14px;font-weight:950;white-space:nowrap}
 .contact-ticket-action b{display:grid;place-items:center;width:28px;height:28px;border:2px solid var(--ink);border-radius:50%;background:var(--yellow);font-size:16px;transition:transform .2s ease}
 .contact-ticket:hover .contact-ticket-action b{transform:rotate(14deg) translate(2px,-2px)}
@@ -86,18 +86,18 @@
 @media(max-width:760px){.changelog-hero{min-height:0;grid-template-columns:1fr auto;gap:16px;padding:34px 18px}.changelog-hero h1{font-size:clamp(44px,13vw,58px)}.changelog-hero-copy>p{font-size:11px}.release-stats{margin-top:12px;font-size:10px}.release-stats b{font-size:25px;text-shadow:2px 2px 0 rgba(8,15,34,.42)}.stats-bang{margin-left:3px;font-size:25px;text-shadow:2px 2px 0 rgba(8,15,34,.58);transform:translateY(1px) rotate(7deg)}.contact-mx-button{margin:16px auto 0;padding:11px 14px;gap:18px}.contact-mx-button span{font-size:14px}.contact-mx-button b{font-size:9px}.latest-ticket{width:130px;justify-self:end;padding:13px;box-shadow:5px 5px 0 var(--ink)}.latest-ticket>span{font-size:7px}.latest-ticket strong{margin-block:13px 8px;font-size:27px}.latest-ticket p{font-size:7px}.latest-ticket a{font-size:9px}.release-section{padding:38px 16px 60px}.release-heading{grid-template-columns:1fr;gap:12px;margin-bottom:24px}.release-heading h2{font-size:34px}.release-card,.release-card.is-latest{grid-template-columns:112px 1fr;margin-right:4px}.release-meta{border-right:2px solid var(--ink);border-bottom:0;padding:12px}.release-meta strong{margin:14px 0 9px;font-size:clamp(20px,29cqi,25px)}.release-published{gap:7px}.release-published time em{font-size:12px}.after-midnight-tag{gap:3px;padding:4px 5px;font-size:7px}.after-midnight-tag i{font-size:9px}.release-content{padding:15px 14px}.release-content h3{margin-bottom:10px;font-size:15px}.release-content ul{gap:5px;font-size:10px}.release-downloads{margin-top:11px}.release-downloads a{min-width:0;flex:1 1 100%;padding:8px}.release-list{gap:12px}.contact-dialog{padding:28px 14px}.mx-badge{padding:19px 13px 15px}.mx-badge-name{gap:10px}.mx-badge-name>img{width:64px;height:64px}.mx-badge-name strong{font-size:30px}.mx-badge-name small{font-size:12px}.mx-badge-qr{width:74%;padding:10px;margin-block:21px}.mx-badge>footer strong{font-size:26px}.mx-badge>footer span{font-size:13px}}
 @media(prefers-reduced-motion:reduce){.contact-mx-button,.night-meme,.night-face-meme{animation:none}}
 @media(max-width:760px){
-  .changelog-hero .contact-ticket{width:238px;margin:0;padding:11px 12px;gap:7px 10px;justify-self:end;box-shadow:6px 6px 0 var(--ink)}
+  .changelog-hero .contact-ticket{width:170px;aspect-ratio:1;margin:0 18px 0 0;padding:12px;gap:8px;justify-self:end;box-shadow:6px 6px 0 var(--ink)}
   .changelog-hero .contact-ticket-kicker{gap:5px;font-size:7px}
   .contact-ticket-kicker i{width:7px;height:7px;border-width:1.5px}
-  .changelog-hero .contact-ticket-main{gap:7px;padding:0 10px 0 0}
-  .contact-ticket-main img{width:39px;height:39px;border-radius:11px;box-shadow:2px 2px 0 var(--ink)}
-  .changelog-hero .contact-ticket-main strong{font-size:19px}
+  .changelog-hero .contact-ticket-main{grid-template-columns:43px 1fr;gap:8px;padding:6px 0 9px}
+  .contact-ticket-main img{width:43px;height:43px;border-radius:11px;box-shadow:2px 2px 0 var(--ink)}
+  .changelog-hero .contact-ticket-main strong{font-size:20px}
   .changelog-hero .contact-ticket-action{font-size:10px}
   .changelog-hero .contact-ticket-action b{width:22px;height:22px;font-size:12px}
 }
 @media(max-width:500px){
   .changelog-hero{grid-template-columns:1fr;gap:25px}
-  .changelog-hero .contact-ticket{width:min(100%,320px);justify-self:center}
+  .changelog-hero .contact-ticket{width:210px;margin:0;justify-self:center}
 }
 @media(max-width:760px){
   .night-face-meme{margin-left:4px;font-size:25px;filter:drop-shadow(1px 1px 0 rgba(8,15,34,.72));transform:translateY(2px) rotate(-5deg)}
