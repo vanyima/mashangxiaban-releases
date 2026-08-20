@@ -30,6 +30,7 @@
 .contact-ticket-main{display:grid;grid-template-columns:64px 1fr;align-items:center;gap:13px;min-width:0;padding:10px 0 14px;border-bottom:2px solid var(--ink)}
 .contact-ticket-main img{width:64px;height:64px;border:2px solid var(--ink);border-radius:17px;background:var(--yellow);box-shadow:3px 3px 0 var(--ink)}
 .contact-ticket-main strong{font-size:29px;line-height:.94;letter-spacing:-.07em}
+.contact-ticket-main strong span{display:block;white-space:nowrap}
 .contact-ticket-action{display:flex;align-items:center;gap:10px;justify-content:space-between;font-size:14px;font-weight:950;white-space:nowrap}
 .contact-ticket-action b{display:grid;place-items:center;width:28px;height:28px;border:2px solid var(--ink);border-radius:50%;background:var(--yellow);font-size:16px;transition:transform .2s ease}
 .contact-ticket:hover .contact-ticket-action b{transform:rotate(14deg) translate(2px,-2px)}
