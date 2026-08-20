@@ -7,12 +7,12 @@
   <title>更新日志｜马上下班</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="styles-nav7.css?v=icon-black-1">
-  <link rel="stylesheet" href="changelog.css?v=roundtrip-2">
+  <link rel="stylesheet" href="changelog.css?v=roundtrip-9">
 </head>
 <body class="changelog-page">
   <header class="site-nav site-nav-v2 changelog-nav">
     <a class="logo" href="index.html?v=roundtrip-2#top" aria-label="马上下班首页"><img src="assets/app-icon.png" srcset="assets/app-icon-96.webp 96w, assets/app-icon.webp 192w" sizes="(max-width: 650px) 40px, 48px" alt="" width="48" height="48"><span><b>马上下班</b><small>OFF DUTY COMPANION</small></span></a>
-    <nav aria-label="页面导航"><a class="top-nav-link nav-feature" href="index.html?v=roundtrip-2#companion">今日陪伴</a><a class="top-nav-link nav-feature" href="index.html?v=roundtrip-2#radar">工位雷达</a><a class="top-nav-link nav-feature" href="index.html?v=roundtrip-2#health">马生健康</a><a class="top-nav-link nav-feature" href="index.html?v=roundtrip-2#retirement">我要退休</a><a class="top-nav-link nav-feature" href="index.html?v=roundtrip-2#evidence">考勤簿</a><span class="nav-divider" aria-hidden="true"></span><a class="top-nav-link nav-meta is-current" href="changelog.html?v=roundtrip-2" aria-current="page">更新日志</a></nav>
+    <nav aria-label="页面导航"><a class="top-nav-link nav-feature" href="index.html?v=roundtrip-2#companion">今日陪伴</a><a class="top-nav-link nav-feature" href="index.html?v=roundtrip-2#radar">附近工友</a><a class="top-nav-link nav-feature" href="index.html?v=roundtrip-2#health">马生健康</a><a class="top-nav-link nav-feature" href="index.html?v=roundtrip-2#retirement">我要退休</a><a class="top-nav-link nav-feature" href="index.html?v=roundtrip-2#evidence">考勤簿</a><span class="nav-divider" aria-hidden="true"></span><a class="top-nav-link nav-meta is-current" href="changelog.html?v=roundtrip-2" aria-current="page">更新日志</a></nav>
     <a class="nav-download" href="index.html?v=roundtrip-2#download">立马下载 ↘</a>
   </header>
   <main>
@@ -21,18 +21,33 @@
       <div class="changelog-hero-copy">
         <span class="section-index">版本档案 / RELEASE NOTES</span>
         <h1>马歇歇<br><em>又学会了什么</em></h1>
-        <p>新增了什么、修好了什么，以及现在该下载哪一版，一眼看明白。</p>
+        <div class="release-stats" aria-live="polite">
+          <strong><b id="release-count">—</b> 次发版，</strong>
+          <strong class="midnight-stat"><b id="midnight-count">—</b> 次在凌晨<span class="night-face-meme" role="img" aria-label="黑脸月亮">🌚</span></strong>
+        </div>
       </div>
-      <aside class="latest-ticket" aria-label="当前最新版本">
-        <span>当前最新版</span><strong id="latest-version">V2.4.6</strong><p>Windows x64<br>macOS Apple 芯片</p><a href="#release-list">往下看更新 ↓</a>
-      </aside>
+      <button class="contact-mx-button contact-ticket" id="contact-mx-button" type="button" aria-label="联系马歇歇，打开微信工牌">
+        <span class="contact-ticket-kicker"><i aria-hidden="true"></i>摸鱼接头处</span>
+        <span class="contact-ticket-main"><img src="assets/app-icon.webp" alt="" width="64" height="64"><strong>联系马歇歇</strong></span>
+        <span class="contact-ticket-action">出示工牌 <b aria-hidden="true">↗</b></span>
+      </button>
     </section>
     <section class="release-section" id="release-list" aria-labelledby="release-title">
-      <header class="release-heading"><span class="section-index">持续更新中</span><h2 id="release-title">版本不是数字，<br>是马又少踩了几个坑。</h2></header>
+      <header class="release-heading is-compact"><span class="section-index" id="release-title">持续更新中 / KEEP SHIPPING</span></header>
       <div class="release-list" id="releases" aria-live="polite"><p class="release-loading">正在翻工位抽屉里的版本记录……</p></div>
     </section>
   </main>
+  <dialog class="contact-dialog" id="contact-dialog" aria-labelledby="contact-dialog-title">
+    <article class="mx-badge">
+      <button class="contact-close" type="button" aria-label="关闭联系卡">×</button>
+      <div class="mx-badge-slot" aria-hidden="true"></div>
+      <header><span>OFF DUTY CONTACT</span><b>NO. 0001</b></header>
+      <div class="mx-badge-name"><img src="assets/app-icon.webp" alt=""><span><strong id="contact-dialog-title">马歇歇</strong><small>精神股东 / 摸鱼接头人</small></span><em>ONLINE</em></div>
+      <div class="mx-badge-qr"><img src="assets/wechat-fanyima-qr-only.png" alt="范以马微信二维码"></div>
+      <footer><strong>扫码，工友 +1</strong><span>有效期：下班前</span></footer>
+    </article>
+  </dialog>
   <footer><a class="logo" href="index.html?v=roundtrip-2"><img src="assets/app-icon.webp" alt="" width="48" height="48"><span><b>马上下班</b><small>© 2026 OFF DUTY DEPARTMENT</small></span></a><p>更新可以等，下班不能等。</p><div class="footer-links"><a href="index.html?v=roundtrip-2">返回官网</a><a href="#release-list">回到最新版本 ↑</a></div></footer>
-  <script src="changelog.js?v=roundtrip-2"></script>
+  <script src="changelog.js?v=roundtrip-4"></script>
 </body>
 </html>

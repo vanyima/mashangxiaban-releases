@@ -334,7 +334,7 @@ if (retirementOrbit) {
   const startOrbit = () => {
     stopOrbit();
     if (reduceOrbitMotion || !orbitInView || document.hidden) return;
-    orbitTimer = setInterval(() => setOrbitIndex(orbitIndex + 1, 'auto'), 3200);
+    orbitTimer = setInterval(() => setOrbitIndex(orbitIndex + 1, 'auto'), 1500);
   };
 
   orbitShots.forEach((shot, index) => {

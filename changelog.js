@@ -1,5 +1,10 @@
 const releaseList = document.querySelector('#releases');
 const latestVersion = document.querySelector('#latest-version');
+const releaseCount = document.querySelector('#release-count');
+const midnightCount = document.querySelector('#midnight-count');
+const contactButton = document.querySelector('#contact-mx-button');
+const contactDialog = document.querySelector('#contact-dialog');
+const contactClose = document.querySelector('.contact-close');
 
 function escapeHtml(value) {
   return String(value).replace(/[&<>'"]/g, (character) => ({
@@ -39,6 +44,12 @@ function getAfterMidnightTag(hour, releaseIndex) {
   return tags[releaseIndex % tags.length];
 }
 
+contactButton?.addEventListener('click', () => contactDialog?.showModal());
+contactClose?.addEventListener('click', () => contactDialog?.close());
+contactDialog?.addEventListener('click', (event) => {
+  if (event.target === contactDialog) contactDialog.close();
+});
+
 function renderRelease(release, index) {
   const publishedAt = formatPublishedAt(release.publishedAt);
   const afterMidnightTag = getAfterMidnightTag(publishedAt.hour, index);
@@ -57,7 +68,12 @@ fetch('changelog.json', { cache: 'no-store' })
   .then((response) => { if (!response.ok) throw new Error('更新日志加载失败'); return response.json(); })
   .then((releases) => {
     if (!Array.isArray(releases) || !releases.length) throw new Error('更新日志为空');
-    latestVersion.textContent = `V${releases[0].version}`;
+    if (latestVersion) latestVersion.textContent = `V${releases[0].version}`;
+    const midnightReleases = releases
+      .map((release) => ({ release, publishedAt: formatPublishedAt(release.publishedAt) }))
+      .filter(({ publishedAt }) => Number.isInteger(publishedAt.hour) && publishedAt.hour >= 0 && publishedAt.hour < 6);
+    releaseCount.textContent = String(releases.length);
+    midnightCount.textContent = String(midnightReleases.length);
     releaseList.innerHTML = releases.map(renderRelease).join('');
   })
   .catch(() => { releaseList.innerHTML = '<p class="release-loading">更新日志暂时走丢了，请稍后刷新页面。</p>'; });
