@@ -7,6 +7,7 @@
   --yellow: #ffe134;
   --red: #ff4c43;
   --paper: #fffdf5;
+  --walk-depth-scale: 1;
 }
 
 * { box-sizing: border-box; }
@@ -200,6 +201,11 @@ body[data-health-level="5"] .pet-shadow { opacity: .34; }
 
 .pet-hit-area.is-dragging .pet-shadow { opacity: .1; transform: scale(.55); }
 
+body.is-walking .help-chip { opacity: .18; }
+body.is-walking .pet-hit-area { transform: scale(var(--walk-depth-scale)); transform-origin: 50% 100%; }
+body.is-walking .pet-shadow { animation: walk-shadow 760ms ease-in-out infinite alternate; }
+.pet-hit-area.is-looking-at-user .pet-shadow { transform: scaleX(.82); opacity: .18; }
+
 .sr-only {
   position: absolute;
   width: 1px;
@@ -214,6 +220,7 @@ body[data-health-level="5"] .pet-shadow { opacity: .34; }
 
 @keyframes bubble-in { from { opacity: 0; transform: translateY(8px) scale(.94); } }
 @keyframes action-pop { 0% { opacity: 0; transform: scale(.3) rotate(-12deg); } 22%, 66% { opacity: 1; transform: scale(1.12) rotate(4deg); } 100% { opacity: 0; transform: translateY(-9px) scale(.84); } }
+@keyframes walk-shadow { from { transform: scaleX(.84); opacity: .18; } to { transform: scaleX(.98); opacity: .28; } }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

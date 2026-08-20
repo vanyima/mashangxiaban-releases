@@ -53,6 +53,7 @@ contextBridge.exposeInMainWorld('desktop', {
   getPetSettings: () => ipcRenderer.invoke('pet:get-settings'),
   setPetEnabled: (enabled) => ipcRenderer.invoke('pet:set-enabled', enabled),
   resetPetPosition: () => ipcRenderer.invoke('pet:reset-position'),
+  startPetPatrol: () => ipcRenderer.invoke('pet:start-patrol'),
   syncPetState: (state) => ipcRenderer.invoke('pet:sync-state', state),
   onPetSettingChanged: (handler) => addPetSettingListener(handler),
   offPetSettingChanged: (handler) => removePetSettingListener(handler),

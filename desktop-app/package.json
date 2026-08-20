@@ -1,13 +1,13 @@
 {
   "name": "xiaban-countdown",
-  "version": "2.5.3",
+  "version": "2.5.4",
   "description": "一款懂打工人精神状态的下班倒计时桌面应用",
   "updateManifestUrl": "https://vanyima.github.io/mashangxiaban-releases/latest.json",
   "updateManifestHint": "发布官网后填写完整 HTTPS 地址，例如 https://你的域名/latest.json",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "check": "node --check app.js && node --check main.js && node --check preload.js && node --check radar-cloudflare.js && node --check update-manifest.js && node scripts/radar-cloudflare.test.js",
+    "check": "node --check app.js && node --check main.js && node --check preload.js && node --check pet.js && node --check pet-walk-path.js && node --check radar-cloudflare.js && node --check update-manifest.js && node scripts/pet-walk-path.test.js && node scripts/radar-cloudflare.test.js",
     "build:mac": "electron-builder --mac dmg --arm64",
     "build:win": "electron-builder --win nsis --x64"
   },
@@ -23,6 +23,7 @@
     "files": [
       "index.html",
       "app.js",
+      "fishing-game.js",
       "radar-cloudflare.js",
       "main.js",
       "preload.js",
@@ -31,9 +32,13 @@
       "pet.js",
       "pet-preload.js",
       "pet-copy.js",
+      "pet-walk-path.js",
       "update-manifest.js",
       "mascot/ma-xiexie-sheet-v1.png",
       "mascot/ma-xiexie-animated-v2.webp",
+      "mascot/ma-xiexie-walk-right-strip-v1.png",
+      "mascot/ma-xiexie-walk-left-strip-v1.png",
+      "mascot/ma-xiexie-front-glare-v1.png",
       "mascot/ma-xiexie-packing-v2/*.png",
       "mascot/ma-xiexie-working-v2/*.png",
       "mascot/ma-xiexie-lunch-v2/*.png",

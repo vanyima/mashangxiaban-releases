@@ -39,7 +39,7 @@ const els = {
   healthPreviewNotice: $('#health-preview-notice'), healthPreviewCopy: $('#health-preview-copy'), healthPreviewReset: $('#health-preview-reset'),
   offSummaryDuration: $('#off-summary-duration'), checkoutReportCard: $('#checkout-report-card'), reportDate: $('#report-date'), reportStamp: $('#report-stamp'), reportStart: $('#report-start'), reportEnd: $('#report-end'), reportOvertime: $('#report-overtime'), reportVent: $('#report-vent'), reportHealth: $('#report-health'), reportEpitaph: $('#report-epitaph'), reportTodos: $('#report-todos'), reportSave: $('#report-save'), reportAttendance: $('#report-attendance'), todoAdd: $('#todo-add'), todoClear: $('#todo-clear'), todoComposer: $('#todo-composer'), todoInput: $('#todo-input'), todoList: $('#todo-list'), shutdownShield: $('#shutdown-shield'), deferTodos: $('#defer-todos'),
   bootLoader: $('#boot-loader'), bootCopy: $('#boot-copy'), bootPercent: $('#boot-percent'),
-  petToggle: $('#pet-toggle'), petToggleState: $('#pet-toggle-state'), petGuideOpen: $('#pet-guide-open'), petResetPosition: $('#pet-reset-position'), petGuide: $('#pet-guide'), petGuideClose: $('#pet-guide-close'),
+  petToggle: $('#pet-toggle'), petToggleState: $('#pet-toggle-state'), petGuideOpen: $('#pet-guide-open'), petResetPosition: $('#pet-reset-position'), petGuide: $('#pet-guide'), petGuideClose: $('#pet-guide-close'), petPatrolStart: $('#pet-patrol-start'),
   autoCheckInOption: $('#auto-check-in-option'), autoCheckInToggle: $('#auto-check-in-toggle'), autoCheckInStatus: $('#auto-check-in-status'),
   retirementShell: $('#retirement-shell'), retirementForm: $('#retirement-form'), retirementCurrentAge: $('#retirement-current-age'), retirementTargetAge: $('#retirement-target-age'), retirementAgeError: $('#retirement-age-error'), retirementDays: $('#retirement-days'), retirementYears: $('#retirement-years'), retirementAgeSummary: $('#retirement-age-summary'), retirementEdit: $('#retirement-edit'), retirementPreviewOpen: $('#retirement-preview-open'), retirementPreview: $('#retirement-preview'), retirementPreviewImage: $('#retirement-preview-image'), retirementPreviewMeta: $('#retirement-preview-meta'), retirementPreviewCopyline: $('#retirement-preview-copyline'), retirementPreviewShuffle: $('#retirement-preview-shuffle'), retirementPreviewClose: $('#retirement-preview-close'),
   radarShell: $('#radar-shell'), radarModeLabel: $('#radar-mode-label'), radarModeToggle: $('#radar-mode-toggle'), radarShowMock: $('#radar-show-mock'), radarSelfName: $('#radar-self-name'), radarNameInput: $('#radar-name-input'), radarNameDice: $('#radar-name-dice'), radarNameSave: $('#radar-name-save'), radarBlips: $('#radar-blips'), radarPeople: $('#radar-people'), radarInbox: $('#radar-inbox'), radarDiscoveryToggle: $('#radar-discovery-toggle'), radarDiscoveryStatus: $('#radar-discovery-status'), radarRangeLabel: $('#radar-range-label'), radarNearbyCount: $('#radar-nearby-count'), radarMoyuCount: $('#radar-moyu-count'), radarWorkingCount: $('#radar-working-count'), radarMessageDialog: $('#radar-message-dialog'), radarMessageForm: $('#radar-message-form'), radarMessageTarget: $('#radar-message-target'), radarMessageInput: $('#radar-message-input'), radarMessageCount: $('#radar-message-count'), radarMessageError: $('#radar-message-error'), radarMessageCancel: $('#radar-message-cancel'), radarMessageImage: $('#radar-message-image'), radarMessageImageInput: $('#radar-message-image-input'), radarMessageImagePreview: $('#radar-message-image-preview'), radarMessageImageRemove: $('#radar-message-image-remove'), radarStickerToggle: $('#radar-sticker-toggle'), radarStickerPanel: $('#radar-sticker-panel'), radarStickerGrid: $('#radar-sticker-grid'), radarComposeSticker: $('#radar-compose-sticker')
@@ -341,12 +341,15 @@ function radarEmptyCopy(mode, discovery, radius) {
   if (!discovery) return ['附近发现尚未开启', '点击上方开关；只有真实数据模式会读取并同步定位。'];
   const range = radius === 0 ? '不限范围内' : `${radius}km 内`;
   if (mode === 'mock') return [`${range}暂时没信号`, '可以扩大扫描范围，或者安心独享这片摸鱼区。'];
-  if (radarRealState.status === 'locating') return ['正在获取系统位置', 'Windows 首次定位可能需要几秒，请稍候。'];
+  if (radarRealState.status === 'locating') {
+    const platformName = window.desktop?.platform === 'darwin' ? 'macOS' : window.desktop?.platform === 'win32' ? 'Windows' : '当前系统';
+    return ['正在获取系统位置', `${platformName} 首次定位可能需要几秒，请稍候。`];
+  }
   if (radarRealState.status === 'syncing') return ['位置已获取，正在连接云端', '正在上传匿名位置并获取附近工友。'];
   if (radarRealState.status === 'denied') return ['没有定位权限', radarRealState.reason || '请在系统设置中允许“马上下班”使用位置后再试。'];
-  if (radarRealState.status === 'location-error') return ['系统暂时无法定位', radarRealState.reason || '请检查系统定位设置后重试。'];
+  if (radarRealState.status === 'location-error') return ['大家都下班了', '这次没搜到在线工友，稍后会自动再找一圈。'];
   if (radarRealState.status === 'error') return ['真实数据暂时不可用', radarRealState.reason || '请检查网络后重试。'];
-  return [`${range}暂时没有在线工友`, '仅显示最近 30 分钟主动开启附近发现的匿名用户。'];
+  return ['大家都下班了', `${range}暂时没有工友亮灯，过会儿再来看看。`];
 }
 
 function radarTroubleshootingSteps() {
@@ -401,7 +404,7 @@ function renderRadar(mode = localStorage.getItem(STORAGE.radarMode) || 'mock') {
   else if (radarRealState.status === 'locating') els.radarDiscoveryStatus.textContent = '正在获取系统位置…';
   else if (radarRealState.status === 'syncing') els.radarDiscoveryStatus.textContent = '位置已获取 · 正在连接云端…';
   else if (radarRealState.status === 'denied') els.radarDiscoveryStatus.textContent = '定位未授权 · 未上传任何位置';
-  else if (radarRealState.status === 'location-error') els.radarDiscoveryStatus.textContent = '系统定位失败 · 未上传任何位置';
+  else if (radarRealState.status === 'location-error') els.radarDiscoveryStatus.textContent = '附近暂时没人 · 稍后自动再找一圈';
   else if (radarRealState.status === 'error') els.radarDiscoveryStatus.textContent = '定位已开启 · 云端同步失败';
   else els.radarDiscoveryStatus.textContent = '定位已开启 · 已同步云端真实数据';
   els.radarRangeLabel.textContent = `扫描范围 · ${radarRadiusLabel(radius)}`;
@@ -416,7 +419,7 @@ function renderRadar(mode = localStorage.getItem(STORAGE.radarMode) || 'mock') {
   els.radarBlips.innerHTML = people.map((person) => { const key = radarPersonKey(person); const proximity = radarProximity(person); return `<button class="radar-blip${key === radarSelectedPersonKey ? ' is-selected' : ''}" type="button" data-person-key="${escapeHTML(key)}" data-proximity="${escapeHTML(proximity)}" data-tone="${escapeHTML(person.tone)}" style="--x:${Number(person.x)}%;--y:${Number(person.y)}%" aria-pressed="${key === radarSelectedPersonKey}" aria-label="${escapeHTML(person.name)}，${escapeHTML(radarProximityLabel(proximity) || person.distance)}"><i></i><span>${escapeHTML(radarProximityLabel(proximity) || person.distance)}</span></button>`; }).join('');
   const [emptyTitle, emptyCopy] = radarEmptyCopy(nextMode, discovery, radius);
   const canRetry = nextMode === 'real' && discovery && ['denied', 'location-error', 'error'].includes(radarRealState.status);
-  const troubleshootingSteps = canRetry ? radarTroubleshootingSteps() : [];
+  const troubleshootingSteps = canRetry && radarRealState.status !== 'location-error' ? radarTroubleshootingSteps() : [];
   const troubleshooting = troubleshootingSteps.length ? `<ol class="radar-troubleshooting">${troubleshootingSteps.map((step) => `<li>${escapeHTML(step)}</li>`).join('')}</ol>` : '';
   els.radarPeople.innerHTML = people.length
     ? people.map((person) => { const key = radarPersonKey(person); const proximity = radarProximity(person); const proximityLabel = radarProximityLabel(proximity); const target = nextMode === 'real' ? ` data-peer-id="${escapeHTML(person.peerId)}"` : ''; return `<article class="radar-person${key === radarSelectedPersonKey ? ' is-selected' : ''}" data-person-key="${escapeHTML(key)}"><div class="radar-person-top"><div class="radar-person-titleline"><strong class="radar-person-name">${escapeHTML(person.name)} · ${escapeHTML(person.status)}</strong>${proximityLabel ? `<span class="radar-proximity" data-proximity="${escapeHTML(proximity)}">${escapeHTML(proximityLabel)}</span>` : ''}</div><span class="radar-distance">${escapeHTML(person.distance)}</span></div><p>${escapeHTML(person.copy)}</p><div class="radar-person-actions"><button type="button" data-radar-action="打招呼" data-radar-signal="hello" data-person="${escapeHTML(person.name)}"${target}>打招呼</button><button type="button" data-radar-action="摸鱼暗号" data-radar-signal="moyu" data-person="${escapeHTML(person.name)}"${target}>摸鱼暗号</button><button type="button" data-radar-action="发消息" data-radar-signal="message" data-person="${escapeHTML(person.name)}"${target}>发消息</button></div></article>`; }).join('')
@@ -513,7 +516,7 @@ async function refreshRealRadar({ announce = false } = {}) {
         ? '请在 Windows“位置”设置中开启定位服务、应用位置权限和桌面应用位置权限。'
         : '系统定位服务未开启或暂时不可用。');
     renderRadar('real');
-    if (announce && window.desktop?.openLocationSettings) {
+    if (announce && denied && window.desktop?.openLocationSettings) {
       const settingsResult = window.desktop?.platform === 'win32' && window.desktop?.showLocationGuide
         ? await window.desktop.showLocationGuide()
         : await window.desktop.openLocationSettings();
@@ -521,7 +524,7 @@ async function refreshRealRadar({ announce = false } = {}) {
       if (settingsResult?.ok) showToast('已打开定位设置', window.desktop?.platform === 'win32' ? '请开启定位服务、允许应用访问位置、允许桌面应用访问位置；返回应用后会自动重试。' : '请开启“定位服务”并允许“马上下班”，返回应用后会自动重试。');
       else if (settingsResult?.canceled) showToast('暂未打开定位设置', '需要开启三个 Windows 定位选项后，其他设备才能看到你。');
       else showToast('无法自动打开定位设置', '请前往“系统设置 → 隐私与安全性 → 定位服务”手动开启。');
-    } else if (announce) showToast('定位没有开启', radarRealState.reason);
+    } else if (announce) showToast('大家都下班了', '这次没搜到在线工友，稍后会自动再找一圈。');
   } finally {
     radarSyncInFlight = false;
   }
@@ -751,7 +754,6 @@ const retirementBlindBoxes = [
   { key:'dive', day:128, label:'海底摸鱼', copy:'下潜两万里，烦恼已失联。', image:'assets/retirement/dive-v3.png', alt:'小小的马歇歇在幽深海底洞穴的蓝色光束中潜水' },
   { key:'park', day:188, label:'公园巡视', copy:'公园走一圈，烦恼自动掉线。', image:'assets/retirement/park-v2.png', alt:'马歇歇笑着在阳光下的公园池塘边散步' },
   { key:'phone', day:58, label:'被窝续费', copy:'被窝续费成功，起床申请驳回。', image:'assets/retirement/bed-phone-v2.png', alt:'马歇歇笑着躺在床上盖着被子玩手机' },
-  { key:'space', day:1001, label:'太空散步', copy:'地球太挤，出来透口气。', image:'assets/retirement/space-travel-v1.png', alt:'马歇歇开心地遨游太空' },
   { key:'river-run', day:92, label:'江边撒欢', copy:'江风负责吹，我负责撒欢。', image:'assets/retirement/river-run-v2.png', alt:'马歇歇在晨光中的上海滨江步道上轻松跑步' },
   { key:'concert', day:520, label:'现场蹦迪', copy:'前排已到位，青春重新开机。', image:'assets/retirement/concert-back-v2.png', alt:'马歇歇背对画面举手机观看红色灯光下的乐队演出' },
   { key:'aurora', day:666, label:'极光长夜', location:'冰岛 · 斯托克角', copy:'极光开灯，今晚宇宙请客。', image:'assets/retirement/iceland-aurora-v2.png', alt:'小小的马歇歇背对画面站在冰湖边仰望极光与群山' },
@@ -1258,7 +1260,9 @@ function chartRow(record) {
   const overtimeMinutes = record.missedCheckout ? 0 : overtimeMinutesForShift(record, end);
   const startHour = start.getHours() + start.getMinutes() / 60; const endHour = end.getHours() + end.getMinutes() / 60 + (dateKey(end) !== dateKey(start) ? 24 : 0);
   const left = Math.max(0, Math.min(96, ((startHour - 8) / 14) * 100)); const width = Math.max(3, Math.min(100 - left, ((endHour - startHour) / 14) * 100));
-  return `<div class="day-row"><div class="day-name"><strong>${formatRecordDay(record.date).split(' · ')[1]}</strong><span>${record.date.slice(5).replace('-', '/')}</span></div><div class="time-line"><span class="work-bar${overtimeMinutes > 0 ? ' is-late' : ''}" style="left:${left}%;width:${width}%"></span></div><div class="day-time">${timeText(start)} → ${record.missedCheckout ? '漏打卡' : record.endedAt ? timeText(end) : '在岗中'}</div></div>`;
+  const verdict = record.missedCheckout ? '漏打下班卡' : record.endedAt ? (overtimeMinutes > 0 ? `${isWeekend(record.startedAt) ? '周末加班' : '超时'} ${minutesText(overtimeMinutes)}` : '准点释放') : '等待下班';
+  const isLate = overtimeMinutes > 0 || record.missedCheckout;
+  return `<div class="day-row"><div class="day-name"><strong>${formatRecordDay(record.date).split(' · ')[1]}</strong><span>${record.date.slice(5).replace('-', '/')}</span></div><div class="time-line"><span class="work-bar${isLate ? ' is-late' : ''}" style="left:${left}%;width:${width}%"></span></div><div class="day-result"><span class="day-time">${timeText(start)} → ${record.missedCheckout ? '漏打卡' : record.endedAt ? timeText(end) : '在岗中'}</span><span class="shift-verdict${isLate ? ' is-late' : ''}">${verdict}</span></div></div>`;
 }
 
 function attendanceRecordDate(record) {
@@ -1334,17 +1338,11 @@ function renderUserData() {
   }, 0);
   const visible = allRecords.slice(0, 5);
   if (!visible.length) {
-    const ventOnly = Object.entries(ventCounts)
-      .filter(([, count]) => Number(count) > 0)
-      .sort(([left], [right]) => right.localeCompare(left))
-      .slice(0, 5)
-      .map(([key, count]) => `<tr><td>${formatRecordDay(key)}</td><td>—</td><td>—</td><td>—</td><td>${Math.max(0, Number(count) || 0)}</td><td><span class="record-status">只疯没打卡</span></td></tr>`).join('');
-    els.userDashboard.innerHTML = `<section class="kpi-grid" aria-label="我的本周敲疯案底"><article class="kpi"><small>本周敲疯值<br>WOODFISH MELTDOWN</small><strong>${weeklyVentCount}</strong><em>工位没留痕，木鱼留了</em></article><article class="kpi"><small>完整打卡<br>COMPLETE SHIFTS</small><strong>0</strong><em>今天只记录到情绪</em></article></section><section class="records"><table><thead><tr><th>日期</th><th>上班</th><th>下班</th><th>肉身占用</th><th>敲疯值</th><th>下班评价</th></tr></thead><tbody>${ventOnly}</tbody></table></section>`;
+    els.userDashboard.innerHTML = `<section class="panel attendance-empty-panel"><div class="panel-title"><strong>本周进度与下班评价</strong><span>暂无打卡</span></div><div><strong>还没有可画进度条的工时</strong><p>本周已经敲疯 ${weeklyVentCount} 次，但没有上下班记录。完成一次打卡后，下班评价会直接出现在进度条旁边。</p></div></section>`;
     return;
   }
   const rows = visible.map(chartRow).join('');
-  const table = visible.map((record) => `<tr><td>${formatRecordDay(record.date)}</td><td>${timeText(new Date(record.startedAt))}</td><td>${record.missedCheckout ? '未打卡' : record.endedAt ? timeText(new Date(record.endedAt)) : '在岗中'}</td><td>${record.missedCheckout ? '—' : compactDuration(recordDuration(record))}</td><td>${Math.max(0, Number(ventCounts[record.date]) || 0)}</td><td><span class="record-status${record.overtimeMinutes > 0 || record.missedCheckout ? ' is-late' : ''}">${record.missedCheckout ? '漏打下班卡' : record.endedAt ? (record.overtimeMinutes > 0 ? `${isWeekend(record.startedAt) ? '周末加班' : '超时'} ${minutesText(record.overtimeMinutes)}` : '准点释放') : '等待下班'}</span></td></tr>`).join('');
-  els.userDashboard.innerHTML = `<section class="kpi-grid" aria-label="我的本周工位案底"><article class="kpi"><small>累计服刑时长<br>TOTAL OCCUPIED</small><strong>${completed.length ? compactDuration(total) : '进行中'}</strong><em>${completed.length} 次完整打卡</em></article><article class="kpi"><small>最晚释放纪录<br>LATEST RELEASE</small><strong>${latest || '—'}</strong><em>来自真实记录</em></article><article class="kpi"><small>最早到案时间<br>EARLIEST ARRIVAL</small><strong>${earliest || '—'}</strong><em>肉身到案证据</em></article><article class="kpi"><small>平均肉身占用<br>AVG. CAPTURED</small><strong>${completed.length ? compactDuration(Math.round(total / completed.length)) : '待下班'}</strong><em>完整记录平均值</em></article><article class="kpi"><small>本周敲疯值<br>WOODFISH MELTDOWN</small><strong>${weeklyVentCount}</strong><em>情绪没解决，木鱼先工伤</em></article></section><div class="ledger-grid"><section class="panel"><div class="panel-title"><strong>我的工位案底</strong><span>08:00 — 22:00</span></div><div class="week-chart"><div class="chart-axis"><span></span><span>08</span><span>10</span><span>12</span><span>14</span><span>16</span><span>18</span><span>20</span></div>${rows}</div></section><aside class="feature-stack"><article class="feature-card"><span class="feature-tag">本周反卷报告</span><h3>${completed.length ? `已完成 ${completed.length} 次打卡` : '第一条数据正在长出来'}</h3><p>这里只统计你的真实打卡，不拿示例数据替你制造工伤。</p></article><article class="feature-card"><span class="feature-tag">加班遗言</span><h3>${completed.length ? completed[0].epitaph || epitaphs[0] : '今天还没下班'}</h3><p>真实下班后自动生成。</p></article><article class="feature-card"><span class="feature-tag">敲疯现场</span><span class="streak-number">${weeklyVentCount}</span><h3>本周累计 ${weeklyVentCount} 敲</h3><p>问题没有消失，但至少木鱼知道你尽力疯过。</p></article></aside></div><section class="records"><table><thead><tr><th>日期</th><th>上班</th><th>下班</th><th>肉身占用</th><th>敲疯值</th><th>下班评价</th></tr></thead><tbody>${table}</tbody></table></section>`;
+  els.userDashboard.innerHTML = `<div class="ledger-grid"><section class="panel"><div class="panel-title"><strong>本周进度与下班评价</strong><span>08:00 — 22:00</span></div><div class="week-chart"><div class="chart-axis"><span></span><span>08</span><span>10</span><span>12</span><span>14</span><span>16</span><span>18</span><span>20</span></div>${rows}</div></section></div>`;
 }
 
 function renderLedgerMode(mode) {
@@ -1740,7 +1738,7 @@ function finishWork() {
     stamp: isWeekend(shift.startedAt) && overtimeMinutes > 0 ? '周末加班' : overtimeMinutes > 0 ? '加班收工' : now < new Date(shift.plannedEndAt) ? '提前收工' : '准点下班'
   };
   const records = getRecords().filter((record) => record.date !== shift.date);
-  records.push({ ...shift }); saveRecords(records); saveShift(shift); window.desktop?.syncReminderSchedule?.(shift); els.epitaph.textContent = epitaph;
+  records.push({ ...shift }); saveRecords(records); saveShift(shift); window.desktop?.syncReminderSchedule?.(shift); if (els.epitaph) els.epitaph.textContent = epitaph;
   renderUserData(); renderHealth(); tick(); showToast('今日正式收工', `${timeText(now)} 已记录到考勤簿。${epitaph}`);
 }
 
@@ -1794,13 +1792,15 @@ document.querySelectorAll('.nav-tab').forEach((button) => button.addEventListene
   if (button.classList.contains('is-active')) return;
   document.querySelectorAll('.nav-tab').forEach((item) => item.classList.toggle('is-active', item === button));
   document.querySelectorAll('.page').forEach((page) => page.classList.toggle('is-active', page.id === `page-${button.dataset.page}`));
-  if (button.dataset.page === 'health') renderHealth();
-  if (button.dataset.page === 'attendance' && els.ledger.dataset.mode === 'user') renderUserData();
+  if (button.dataset.page === 'attendance') {
+    renderHealth();
+    if (els.ledger.dataset.mode === 'user') renderUserData();
+  }
   if (button.dataset.page === 'radar') renderRadar();
   if (button.dataset.page === 'retirement') renderRetirementPlan();
 }));
 
-$('#health-shortcut').addEventListener('click', () => $('.nav-tab[data-page="health"]').click());
+$('#health-shortcut').addEventListener('click', () => $('.nav-tab[data-page="attendance"]').click());
 els.reportAttendance.addEventListener('click', () => $('.nav-tab[data-page="attendance"]').click());
 els.reportSave.addEventListener('click', async () => {
   if (!window.desktop?.saveReportCard) {
@@ -2348,6 +2348,15 @@ els.petGuideOpen?.addEventListener('click', () => {
 });
 els.petGuideClose?.addEventListener('click', () => { els.petGuide.hidden = true; els.petGuideOpen.focus(); });
 els.petGuide?.addEventListener('click', (event) => { if (event.target === els.petGuide) els.petGuideClose.click(); });
+els.petPatrolStart?.addEventListener('click', async () => {
+  const result = await window.desktop?.startPetPatrol?.();
+  if (result?.ok === false) {
+    showToast('巡视没有启动', '请先开启桌面宠物，再试一次。');
+    return;
+  }
+  els.petGuide.hidden = true;
+  showToast('马歇歇开始巡视', '它会模拟加班超时状态，从桌面一端慢慢走到另一端。');
+});
 els.petResetPosition?.addEventListener('click', async () => {
   els.settingsMenu.classList.remove('is-open'); els.settingsToggle.setAttribute('aria-expanded', 'false');
   await window.desktop?.resetPetPosition?.();

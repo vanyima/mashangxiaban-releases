@@ -181,7 +181,9 @@
     .pet-guide-head h2 { margin: 7px 0 0; font: 950 25px/1 var(--display); }
     .pet-guide-close { width: 35px; height: 35px; border: 2px solid var(--ink); background: var(--yellow); color: var(--ink); font-size: 22px; font-weight: 950; cursor: pointer; }
     .pet-guide-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; margin-top: 15px; }
-    .pet-guide-tip { min-height: 74px; padding: 11px; border: 1px solid rgba(17,19,26,.35); background: var(--white); }
+    .pet-guide-tip { min-height: 74px; padding: 11px; border: 1px solid rgba(17,19,26,.35); background: var(--white); text-align: left; color: inherit; }
+    button.pet-guide-tip { width: 100%; cursor: pointer; font: inherit; box-shadow: 3px 3px 0 var(--ink); transition: transform .14s ease, box-shadow .14s ease; }
+    button.pet-guide-tip:hover, button.pet-guide-tip:focus-visible { transform: translate(-1px,-1px); box-shadow: 5px 5px 0 var(--ink); outline: 3px solid var(--yellow); outline-offset: 1px; }
     .pet-guide-tip strong { display: block; font-size: 12px; }
     .pet-guide-tip span { display: block; margin-top: 6px; color: var(--muted); font-size: 10px; line-height: 1.45; }
 
@@ -344,6 +346,153 @@
     .app:is([data-phase="near"],[data-phase="checkout"],[data-phase="overtime"]) .todo-add { background: #8d8d8d; cursor: not-allowed; animation: none; }
     .todo-note.is-deferred { background: #dedede; opacity: .7; transform: rotate(.2deg); }
     .todo-note-status { display: inline-block; margin-top: 6px; padding: 3px 5px; border: 1px solid var(--ink); background: var(--white); color: var(--red); font: 900 8px/1 var(--mono); }
+    .todo-board[hidden] { display: none !important; }
+
+    .playground-entry {
+      position: relative;
+      flex: 0 0 308px;
+      min-height: 308px;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      margin: 12px 0 5px;
+      padding: 0;
+      overflow: hidden;
+      border: 2px solid var(--ink);
+      background: #92dff0;
+      color: var(--ink);
+      text-align: left;
+      box-shadow: 4px 4px 0 var(--ink);
+      cursor: pointer;
+    }
+    .playground-entry::before { content: ""; position: absolute; inset: 51% 0 0; background: repeating-linear-gradient(0deg,#174c8b 0 10px,#1e69a5 10px 20px); clip-path: polygon(0 17%,8% 5%,16% 17%,24% 5%,32% 17%,40% 5%,48% 17%,56% 5%,64% 17%,72% 5%,80% 17%,88% 5%,96% 17%,100% 9%,100% 100%,0 100%); }
+    .playground-entry-top { position: relative; z-index: 1; display: flex; align-items: center; justify-content: space-between; padding: 12px 13px; border-bottom: 2px solid var(--ink); background: var(--yellow); font: 900 10px/1 var(--mono); letter-spacing: .08em; }
+    .playground-entry-copy { position: relative; z-index: 1; align-self: start; padding: 20px 16px 0; }
+    .playground-entry-copy small { display: block; color: #174c8b; font: 950 9px/1 var(--mono); letter-spacing: .12em; }
+    .playground-entry-copy strong { display: block; max-width: 250px; margin-top: 7px; font: 950 32px/.94 var(--display); letter-spacing: -.055em; }
+    .playground-entry-copy span { display: block; max-width: 235px; margin-top: 9px; font-size: 10px; font-weight: 800; line-height: 1.45; }
+    .playground-entry-action { position: relative; z-index: 2; width: 96px; height: 96px; display: grid; place-items: center; justify-self: end; align-self: end; margin: 0 17px 15px 0; padding: 14px; border: 3px solid var(--ink); border-radius: 50%; background: var(--white); color: var(--ink); box-shadow: 4px 5px 0 var(--ink); font: 950 16px/1.16 var(--display); text-align: center; word-break: keep-all; overflow-wrap: normal; white-space: normal; transform: rotate(-4deg); }
+    .playground-entry:not(:disabled):hover { transform: translate(-1px,-1px) rotate(-.25deg); box-shadow: 6px 6px 0 var(--ink); }
+    .playground-entry:not(:disabled):hover .playground-entry-action { background: var(--yellow); transform: translate(-2px,-2px) rotate(2deg); box-shadow: 6px 7px 0 var(--ink); }
+    .app:is([data-phase="checkout"],[data-phase="overtime"]) .playground-entry { flex: 0 0 166px; min-height: 166px; grid-template-columns: minmax(0,1fr) 94px; grid-template-rows: auto 1fr; background: #e7e1d5; box-shadow: 3px 3px 0 var(--ink); cursor: not-allowed; transform: rotate(-.15deg); }
+    .app:is([data-phase="checkout"],[data-phase="overtime"]) .playground-entry::before { content: none; }
+    .app:is([data-phase="checkout"],[data-phase="overtime"]) .playground-entry-top { grid-column: 1/-1; padding: 8px 11px; background: #d5d0c5; color: #6a665f; }
+    .app:is([data-phase="checkout"],[data-phase="overtime"]) .playground-entry-copy { grid-column: 1; grid-row: 2; align-self: center; padding: 10px 8px 11px 12px; }
+    .app:is([data-phase="checkout"],[data-phase="overtime"]) .playground-entry-copy small { color: var(--red); }
+    .app:is([data-phase="checkout"],[data-phase="overtime"]) .playground-entry-copy strong { margin-top: 4px; font-size: 20px; line-height: 1; }
+    .app:is([data-phase="checkout"],[data-phase="overtime"]) .playground-entry-copy span { max-width: 260px; margin-top: 6px; color: #625f59; font-size: 9px; line-height: 1.35; }
+    .app:is([data-phase="checkout"],[data-phase="overtime"]) .playground-entry-action { grid-column: 2; grid-row: 2; width: 76px; height: 76px; align-self: center; margin: 0 11px 0 0; padding: 9px; border-color: #77736c; background: #cbc6bd; color: #6b6761; box-shadow: 3px 3px 0 #77736c; font-size: 14px; transform: rotate(3deg); }
+    .app[data-state="ready"] .playground-entry, .app[data-state="off"] .playground-entry { display: none; }
+
+    .playground-page { min-height: calc(100vh - 72px); padding: 22px 30px 34px; color: var(--ink); background: #0d2c69; }
+    .playground-shell { width: min(1380px,100%); margin: 0 auto; border: 3px solid var(--ink); background: var(--cream); box-shadow: 12px 13px 0 #071742; }
+    .playground-head { display: grid; grid-template-columns: auto 1fr auto; gap: 18px; align-items: center; padding: 13px 16px; border-bottom: 3px solid var(--ink); background: var(--yellow); }
+    .playground-back, .playground-doc-button { min-height: 38px; padding: 0 13px; border: 2px solid var(--ink); background: var(--white); color: var(--ink); font-size: 10px; font-weight: 950; box-shadow: 3px 3px 0 var(--ink); cursor: pointer; }
+    .playground-title small { display: block; color: #7e2b22; font: 900 8px/1 var(--mono); letter-spacing: .13em; }
+    .playground-title h2 { margin: 5px 0 0; font: 950 clamp(23px,3vw,38px)/.94 var(--display); letter-spacing: -.05em; }
+    .playground-doc-button kbd { margin-right: 7px; padding: 3px 6px; border: 1px solid var(--ink); background: #e9e5d9; font: 900 9px/1 var(--mono); box-shadow: 1px 1px 0 var(--ink); }
+    .playground-layout { display: grid; grid-template-columns: minmax(0,1fr) 290px; min-height: 610px; }
+    .fishing-stage { min-width: 0; padding: 17px; border-right: 3px solid var(--ink); background: #bceaf2; }
+    .fishing-mission { display: grid; grid-template-columns: auto 1fr auto; gap: 14px; align-items: center; margin-bottom: 12px; padding: 10px 12px; border: 2px solid var(--ink); background: var(--white); box-shadow: 3px 3px 0 rgba(17,19,26,.35); }
+    .fishing-mission > span { font: 950 9px/1 var(--mono); letter-spacing: .08em; }
+    .fishing-mission-track { height: 12px; border: 2px solid var(--ink); background: #e5e1d6; }
+    .fishing-mission-fill { width: 0; height: 100%; background: var(--red); transition: width .2s ease; }
+    .fishing-mission strong { min-width: 88px; text-align: right; font: 950 12px/1 var(--mono); }
+    .fishing-pond { position: relative; min-height: 510px; overflow: hidden; border: 3px solid var(--ink); background: linear-gradient(#7fd3e7 0 24%,#227bb8 24% 57%,#0c4e8b 57% 100%); cursor: crosshair; touch-action: none; user-select: none; }
+    .fishing-pond::before { content: ""; position: absolute; inset: 22% 0 auto; height: 30px; background: repeating-linear-gradient(135deg,rgba(255,255,255,.52) 0 12px,transparent 12px 25px); clip-path: polygon(0 50%,6% 18%,12% 57%,18% 20%,24% 55%,30% 18%,36% 56%,42% 20%,48% 54%,54% 19%,60% 57%,66% 20%,72% 54%,78% 18%,84% 57%,90% 20%,96% 55%,100% 25%,100% 100%,0 100%); opacity: .65; }
+    .fishing-pond::after { content: ""; position: absolute; inset: auto 0 0; height: 52px; background: #d3a65a; border-top: 3px solid var(--ink); clip-path: polygon(0 28%,8% 8%,17% 32%,27% 9%,38% 34%,49% 10%,60% 31%,72% 7%,84% 31%,93% 9%,100% 28%,100% 100%,0 100%); }
+    .pond-cloud { position: absolute; left: 8%; top: 8%; width: 100px; height: 24px; border: 2px solid var(--ink); border-radius: 30px; background: var(--white); box-shadow: 30px -12px 0 5px var(--white),31px -13px 0 7px var(--ink); opacity: .88; }
+    .pond-sign { position: absolute; z-index: 2; right: 12px; top: 12px; padding: 6px 8px; border: 2px solid var(--ink); background: var(--yellow); font: 900 8px/1 var(--mono); transform: rotate(2deg); }
+    .pond-fish { position: absolute; z-index: 3; width: var(--fish-size,70px); height: calc(var(--fish-size,70px) * .48); transform: translate(-50%,-50%) scaleX(var(--direction,1)); filter: drop-shadow(3px 3px 0 rgba(4,24,65,.35)); pointer-events: none; }
+    .pond-fish-body { position: absolute; inset: 4px 10px; border: 3px solid var(--ink); border-radius: 52% 46% 48% 52%; background: var(--fish-color,#ffcf45); }
+    .pond-fish-body::before { content: ""; position: absolute; right: 10px; top: 8px; width: 5px; height: 5px; border: 2px solid var(--ink); border-radius: 50%; background: var(--white); }
+    .pond-fish-body::after { content: ""; position: absolute; left: -14px; top: 7px; width: 22px; height: 22px; border: 3px solid var(--ink); background: var(--fish-color,#ffcf45); transform: rotate(45deg); }
+    .pond-fish-label { position: absolute; left: 50%; top: 100%; padding: 3px 5px; border: 1px solid var(--ink); background: var(--white); color: var(--ink); font: 900 7px/1 var(--mono); white-space: nowrap; transform: translateX(-50%) scaleX(var(--direction,1)); }
+    .pond-fish.is-hooked { z-index: 7; animation: fish-struggle .18s ease-in-out infinite alternate; }
+    .fishing-line { position: absolute; z-index: 8; left: 50%; top: 0; width: 3px; height: 0; background: var(--ink); transform-origin: top; pointer-events: none; }
+    .fishing-line::after { content: "J"; position: absolute; right: -7px; bottom: -12px; color: var(--ink); font: 950 18px/1 var(--mono); }
+    .fishing-line.is-hot { background: var(--red); box-shadow: 0 0 7px var(--red); }
+    .cast-marker { position: absolute; z-index: 6; width: 32px; height: 32px; border: 3px solid var(--yellow); border-radius: 50%; transform: translate(-50%,-50%); pointer-events: none; box-shadow: 0 0 0 3px rgba(17,19,26,.45); }
+    .cast-marker::before,.cast-marker::after { content: ""; position: absolute; left: 50%; top: 50%; background: var(--yellow); transform: translate(-50%,-50%); }
+    .cast-marker::before { width: 44px; height: 3px; }.cast-marker::after { width: 3px; height: 44px; }
+    .fishing-callout { position: absolute; z-index: 12; left: 50%; top: 18%; max-width: 80%; padding: 9px 13px; border: 3px solid var(--ink); background: var(--yellow); color: var(--ink); box-shadow: 4px 4px 0 var(--ink); font: 950 14px/1 var(--display); text-align: center; transform: translateX(-50%); pointer-events: none; }
+    .fishing-overlay { position: absolute; z-index: 20; inset: 0; display: grid; place-items: center; padding: 24px; background: rgba(7,22,61,.76); color: var(--white); text-align: center; }
+    .fishing-overlay[hidden] { display: none; }
+    .fishing-overlay-card { width: min(440px,100%); padding: 24px; border: 3px solid var(--ink); background: var(--cream); color: var(--ink); box-shadow: 9px 9px 0 #071742; transform: rotate(-.5deg); }
+    .fishing-overlay-card small { font: 900 9px/1 var(--mono); letter-spacing: .12em; color: var(--red); }
+    .fishing-overlay-card h3 { margin: 9px 0; font: 950 31px/.95 var(--display); letter-spacing: -.05em; }
+    .fishing-overlay-card p { margin: 0; color: var(--muted); font-size: 11px; font-weight: 750; line-height: 1.65; }
+    .fishing-overlay-card button { width: 100%; min-height: 48px; margin-top: 17px; border: 2px solid var(--ink); background: var(--yellow); color: var(--ink); box-shadow: 4px 4px 0 var(--ink); font-weight: 950; cursor: pointer; }
+    .fishing-tension { position: absolute; z-index: 10; left: 16px; bottom: 16px; width: min(280px,calc(100% - 32px)); padding: 9px 10px; border: 2px solid var(--ink); background: var(--white); box-shadow: 3px 3px 0 var(--ink); }
+    .fishing-tension[hidden] { display: none; }
+    .fishing-tension-head { display: flex; justify-content: space-between; margin-bottom: 6px; font: 900 8px/1 var(--mono); }
+    .fishing-tension-track { position: relative; height: 14px; border: 2px solid var(--ink); background: linear-gradient(90deg,#e5e1d6 0 12%,#43d38d 12% 67%,#ffdf32 67% 82%,#ff4c3e 82%); }
+    .fishing-tension-marker { position: absolute; left: 45%; top: -5px; width: 8px; height: 20px; border: 2px solid var(--ink); background: var(--white); transform: translateX(-50%); transition: left .07s linear; }
+    .fishing-sidebar { display: flex; flex-direction: column; background: var(--cream); }
+    .fishing-scoreboard { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 3px solid var(--ink); }
+    .fishing-stat { padding: 15px; border-right: 1px solid var(--ink); border-bottom: 1px solid var(--ink); }
+    .fishing-stat:nth-child(2n) { border-right: 0; }
+    .fishing-stat small { display: block; color: var(--muted); font: 900 8px/1 var(--mono); }
+    .fishing-stat strong { display: block; margin-top: 7px; font: 950 28px/1 var(--display); letter-spacing: -.04em; }
+    .fishing-stat.is-time strong { color: var(--red); }
+    .fishing-guide { flex: 1; padding: 17px; }
+    .fishing-guide h3 { margin: 0 0 12px; font: 950 17px/1 var(--display); }
+    .fishing-guide ol { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; counter-reset: fish-step; }
+    .fishing-guide li { counter-increment: fish-step; display: grid; grid-template-columns: 24px 1fr; gap: 8px; align-items: start; color: var(--muted); font-size: 10px; font-weight: 750; line-height: 1.45; }
+    .fishing-guide li::before { content: counter(fish-step); width: 22px; height: 22px; display: grid; place-items: center; border: 2px solid var(--ink); border-radius: 50%; background: var(--yellow); color: var(--ink); font: 950 9px/1 var(--mono); }
+    .fishing-catch-log { min-height: 122px; padding: 13px 16px; border-top: 3px solid var(--ink); background: #d9ecff; }
+    .fishing-catch-log > strong { font: 950 10px/1 var(--mono); }
+    .fishing-catch-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 9px; }
+    .fishing-catch-list span { padding: 5px 7px; border: 1px solid var(--ink); background: var(--white); font-size: 8px; font-weight: 900; }
+
+    .work-cover { position: fixed; z-index: 300; inset: 0; overflow: auto; background: #fff; color: #1f2329; font-family: -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif; }
+    .work-cover[hidden] { display: none; }
+    .work-doc-bar { position: sticky; top: 0; z-index: 4; height: 64px; display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 0 18px; border-bottom: 1px solid #dee0e3; background: rgba(255,255,255,.97); backdrop-filter: blur(12px); }
+    .work-doc-bar-left,.work-doc-bar-actions { display: flex; align-items: center; gap: 8px; min-width: 0; }
+    .work-doc-icon { width: 34px; height: 34px; display: grid; place-items: center; border: 0; border-radius: 6px; background: transparent; color: #333840; font-size: 19px; cursor: default; }
+    .work-doc-icon:hover { background: #f2f3f5; }
+    .work-doc-divider { width: 1px; height: 32px; margin: 0 5px; background: #d8dade; }
+    .work-doc-crumb { min-width: 0; overflow: hidden; color: #646a73; font-size: 13px; text-overflow: ellipsis; white-space: nowrap; }
+    .work-doc-crumb b { color: #1f2329; font-weight: 600; }
+    .work-doc-share { min-height: 38px; padding: 0 17px; border: 0; border-radius: 7px; background: #1456f0; color: #fff; font-size: 13px; font-weight: 600; cursor: default; }
+    .work-doc-edit { min-height: 38px; padding: 0 13px; border: 1px solid #cfd2d8; border-radius: 7px; background: #fff; color: #262a30; font-size: 13px; font-weight: 600; cursor: default; }
+    .work-doc-avatar { width: 36px; height: 36px; display: grid; place-items: center; border-radius: 50%; background: linear-gradient(135deg,#7b61e8,#b26be7); color: #fff; font-size: 12px; font-weight: 700; }
+    .work-cover-return { min-height: 30px; padding: 0 10px; border: 1px solid #d6d9de; border-radius: 6px; background: #fff; color: #6b717a; font-size: 10px; cursor: pointer; }
+    .work-cover-return:hover,.work-cover-return:focus-visible { border-color: #1456f0; background: #f0f4ff; color: #1456f0; outline: 2px solid rgba(20,86,240,.16); }
+    .work-doc-layout { min-height: calc(100vh - 64px); display: grid; grid-template-columns: 250px minmax(560px,1fr) 276px; }
+    .work-doc-nav { position: sticky; top: 64px; align-self: start; height: calc(100vh - 64px); overflow: auto; padding: 34px 18px 40px; border-right: 1px solid #e2e4e8; background: #fff; color: #646a73; font-size: 13px; }
+    .work-doc-nav-collapse { display: block; margin-bottom: 17px; color: #8a9099; font-size: 25px; line-height: 1; }
+    .work-doc-nav-title { display: block; margin-bottom: 13px; color: #1456f0; font-size: 14px; font-weight: 600; line-height: 1.45; }
+    .work-doc-nav-list { display: grid; gap: 2px; }
+    .work-doc-nav-list span { padding: 6px 7px; border-radius: 4px; line-height: 1.4; }
+    .work-doc-nav-list span.is-active { background: #edf3ff; color: #1456f0; font-weight: 600; }
+    .work-doc-nav-list span.is-section { margin-top: 6px; color: #4e555f; font-weight: 600; }
+    .work-doc-nav-list span.is-sub { padding-left: 24px; color: #7a818b; }
+    .work-doc-main { min-width: 0; background: #fff; }
+    .work-doc-paper { width: min(900px,calc(100% - 72px)); min-height: 1200px; margin: 0 auto; padding: 72px 0 110px; background: #fff; }
+    .work-doc-paper h1 { margin: 0; color: #1f2329; font-size: clamp(30px,3vw,48px); font-weight: 700; line-height: 1.25; letter-spacing: -.025em; }
+    .work-doc-meta { display: flex; flex-wrap: wrap; gap: 8px 18px; margin: 14px 0 45px; color: #8a9099; font-size: 11px; }
+    .work-doc-paper h2 { margin: 40px 0 20px; color: #1f2329; font-size: 27px; line-height: 1.35; }
+    .work-doc-paper h2 b,.work-doc-paper h3 b { margin-right: 8px; color: #1456f0; }
+    .work-doc-paper h3 { margin: 29px 0 13px; color: #252930; font-size: 20px; line-height: 1.4; }
+    .work-doc-paper p,.work-doc-paper li { color: #2d3138; font-size: 15px; line-height: 1.95; }
+    .work-doc-paper p { margin: 12px 0; }
+    .work-doc-paper ul,.work-doc-paper ol { display: grid; gap: 8px; padding-left: 28px; }
+    .work-doc-paper li::marker { color: #1456f0; }
+    .work-doc-paper table { width: 100%; margin: 20px 0; border-collapse: collapse; font-size: 13px; }
+    .work-doc-paper th,.work-doc-paper td { padding: 12px 14px; border: 1px solid #dfe2e7; text-align: left; line-height: 1.55; }
+    .work-doc-paper th { background: #f5f6f7; color: #4c525c; font-weight: 600; }
+    .work-doc-callout { margin: 22px 0; padding: 16px 18px; border-left: 4px solid #1456f0; border-radius: 0 4px 4px 0; background: #f0f4ff; color: #343941; font-size: 14px; line-height: 1.8; }
+    .work-doc-comments { position: sticky; top: 64px; align-self: start; height: calc(100vh - 64px); overflow: auto; border-left: 1px solid #dfe1e5; background: #fff; }
+    .work-doc-comments-head { height: 48px; display: flex; align-items: center; justify-content: space-between; padding: 0 18px; border-bottom: 1px solid #e1e3e7; color: #252930; font-size: 15px; font-weight: 650; }
+    .work-doc-comments-head span:last-child { color: #7f858e; font-size: 22px; }
+    .work-doc-comment { margin: 16px; padding: 13px; border: 1px solid #e0e2e6; border-radius: 7px; background: #fff; color: #5b626d; font-size: 12px; line-height: 1.65; box-shadow: 0 2px 7px rgba(31,35,41,.04); }
+    .work-doc-comment-top { display: flex; align-items: center; gap: 8px; margin-bottom: 9px; color: #2f343b; font-weight: 600; }
+    .work-doc-comment-avatar { width: 25px; height: 25px; display: grid; place-items: center; border-radius: 50%; background: #dbe6ff; color: #1456f0; font-size: 10px; }
+    .work-doc-comment time { display: block; margin-top: 8px; color: #a0a5ad; font-size: 10px; }
+
+    @keyframes fish-struggle { from { rotate: -3deg; } to { rotate: 4deg; } }
+    @media (max-width: 1120px) { .playground-layout { grid-template-columns: 1fr; }.fishing-stage { border-right: 0; border-bottom: 3px solid var(--ink); }.fishing-sidebar { display: grid; grid-template-columns: 1fr 1fr; }.fishing-scoreboard { border-bottom: 0; border-right: 3px solid var(--ink); }.fishing-catch-log { border-top: 0; border-left: 3px solid var(--ink); }.work-doc-layout { grid-template-columns: 220px minmax(0,1fr); }.work-doc-comments { display: none; }.work-doc-paper { width: min(760px,calc(100% - 54px)); }.work-doc-bar-actions .work-doc-icon:nth-of-type(n+2) { display: none; } }
+    @media (max-width: 760px) { .playground-page { padding: 12px; }.playground-head { grid-template-columns: auto 1fr; }.playground-doc-button { grid-column: 1/-1; }.fishing-stage { padding: 10px; }.fishing-mission { grid-template-columns: 1fr auto; }.fishing-mission-track { grid-column: 1/-1; grid-row: 2; }.fishing-pond { min-height: 430px; }.fishing-sidebar { grid-template-columns: 1fr; }.fishing-scoreboard { border-right: 0; }.fishing-catch-log { border-left: 0; border-top: 3px solid var(--ink); }.work-doc-bar { height: 58px; padding: 0 10px; }.work-doc-bar-left .work-doc-icon,.work-doc-divider,.work-doc-share,.work-doc-edit,.work-doc-status { display: none; }.work-doc-layout { grid-template-columns: 1fr; }.work-doc-nav { display: none; }.work-doc-paper { width: calc(100% - 36px); padding: 42px 0 80px; }.work-doc-paper h1 { font-size: 29px; }.work-doc-paper h2 { font-size: 23px; }.work-doc-paper p,.work-doc-paper li { font-size: 14px; } }
     .app[data-state="ready"] .todo-board, .app[data-state="off"] .todo-board { display: none; }
     .app[data-state="overtime"] .overtime-alert { margin-top: 9px; padding: 10px 12px; }
     .app[data-state="overtime"] .overtime-alert p { margin-top: 4px; line-height: 1.4; }
@@ -1090,7 +1239,9 @@
       background-size: 34px 34px;
     }
     .radar-shell { max-width: 1400px; }
-    .radar-head { grid-template-columns: 1fr auto; align-items: end; gap: 30px; padding-bottom: 15px; border-bottom: 3px solid var(--ink); }
+    .radar-head { grid-template-columns: minmax(245px,.85fr) minmax(360px,1.3fr) minmax(290px,.9fr) auto; align-items: stretch; gap: 14px; padding: 16px; border: 2px solid var(--ink); background: rgba(255,253,248,.92); box-shadow: 6px 6px 0 var(--ink); }
+    .radar-head > div:first-child { grid-column: 1; grid-row: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; }
+    .radar-head > .radar-head-actions { grid-column: 4; grid-row: 1; align-self: center; }
     .radar-head h2 { margin-top: 8px; color: var(--ink); font-size: clamp(32px,3.35vw,47px); letter-spacing: -.055em; }
     .radar-head > div:first-child > p { margin-top: 8px; color: var(--muted); font-size: 10px; }
     .radar-kicker { color: var(--red); font-size: 9px; letter-spacing: .16em; }
@@ -1099,7 +1250,9 @@
     .radar-mode-toggle { min-height: 36px; padding: 0 12px; border: 2px solid var(--ink); border-radius: 0; background: var(--yellow); color: var(--ink); box-shadow: 3px 3px 0 var(--ink); }
     .radar-mode-toggle:hover { border-color: var(--ink); background: var(--white); transform: translate(1px,1px); box-shadow: 2px 2px 0 var(--ink); }
 
-    .radar-controls { grid-template-columns: minmax(390px,1.25fr) minmax(285px,.9fr) minmax(270px,.72fr); gap: 10px; margin-top: 14px; }
+    .radar-head > .radar-controls { display: contents; }
+    .radar-head > .radar-controls .radar-identity { grid-column: 2; grid-row: 1; align-self: stretch; }
+    .radar-head > .radar-controls .radar-radius { grid-column: 3; grid-row: 1; align-self: stretch; }
     .radar-identity,.radar-discovery-toggle,.radar-radius { min-height: 78px; border: 2px solid var(--ink); border-radius: 0; box-shadow: 4px 4px 0 var(--ink); }
     .radar-identity { position: relative; grid-template-columns: 38px minmax(150px,1fr) 38px 52px; grid-template-rows: 39px auto; padding: 9px 10px; background: var(--yellow); }
     .radar-identity::before { content: "MY BADGE"; position: absolute; right: 9px; top: -8px; padding: 3px 6px; border: 1px solid var(--ink); background: var(--red); color: var(--white); font: 900 6px/1 var(--mono); letter-spacing: .1em; transform: rotate(1.5deg); }
@@ -1282,6 +1435,49 @@
     .retirement-preview-actions button:first-child { border-color: var(--ink); background: var(--yellow); color: var(--ink); box-shadow: 4px 4px 0 var(--ink); }
     .retirement-preview.is-redrawing .retirement-preview-image { animation: retirement-image-redraw .38s ease both; }
 
+    /* 合并档案页：考勤是左侧主阅读流，健康档案固定在右侧。 */
+    .attendance-page { height: calc(100vh - 72px); min-height: 0; padding: 18px 24px; overflow: hidden; }
+    .attendance-health-layout { width: 100%; max-width: 1500px; height: 100%; margin: 0 auto; display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1.15fr) minmax(0,.85fr); grid-template-areas: "ledger health health"; align-items: stretch; gap: 0; }
+    .attendance-ledger-pane { grid-area: ledger; min-width: 0; max-width: none; width: 100%; height: 100%; padding: 2px 22px 12px 2px; overflow-x: hidden; overflow-y: auto; border-right: 2px solid var(--ink); scrollbar-gutter: stable; scrollbar-width: thin; scrollbar-color: var(--ink) transparent; }
+    .attendance-ledger-pane::-webkit-scrollbar { width: 7px; }
+    .attendance-ledger-pane::-webkit-scrollbar-thumb { background: var(--ink); }
+    .attendance-health-pane { grid-area: health; width: calc(100% - 22px); height: 100%; min-height: 0; margin-left: 22px; overflow: hidden; grid-template-columns: minmax(0,1.15fr) minmax(0,.85fr); box-shadow: 7px 7px 0 var(--ink); }
+    .attendance-health-pane .health-hero { min-height: 0; padding: 21px 24px; border-right: 2px solid var(--ink); border-bottom: 0; }
+    .attendance-health-pane .health-hero h2 { max-width: 350px; margin-top: 12px; font-size: clamp(34px,3.2vw,50px); }
+    .attendance-health-pane .health-mascot-stage { min-height: 220px; margin: -8px 0; }
+    .attendance-health-pane .health-mascot { width: 225px; height: 225px; }
+    .attendance-health-pane .health-mascot[data-severity="4"] { width: 245px; height: 230px; }
+    .attendance-health-pane .health-score-row { padding-top: 13px; }
+    .attendance-health-pane .health-score-value strong { font-size: 44px; }
+    .attendance-health-pane .health-detail { min-width: 0; min-height: 0; padding: 18px 16px; overflow: hidden; }
+    .attendance-health-pane .health-detail-head { min-height: 80px; }
+    .attendance-health-pane .health-detail-head { display: grid; grid-template-columns: 1fr auto; gap: 10px; }
+    .attendance-health-pane .health-detail-head h3 { font-size: 23px; }
+    .attendance-health-pane .health-hours { min-width: 82px; }
+    .attendance-health-pane .health-stage-list { gap: 4px; }
+    .attendance-health-pane .health-stage-button { grid-template-columns: 52px minmax(0,1fr); gap: 8px; min-height: 47px; padding: 5px 9px; }
+    .attendance-health-pane .health-stage-button em { grid-column: 2; margin-top: -4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .attendance-ledger-pane .ledger-title { width: 100%; grid-template-columns: minmax(0,1fr) 104px; gap: 12px 18px; padding: 18px 20px; border: 2px solid var(--ink); background: var(--white); box-shadow: 6px 6px 0 var(--ink); }
+    .attendance-ledger-pane .ledger-actions { width: 104px; }
+    .attendance-ledger-pane .ledger-actions > * { width: 100%; box-sizing: border-box; text-align: center; }
+    .attendance-ledger-pane #mock-data-view,
+    .attendance-ledger-pane .user-data-view { width: 100%; }
+    .attendance-ledger-pane .ledger-title > small { grid-column: 1 / -1; grid-row: 2; max-width: none; padding-top: 12px; border-top: 1px dashed #aaa59a; }
+    .attendance-ledger-pane .ledger-title h2 { font-size: clamp(28px,2.45vw,36px); }
+    .attendance-ledger-pane .ledger-grid { grid-template-columns: 1fr; gap: 0; margin-top: 22px; }
+    .attendance-ledger-pane .panel { box-shadow: 6px 6px 0 var(--ink); }
+    .attendance-ledger-pane .week-chart { padding: 18px 16px 14px; }
+    .attendance-ledger-pane .chart-axis { grid-template-columns: 50px repeat(7,1fr); }
+    .attendance-ledger-pane .day-row { grid-template-columns: 50px minmax(130px,1fr) 104px; gap: 8px; min-height: 66px; }
+    .day-result { display: grid; justify-items: end; gap: 6px; }
+    .shift-verdict { display: inline-block; max-width: 104px; padding: 5px 6px; background: var(--yellow); font-size: 8px; font-weight: 900; line-height: 1.15; text-align: right; word-break: keep-all; overflow-wrap: normal; }
+    .shift-verdict.is-late { background: #ffd2ca; color: #a1281f; }
+    .attendance-ledger-pane .user-data-view { margin-top: 22px; }
+    .attendance-ledger-pane .empty-ledger { min-height: 360px; padding: 34px; box-shadow: 6px 6px 0 var(--ink); }
+    .attendance-empty-panel > div:last-child { padding: 34px 24px; }
+    .attendance-empty-panel > div:last-child > strong { font: 950 23px/1.1 var(--display); }
+    .attendance-empty-panel p { margin: 10px 0 0; color: var(--muted); font-size: 11px; line-height: 1.65; }
+
     @keyframes action-sheen { 0%,52% { transform: translateX(0) skewX(-18deg); opacity: 0; } 58% { opacity: .78; } 82%,100% { transform: translateX(650%) skewX(-18deg); opacity: 0; } }
     @keyframes market-hammer-hit { 0%,100% { transform: rotate(-34deg); } 42% { transform: rotate(8deg); } 63% { transform: rotate(-7deg); } }
     @keyframes market-bell-shake { 0%,100% { transform: rotate(0); } 35% { transform: rotate(-3deg); } 55% { transform: rotate(3deg); } 76% { transform: rotate(-1.5deg); } }
@@ -1324,6 +1520,7 @@
       .nav-tab { padding: 0 11px; }
       .top-status { display: none; }
       .top-actions { min-width: auto; }
+      .attendance-page { height: auto; min-height: calc(100vh - 72px); overflow: auto; }
       .today-grid {
         grid-template-columns: 1fr;
         grid-template-areas: "date" "copy" "side" "timer" "progress";
@@ -1337,7 +1534,17 @@
       .kpi-grid { grid-template-columns: repeat(2, 1fr); }
       .kpi { border-bottom: 1px solid var(--ink); }
       .ledger-grid { grid-template-columns: 1fr; }
+      .attendance-health-layout { height: auto; grid-template-columns: 1fr; grid-template-areas: "ledger" "health"; gap: 22px; }
+      .attendance-ledger-pane { height: auto; padding: 0; overflow: visible; border-right: 0; }
+      .attendance-health-pane { width: 100%; height: auto; margin-left: 0; overflow: visible; grid-template-columns: minmax(330px,1fr) minmax(250px,.72fr); }
+      .attendance-health-pane .health-hero { min-height: 520px; border-right: 2px solid var(--ink); border-bottom: 0; }
+      .attendance-health-pane .health-detail { overflow: visible; }
       .radar-head { grid-template-columns: 1fr auto; }
+      .radar-head > div:first-child { grid-column: 1; grid-row: 1; }
+      .radar-head > .radar-head-actions { grid-column: 2; grid-row: 1; }
+      .radar-head > .radar-controls { display: grid; grid-column: 1/-1; grid-row: 2; grid-template-columns: 1fr 1fr; gap: 10px; padding-top: 14px; border-top: 1px dashed rgba(17,19,26,.45); }
+      .radar-head > .radar-controls .radar-identity,
+      .radar-head > .radar-controls .radar-radius { grid-column: auto; grid-row: auto; }
       .radar-head > p { grid-column: 1/-1; grid-row: 2; }
       .radar-layout { grid-template-columns: 1fr; }
       .radar-controls { grid-template-columns: 1fr 1fr; }
@@ -1370,7 +1577,18 @@
       .progress-wrap { margin-top: 0; }
       .timer-value { font-size: 54px; }
       .kpi-grid { grid-template-columns: 1fr; }
+      .attendance-health-pane { grid-template-columns: 1fr; }
+      .attendance-health-pane .health-hero { min-height: 330px; border-right: 0; border-bottom: 2px solid var(--ink); }
+      .attendance-health-pane .health-mascot-stage { min-height: 150px; margin: -25px 0 -12px; }
+      .attendance-health-pane .health-mascot { width: 190px; height: 190px; }
+      .attendance-ledger-pane .ledger-title { grid-template-columns: 1fr; }
+      .attendance-ledger-pane .ledger-actions { align-items: flex-start; }
+      .attendance-ledger-pane .ledger-title > small { grid-column: auto; grid-row: auto; }
+      .attendance-ledger-pane .day-row { grid-template-columns: 50px minmax(150px,1fr); }
+      .attendance-ledger-pane .day-result { grid-column: 2; grid-template-columns: 1fr auto; align-items: center; }
       .radar-head { grid-template-columns: 1fr; align-items: start; }
+      .radar-head > .radar-head-actions { grid-column: 1; grid-row: 2; }
+      .radar-head > .radar-controls { grid-column: 1; grid-row: 3; grid-template-columns: 1fr; }
       .radar-head-actions { width: 100%; justify-content: space-between; flex-wrap: wrap; }
       .radar-title-line { align-items: flex-end; flex-wrap: wrap; gap: 10px 14px; }
       .radar-mode-actions { justify-items: start; }
@@ -1427,8 +1645,7 @@
       <nav class="nav-tabs" aria-label="应用页面">
         <button class="nav-tab is-active" data-page="today">今日陪伴</button>
           <button class="nav-tab" data-page="radar">附近工友</button>
-        <button class="nav-tab" data-page="attendance">考勤簿</button>
-        <button class="nav-tab" data-page="health">马生健康</button>
+        <button class="nav-tab" data-page="attendance">考勤 · 健康</button>
         <button class="nav-tab" data-page="retirement">我要退休</button>
       </nav>
       <div class="top-actions">
@@ -1507,12 +1724,18 @@
               <span class="plan-auto-cue">上下班时间均可修改</span>
             </div>
 
-            <section class="todo-board" aria-label="今日待办便利贴">
+            <section class="todo-board" aria-label="今日待办便利贴" hidden>
               <div class="todo-head"><strong>待办便利贴</strong><div class="todo-head-actions"><button class="todo-clear" id="todo-clear" type="button">清空全部</button><button class="todo-add" id="todo-add" type="button" aria-label="添加待办">+</button></div></div>
               <div class="shutdown-shield" id="shutdown-shield" role="status"><div><small>OFF-DUTY SHIELD / 下班结界</small><strong>禁止开新坑，剩下的交给明天</strong></div><button id="defer-todos" type="button">未完成的明天继续</button></div>
               <form class="todo-composer" id="todo-composer"><input id="todo-input" maxlength="80" placeholder="写下一件事，别顺手写成年度规划" aria-label="待办内容"><button type="submit">贴上去</button></form>
               <div class="todo-list" id="todo-list"></div>
             </section>
+
+            <button class="playground-entry" id="playground-entry" type="button" aria-label="进入摸鱼乐园，玩带薪钓鱼">
+              <span class="playground-entry-top"><span id="playground-entry-status">PAID BREAK · 01</span><span id="playground-entry-hint">空格键可伪装</span></span>
+              <span class="playground-entry-copy"><small id="playground-entry-kicker">今日摸鱼项目</small><strong id="playground-entry-title">摸鱼乐园</strong><span id="playground-entry-description">《带薪钓鱼》限时开放。看准、起竿、稳住鱼线，差一点就能刷新纪录。</span></span>
+              <span class="playground-entry-action" id="playground-entry-action">开始摸鱼</span>
+            </button>
 
             <div class="side-metrics" aria-label="实时工位状态">
               <div class="side-metric"><small>ON DUTY / 已在岗</small><strong id="worked-duration">00h 00m</strong></div>
@@ -1574,10 +1797,87 @@
         </aside>
       </div>
     </main>
+
+    <main class="page playground-page" id="page-playground" aria-label="摸鱼乐园">
+      <section class="playground-shell">
+        <header class="playground-head">
+          <button class="playground-back" id="playground-back" type="button">← 回到今日陪伴</button>
+          <div class="playground-title"><small>PAID BREAK ARCADE / 工位限定</small><h2>摸鱼乐园 · 带薪钓鱼</h2></div>
+          <button class="playground-doc-button" id="playground-doc-button" type="button"><kbd>SPACE</kbd>打开工作文档</button>
+        </header>
+        <div class="playground-layout">
+          <section class="fishing-stage">
+            <div class="fishing-mission"><span>今日带薪指标</span><div class="fishing-mission-track" aria-label="任务进度"><div class="fishing-mission-fill" id="fishing-mission-fill"></div></div><strong id="fishing-mission-score">0 / 1500</strong></div>
+            <div class="fishing-pond" id="fishing-pond" aria-label="带薪钓鱼游戏区域">
+              <span class="pond-cloud" aria-hidden="true"></span><span class="pond-sign">公司内网 · 禁止认真</span>
+              <div id="fishing-fish-layer"></div>
+              <span class="fishing-line" id="fishing-line"></span>
+              <span class="cast-marker" id="fishing-cast-marker" hidden></span>
+              <div class="fishing-callout" id="fishing-callout">移动鼠标瞄准鱼头，单击下钩</div>
+              <div class="fishing-tension" id="fishing-tension" hidden><div class="fishing-tension-head"><span>鱼线张力</span><strong id="fishing-tension-copy">稳住</strong></div><div class="fishing-tension-track"><span class="fishing-tension-marker" id="fishing-tension-marker"></span></div></div>
+              <div class="fishing-overlay" id="fishing-overlay"><div class="fishing-overlay-card"><small id="fishing-overlay-kicker">60 秒工位挑战</small><h3 id="fishing-overlay-title">差一点，才最上头。</h3><p id="fishing-overlay-copy">瞄准鱼头下钩；咬钩时再次点击；按住鼠标收线、松开降张力。空格随时打开工作文档。</p><button id="fishing-overlay-action" type="button">开始带薪钓鱼 →</button></div></div>
+            </div>
+          </section>
+          <aside class="fishing-sidebar">
+            <div class="fishing-scoreboard">
+              <div class="fishing-stat"><small>本局摸鱼值</small><strong id="fishing-score">0</strong></div>
+              <div class="fishing-stat is-time"><small>剩余时间</small><strong id="fishing-time">60.0</strong></div>
+              <div class="fishing-stat"><small>连续上钩</small><strong id="fishing-combo">×1</strong></div>
+              <div class="fishing-stat"><small>今日最高</small><strong id="fishing-best">0</strong></div>
+            </div>
+            <div class="fishing-guide"><h3>工位钓鱼守则</h3><ol><li>移动鼠标预判鱼的路线，单击把钩落在鱼头附近。</li><li>出现“咬钩”时迅速再点一次，完美起竿会降低鱼的体力。</li><li>按住鼠标收线，松开降张力；红线坚持太久就会断。</li></ol></div>
+            <div class="fishing-catch-log"><strong>本局鱼篓</strong><div class="fishing-catch-list" id="fishing-catch-list"><span>还空着，先钓一条</span></div></div>
+          </aside>
+        </div>
+      </section>
+    </main>
+
+    <section class="work-cover" id="work-cover" aria-label="Harness 平台能力调研文档" hidden>
+        <header class="work-doc-bar">
+          <div class="work-doc-bar-left"><span class="work-doc-icon" aria-hidden="true">☰</span><span class="work-doc-icon" aria-hidden="true">⌂</span><i class="work-doc-divider"></i><span class="work-doc-crumb">平台工程空间&nbsp; › &nbsp;<b>Harness 平台能力调研与接入评估</b>&nbsp; ♧</span></div>
+          <div class="work-doc-bar-actions"><button class="work-doc-share" type="button">♙ 分享</button><button class="work-doc-edit" type="button">✎&nbsp; 编辑⌄</button><span class="work-doc-icon" aria-hidden="true">♢</span><span class="work-doc-icon" aria-hidden="true">•••</span><span class="work-doc-icon" aria-hidden="true">⌕</span><span class="work-doc-icon" aria-hidden="true">＋</span><span class="work-doc-avatar" aria-hidden="true">研</span><button class="work-cover-return" id="work-cover-return" type="button" title="也可以再次按空格">返回批注</button></div>
+        </header>
+        <div class="work-doc-layout">
+          <nav class="work-doc-nav" aria-label="Harness 调研文档目录">
+            <span class="work-doc-nav-collapse" aria-hidden="true">≪</span>
+            <strong class="work-doc-nav-title">Harness 平台能力调研与接入评估</strong>
+            <div class="work-doc-nav-list"><span class="is-active">1. 调研概述</span><span class="is-sub">1.1 背景</span><span class="is-sub">1.2 调研目标</span><span class="is-sub">1.3 评估范围</span><span class="is-section">2. 产品与架构</span><span class="is-sub">2.1 平台定位</span><span class="is-sub">2.2 核心组件</span><span class="is-sub">2.3 部署模型</span><span class="is-section">3. 核心能力评估</span><span class="is-sub">3.1 持续交付</span><span class="is-sub">3.2 特性开关</span><span class="is-sub">3.3 云成本治理</span><span class="is-section">4. 接入方案</span><span class="is-section">5. 风险与结论</span></div>
+          </nav>
+          <main class="work-doc-main">
+            <article class="work-doc-paper">
+              <h1>Harness 平台能力调研与接入评估</h1>
+              <div class="work-doc-meta"><span>平台工程组</span><span>更新于 2026 年 8 月 20 日</span><span>内部调研 · V0.6</span></div>
+              <h2><b>1.</b>调研概述</h2>
+              <h3><b>1.1</b>背景</h3>
+              <p>随着研发团队和交付环境持续扩张，现有流水线在模板复用、发布治理、权限边界和失败定位方面逐渐暴露出维护成本。不同业务线使用的工具链并不完全一致，发布策略也依赖各团队自行约定，导致同类能力重复建设，平台侧难以形成统一的交付视图。</p>
+              <p>本次调研聚焦 Harness 在软件交付平台方向的能力，重点判断它是否能够承接持续交付、特性发布和云成本治理等场景，并评估与现有代码仓库、制品库、集群及审批体系的集成成本。</p>
+              <div class="work-doc-callout"><strong>核心判断：</strong>Harness 的价值不只在于替换流水线工具，更在于把发布策略、验证规则、权限和审计记录收敛到统一控制面。</div>
+              <h3><b>1.2</b>调研目标</h3>
+              <ul><li>梳理 Harness 的产品边界、核心模块和典型部署方式。</li><li>验证多环境发布、渐进式交付、失败回滚和审批审计能力。</li><li>评估与现有 Git、制品仓库、Kubernetes 和身份系统的接入路径。</li><li>形成试点范围、验证指标和阶段性迁移建议。</li></ul>
+              <h2><b>2.</b>产品与架构</h2>
+              <h3><b>2.1</b>平台定位</h3>
+              <p>Harness 面向软件交付生命周期提供模块化能力。持续交付负责服务、环境、基础设施定义与流水线编排；特性开关将功能发布与代码部署解耦；云成本治理则从资源使用和业务归属角度补充成本可见性。各模块可以独立采用，也可以共享组织、项目、连接器、密钥和治理策略。</p>
+              <table><thead><tr><th>能力模块</th><th>主要使用场景</th><th>本次关注点</th></tr></thead><tbody><tr><td>Continuous Delivery</td><td>多环境部署、审批与回滚</td><td>模板复用、策略治理、执行可观测性</td></tr><tr><td>Feature Flags</td><td>灰度发布与实验控制</td><td>规则管理、SDK 接入、紧急关闭</td></tr><tr><td>Cloud Cost Management</td><td>资源成本分析与优化</td><td>成本归属、异常识别、优化建议</td></tr><tr><td>Platform Governance</td><td>权限、策略和审计</td><td>组织模型、密钥边界、合规记录</td></tr></tbody></table>
+              <h3><b>2.2</b>初步架构判断</h3>
+              <p>平台采用集中控制面管理项目和执行定义，通过连接器访问外部系统，并由部署在目标网络中的执行组件完成受控操作。该模式能够避免直接暴露内部集群，但仍需要重点验证网络连通、凭证托管、执行组件高可用和版本升级策略。</p>
+              <h2><b>3.</b>核心能力评估</h2>
+              <ol><li><strong>发布编排：</strong>需要覆盖服务化模板、环境差异参数、人工审批和自动验证。</li><li><strong>失败处理：</strong>重点观察失败策略是否足够清晰，以及回滚动作能否被完整审计。</li><li><strong>治理能力：</strong>确认组织、项目和资源组之间的权限继承是否符合现有管理边界。</li><li><strong>可扩展性：</strong>验证自定义步骤、脚本和现有内部平台能力的组合方式。</li></ol>
+              <h2><b>4.</b>试点建议</h2>
+              <p>建议选择依赖关系清晰、发布频率稳定且具备测试环境的非核心服务作为首个试点。试点阶段不追求完整迁移，优先验证模板复用、分阶段发布、自动验证、失败回滚和审计查询五条关键路径，再根据数据决定是否扩大范围。</p>
+            </article>
+          </main>
+          <aside class="work-doc-comments" aria-label="文档评论">
+            <div class="work-doc-comments-head"><span>评论（2）</span><span>≫</span></div>
+            <article class="work-doc-comment"><div class="work-doc-comment-top"><span class="work-doc-comment-avatar">平</span><span>平台组</span></div>试点指标建议补充部署成功率、平均恢复时间和模板复用比例，便于和现有流程做对照。<time>今天 10:24</time></article>
+            <article class="work-doc-comment"><div class="work-doc-comment-top"><span class="work-doc-comment-avatar">架</span><span>架构评审</span></div>接入方案中需要单列执行组件的网络边界和凭证轮换机制。<time>今天 11:08</time></article>
+          </aside>
+        </div>
+    </section>
     <section class="pet-guide" id="pet-guide" role="dialog" aria-modal="true" aria-labelledby="pet-guide-title" hidden>
       <div class="pet-guide-card">
         <div class="pet-guide-head"><div><small>MA XIEXIE · DESKTOP PET</small><h2 id="pet-guide-title">马歇歇互动玩法</h2></div><button class="pet-guide-close" id="pet-guide-close" type="button" aria-label="关闭玩法说明">×</button></div>
         <div class="pet-guide-grid">
+          <button class="pet-guide-tip" id="pet-patrol-start" type="button"><strong>巡视</strong><span>点击后，马歇歇会模拟加班超时，从桌面一端慢慢走到另一端。</span></button>
           <div class="pet-guide-tip"><strong>靠近看看</strong><span>眼睛会先追踪鼠标，头和身体随后慢慢跟上。</span></div>
           <div class="pet-guide-tip"><strong>点它或双击</strong><span>摸摸头会有回应；双击可能触发隐藏动作。</span></div>
           <div class="pet-guide-tip"><strong>按住拖动</strong><span>把马歇歇带到顺眼的位置，它会记住自己的工位。</span></div>
@@ -1588,8 +1888,9 @@
       </div>
     </section>
 
-    <main class="page health-page" id="page-health">
-      <section class="health-shell" aria-label="马歇歇健康档案">
+    <main class="page attendance-page" id="page-attendance">
+      <div class="attendance-health-layout">
+      <section class="health-shell attendance-health-pane" aria-label="马歇歇健康档案">
         <div class="health-hero">
           <div>
             <span class="health-kicker">MA-SHENG HEALTH FILE / 马生健康档案</span>
@@ -1626,13 +1927,10 @@
             <button class="health-stage-button" type="button" data-health-stage="5"><span>50h+</span><strong>猝死结局</strong><em>墓碑已送达</em></button>
           </div>
           <div class="health-preview-notice" id="health-preview-notice" hidden><span id="health-preview-copy"></span><button id="health-preview-reset" type="button">回到当前状态</button></div>
-          <p class="health-disclaimer">这是黑色幽默式养成反馈，不是医学诊断，也不代表加班时长与具体疾病存在直接对应关系。重症与猝死阶段用于强烈劝退极端加班，并引导休息、体检和寻求专业医疗帮助。</p>
         </div>
       </section>
-    </main>
 
-    <main class="page attendance-page" id="page-attendance">
-      <div class="ledger" id="ledger" data-mode="mock">
+      <section class="ledger attendance-ledger-pane" id="ledger" data-mode="mock">
         <header class="ledger-title">
           <div><p>考勤簿 / 本周打工人格</p><h2 id="ledger-persona-title">工位钉子户预备役</h2></div>
           <small id="ledger-persona-copy">人已经想走，椅子坚持续约。</small>
@@ -1643,45 +1941,19 @@
         </header>
 
         <div id="mock-data-view">
-        <section class="kpi-grid" aria-label="本周工位案底">
-          <article class="kpi"><small>本周服刑时长<br />TOTAL OCCUPIED</small><strong>46h 37m</strong><em>比上周少 42 分钟</em></article>
-          <article class="kpi"><small>最晚释放纪录<br />LATEST RELEASE</small><strong>21:18</strong><em>周四 · 需求临终前又抢救了</em></article>
-          <article class="kpi"><small>最早到案时间<br />EARLIEST ARRIVAL</small><strong>08:47</strong><em>周二 · 灵魂 09:23 才到</em></article>
-          <article class="kpi"><small>平均肉身占用<br />AVG. CAPTURED</small><strong>9h 19m</strong><em>含午饭时对人生的思考</em></article>
-          <article class="kpi"><small>本周敲疯值<br />WOODFISH MELTDOWN</small><strong>286</strong><em>平均每天敲 57 次续命</em></article>
-        </section>
-
         <div class="ledger-grid">
           <section class="panel">
-            <div class="panel-title"><strong>本周工位案底</strong><span>08:00 — 22:00</span></div>
+            <div class="panel-title"><strong>本周进度与下班评价</strong><span>08:00 — 22:00</span></div>
             <div class="week-chart">
               <div class="chart-axis"><span></span><span>08</span><span>10</span><span>12</span><span>14</span><span>16</span><span>18</span><span>20</span></div>
-              <div class="day-row"><div class="day-name"><strong>周一</strong><span>08/04</span></div><div class="time-line"><span class="work-bar" style="left:8%;width:68%"></span></div><div class="day-time">09:06 → 18:34</div></div>
-              <div class="day-row"><div class="day-name"><strong>周二</strong><span>08/05</span></div><div class="time-line"><span class="work-bar" style="left:5%;width:65%"></span></div><div class="day-time">08:47 → 17:53</div></div>
-              <div class="day-row"><div class="day-name"><strong>周三</strong><span>08/06</span></div><div class="time-line"><span class="work-bar is-late" style="left:9%;width:78%"></span></div><div class="day-time">09:14 → 20:09</div></div>
-              <div class="day-row"><div class="day-name"><strong>周四</strong><span>08/07</span></div><div class="time-line"><span class="work-bar is-late" style="left:7%;width:89%"></span></div><div class="day-time">08:58 → 21:18</div></div>
-              <div class="day-row"><div class="day-name"><strong>周五</strong><span>08/08</span></div><div class="time-line"><span class="work-bar" style="left:10%;width:64%"></span></div><div class="day-time">09:21 → 18:19</div></div>
+              <div class="day-row"><div class="day-name"><strong>周一</strong><span>08/04</span></div><div class="time-line"><span class="work-bar" style="left:8%;width:68%"></span></div><div class="day-result"><span class="day-time">09:06 → 18:34</span><span class="shift-verdict">差一点准点</span></div></div>
+              <div class="day-row"><div class="day-name"><strong>周二</strong><span>08/05</span></div><div class="time-line"><span class="work-bar" style="left:5%;width:65%"></span></div><div class="day-result"><span class="day-time">08:47 → 17:53</span><span class="shift-verdict">成功越狱</span></div></div>
+              <div class="day-row"><div class="day-name"><strong>周三</strong><span>08/06</span></div><div class="time-line"><span class="work-bar is-late" style="left:9%;width:78%"></span></div><div class="day-result"><span class="day-time">09:14 → 20:09</span><span class="shift-verdict is-late">晚饭已报警</span></div></div>
+              <div class="day-row"><div class="day-name"><strong>周四</strong><span>08/07</span></div><div class="time-line"><span class="work-bar is-late" style="left:7%;width:89%"></span></div><div class="day-result"><span class="day-time">08:58 → 21:18</span><span class="shift-verdict is-late">重度工位滞留</span></div></div>
+              <div class="day-row"><div class="day-name"><strong>周五</strong><span>08/08</span></div><div class="time-line"><span class="work-bar" style="left:10%;width:64%"></span></div><div class="day-result"><span class="day-time">09:21 → 18:19</span><span class="shift-verdict">准点释放</span></div></div>
             </div>
           </section>
-
-          <aside class="feature-stack">
-            <article class="feature-card"><span class="feature-tag">本周反卷报告</span><h3>少加班 42 分钟</h3><p>恭喜，你从工作手里赎回了一集电视剧。进步不大，但属于你。</p></article>
-            <article class="feature-card"><span class="feature-tag">加班遗言</span><h3 id="epitaph-text">“今天不是你输给工作，是晚饭终于赢回了你。”</h3><p>下班后随机生成，可复制，但不建议发给老板。</p></article>
-            <article class="feature-card"><span class="feature-tag">敲疯现场</span><span class="streak-number">286</span><h3>本周累计 286 敲</h3><p>问题没有消失，但至少木鱼知道你尽力疯过。</p></article>
-          </aside>
         </div>
-
-        <section class="records">
-          <table>
-            <thead><tr><th>日期</th><th>上班</th><th>下班</th><th>肉身占用</th><th>敲疯值</th><th>下班评价</th></tr></thead>
-            <tbody id="record-body">
-              <tr><td>08/08 · 周五</td><td>09:21</td><td>18:19</td><td>8h 58m</td><td>41</td><td><span class="record-status">差一点准点</span></td></tr>
-              <tr><td>08/07 · 周四</td><td>08:58</td><td>21:18</td><td>12h 20m</td><td>96</td><td><span class="record-status is-late">重度工位滞留</span></td></tr>
-              <tr><td>08/06 · 周三</td><td>09:14</td><td>20:09</td><td>10h 55m</td><td>73</td><td><span class="record-status is-late">晚饭已报警</span></td></tr>
-              <tr><td>08/05 · 周二</td><td>08:47</td><td>17:53</td><td>9h 06m</td><td>52</td><td><span class="record-status">成功越狱</span></td></tr>
-            </tbody>
-          </table>
-        </section>
         </div>
 
         <section class="user-data-view" id="user-data-view" aria-live="polite">
@@ -1695,6 +1967,7 @@
           </div>
           <div class="user-dashboard is-hidden" id="user-dashboard"></div>
         </section>
+      </section>
       </div>
     </main>
 
@@ -1705,18 +1978,17 @@
           <div class="radar-head-actions">
             <div class="radar-mode-actions"><span class="radar-demo-label" id="radar-mode-label">本地示例数据</span><button class="radar-mode-toggle" id="radar-mode-toggle" type="button">查看真实数据</button></div>
           </div>
+          <section class="radar-controls" aria-label="附近发现控制">
+            <div class="radar-identity">
+              <span class="radar-identity-avatar" aria-hidden="true">我</span>
+              <label for="radar-name-input"><span>我的匿名工牌</span><input id="radar-name-input" type="text" maxlength="18" autocomplete="off" spellcheck="false" aria-describedby="radar-name-hint"></label>
+              <button class="radar-name-dice" id="radar-name-dice" type="button" aria-label="随机换一个匿名名称" title="随机换一个">🎲</button>
+              <button class="radar-name-save" id="radar-name-save" type="button">保存</button>
+              <small id="radar-name-hint">可自定义，也可以掷骰子随机生成</small>
+            </div>
+            <fieldset class="radar-radius"><legend>扫描范围</legend><div><button type="button" data-radar-radius="1" aria-pressed="false">1KM</button><button type="button" data-radar-radius="20" aria-pressed="true">20KM</button><button type="button" data-radar-radius="0" aria-pressed="false">不限</button></div></fieldset>
+          </section>
         </header>
-
-        <section class="radar-controls" aria-label="附近发现控制">
-          <div class="radar-identity">
-            <span class="radar-identity-avatar" aria-hidden="true">我</span>
-            <label for="radar-name-input"><span>我的匿名工牌</span><input id="radar-name-input" type="text" maxlength="18" autocomplete="off" spellcheck="false" aria-describedby="radar-name-hint"></label>
-            <button class="radar-name-dice" id="radar-name-dice" type="button" aria-label="随机换一个匿名名称" title="随机换一个">🎲</button>
-            <button class="radar-name-save" id="radar-name-save" type="button">保存</button>
-            <small id="radar-name-hint">可自定义，也可以掷骰子随机生成</small>
-          </div>
-          <fieldset class="radar-radius"><legend>扫描范围</legend><div><button type="button" data-radar-radius="1" aria-pressed="false">1KM</button><button type="button" data-radar-radius="20" aria-pressed="true">20KM</button><button type="button" data-radar-radius="0" aria-pressed="false">不限</button></div></fieldset>
-        </section>
 
         <div class="radar-mock radar-data-view">
           <div class="radar-layout">
@@ -1802,5 +2074,6 @@
   </div>
 
   <script src="app.js"></script>
+  <script src="fishing-game.js"></script>
 </body>
 </html>

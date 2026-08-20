@@ -6,6 +6,7 @@ const { createHash, randomUUID } = require('crypto');
 const { Readable } = require('stream');
 const { expectedExtension, platformKey, resolveUpdateArtifact } = require('./update-manifest');
 const { createCloudflareRadarStore } = require('./radar-cloudflare');
+const { movementBounds, horizontalTraversal, sideDirection } = require('./pet-walk-path');
 
 let mainWindow;
 let petWindow;
@@ -16,6 +17,7 @@ let petDragSession = null;
 let petAvoidanceRestorePosition = null;
 let petProgrammaticMoveUntil = 0;
 let petPointerInteractionUntil = 0;
+let petWalkSession = null;
 let currentPetScale = 0.65;
 let currentNativeBadgeKey = null;
 let radarUnreadCount = 0;
@@ -284,6 +286,49 @@ const reminderVoices = {
   ot120: '加班已经两小时。红色警报。请马上离开工位。你怎么还在，明天不过了吗？'
 };
 
+const overtimePetMessages = {
+  ot10: [
+    '喂，你怎么还在。',
+    '收拾一下，该下班了。',
+    '电脑不会寂寞，先回去吃饭。',
+    '剩下的明天再做，今晚先还给自己。',
+    '我都走到这儿了，你也该动一动了。',
+    '保存、关窗、起身，一气呵成。'
+  ],
+  ot30: [
+    '喂，你怎么还在。',
+    '半小时了，收尾不能无限续杯。',
+    '别再说马上，这匹马都等急了。',
+    '你的晚饭正在申请劳动仲裁。',
+    '文件已保存，人也请保存。',
+    '走到桌面另一头之前，你最好已经站起来。'
+  ],
+  ot60: [
+    '喂，你怎么还在。',
+    '你怎么还在？已经超时一小时了。',
+    '项目没感动，颈椎先记住了。',
+    '停止用私人时间给工作充值。',
+    '需求有明天，你的今晚只有一次。',
+    '马上撤离，我是认真的。'
+  ],
+  ot120: [
+    '喂，你怎么还在。',
+    '两小时了！我走到另一头你就下班。',
+    '你的床已经发布最高级别寻人启事。',
+    '不要再开新文件，真的会没完。',
+    '电脑正在吸你的魂，快走。',
+    '现在、马上、立刻，离开工位。'
+  ],
+  ot180: [
+    '喂，你怎么还在。',
+    '三小时了，你是在工位上过夜吗？',
+    '停止工作，这不是建议。',
+    '项目经理不会因为你熬夜召唤神龙。',
+    '带上水杯，朝电梯方向移动。',
+    '最后通牒：马上离开工位。'
+  ]
+};
+
 function scheduleFilePath() {
   return path.join(app.getPath('userData'), 'notification-schedule.json');
 }
@@ -373,6 +418,10 @@ function scheduleActiveShiftReminders(schedule = readReminderSchedule()) {
       const latest = readReminderSchedule();
       if (!isSameReminderSchedule(latest, schedule) || latest.endedAt) return;
       const [title, body] = reminderMessages[key];
+      if (key === 'zero') triggerPetReminderWalk('checkout', body);
+      if (key.startsWith('ot')) {
+        triggerPetReminderWalk('overtime', overtimePetMessages[key] || body);
+      }
       if (reminderVoices[key]) setTimeout(() => speakAnnouncement(reminderVoices[key]), key === 'zero' ? 3180 : 0);
       const result = await showVisibleNotification({ title, body });
       if (result.ok) markReminderDelivered(schedule, key);
@@ -417,6 +466,132 @@ function triggerPetAction(action, text) {
   return true;
 }
 
+function sendPetAction(payload) {
+  if (!readPetSettings().enabled || !petWindow || petWindow.isDestroyed() || petWindow.webContents.isLoading()) return false;
+  petWindow.webContents.send('pet:action', payload);
+  return true;
+}
+
+function cancelPetWalk({ notifyRenderer = true } = {}) {
+  if (!petWalkSession) return false;
+  petWalkSession.cancelled = true;
+  if (petWalkSession.timer) clearTimeout(petWalkSession.timer);
+  petWalkSession = null;
+  if (notifyRenderer) sendPetAction({ action: 'walk-stop', reason: 'cancelled' });
+  return true;
+}
+
+function animatePetWalkSegment(from, to, session, speed) {
+  const distance = Math.hypot(to.x - from.x, to.y - from.y);
+  if (distance < 1 || session.cancelled) return Promise.resolve();
+  const direction = sideDirection(from, to, session.bounds, session.direction);
+  session.direction = direction;
+  sendPetAction({ action: 'walk-direction', direction });
+  const duration = distance / speed * 1000;
+  let activeElapsed = 0;
+  let previousTick = Date.now();
+  return new Promise((resolve) => {
+    const step = () => {
+      if (session.cancelled || petWalkSession !== session || !petWindow || petWindow.isDestroyed()) return resolve();
+      const now = Date.now();
+      const delta = now - previousTick;
+      previousTick = now;
+      if (now >= session.nextLookAt && now >= session.pauseUntil) {
+        session.pauseUntil = now + 1500;
+        session.nextLookAt = session.pauseUntil + 4200 + Math.random() * 3000;
+        const text = session.copies.length ? session.copies[session.copyIndex % session.copies.length] : '';
+        session.copyIndex += 1;
+        sendPetAction({ action: 'walk-look-user', text });
+      }
+      if (now < session.pauseUntil) {
+        session.resumeDirection = true;
+        session.timer = setTimeout(step, 34);
+        return;
+      }
+      if (session.resumeDirection) {
+        session.resumeDirection = false;
+        sendPetAction({ action: 'walk-direction', direction });
+      }
+      activeElapsed += delta;
+      const progress = Math.min(1, activeElapsed / duration);
+      const position = {
+        x: Math.round(from.x + (to.x - from.x) * progress),
+        y: Math.round(from.y + (to.y - from.y) * progress)
+      };
+      session.travelled += Math.hypot(position.x - session.previousPosition.x, position.y - session.previousPosition.y);
+      session.previousPosition = position;
+      // One eight-frame walking cycle spans roughly 80 px. At the deliberately
+      // slow traversal speed this reads as alternating planted steps, not a run.
+      const gaitFrame = Math.floor(session.travelled / 10) % 8;
+      if (gaitFrame !== session.gaitFrame) {
+        session.gaitFrame = gaitFrame;
+        sendPetAction({ action: 'walk-step', frame: gaitFrame });
+      }
+      petProgrammaticMoveUntil = now + 120;
+      petWindow.setPosition(position.x, position.y, false);
+      sendPetAction({ action: 'walk-depth', scale: 1 });
+      if (progress >= 1) return resolve();
+      session.timer = setTimeout(step, 34);
+    };
+    step();
+  });
+}
+
+async function triggerPetReminderWalk(kind, text) {
+  if (!readPetSettings().enabled || !petWindow || petWindow.isDestroyed() || petWindow.webContents.isLoading()) return false;
+  let copies = (Array.isArray(text) ? text : [text]).map((line) => String(line || '').trim()).filter(Boolean);
+  if (kind === 'overtime') {
+    const requiredCallout = '喂，你怎么还在。';
+    copies = [requiredCallout, ...copies.filter((line) => line !== requiredCallout)];
+  }
+  if (latestPetState.reducedMotion) {
+    sendPetAction({ action: 'walk-start', kind, mode: 'reduced-motion', direction: 'right' });
+    sendPetAction({ action: 'walk-look-user', text: copies[0] || '' });
+    setTimeout(() => sendPetAction({ action: 'walk-stop', kind, reason: 'reduced-motion' }), 1050);
+    return true;
+  }
+  cancelPetWalk();
+  const display = screen.getDisplayMatching(petWindow.getBounds());
+  syncPetScaleForDisplay(display);
+  const [width, height] = petWindow.getSize();
+  const [x, y] = petWindow.getPosition();
+  const mode = 'cross-screen';
+  const points = horizontalTraversal(display.workArea, { width, height }, { x, y });
+  const bounds = movementBounds(display.workArea, { width, height });
+  const session = {
+    cancelled: false,
+    timer: null,
+    mode,
+    bounds,
+    copies,
+    copyIndex: 0,
+    travelled: 0,
+    gaitFrame: -1,
+    previousPosition: points[0],
+    direction: sideDirection(points[0], points[1], bounds),
+    nextLookAt: Date.now() + 4200 + Math.random() * 2400,
+    pauseUntil: 0,
+    resumeDirection: false
+  };
+  petWalkSession = session;
+  petAvoidanceRestorePosition = null;
+  petProgrammaticMoveUntil = Date.now() + 450;
+  petWindow.setPosition(points[0].x, points[0].y, false);
+  sendPetAction({ action: 'walk-start', kind, mode, direction: session.direction });
+  sendPetAction({ action: 'walk-depth', scale: 1 });
+  for (let index = 1; index < points.length && !session.cancelled; index += 1) {
+    await animatePetWalkSegment(points[index - 1], points[index], session, 52);
+  }
+  if (session.cancelled || petWalkSession !== session) return false;
+  petWalkSession = null;
+  const finalPosition = points.at(-1);
+  readPetSettings().position = finalPosition;
+  writePetSettings();
+  sendPetAction({ action: 'walk-depth', scale: 1 });
+  sendPetAction({ action: 'walk-stop', kind, reason: 'complete' });
+  return true;
+}
+
 function scheduleLunchReminder() {
   clearReminderTimers('lunch:');
   const now = new Date();
@@ -426,7 +601,7 @@ function scheduleLunchReminder() {
   reminderTimers.set(key, setTimeout(async () => {
     reminderTimers.delete(key);
     const message = nextLunchReminderMessage();
-    triggerPetAction('lunch', message.body);
+    triggerPetReminderWalk('lunch', message.body);
     speakAnnouncement(`${message.title}。${message.body}`);
     await showVisibleNotification(message);
     scheduleLunchReminder();
@@ -866,6 +1041,7 @@ function setPetEnabled(enabled, { notify = false } = {}) {
       window.webContents.send('pet:state-changed', latestPetState);
     }
   } else if (petWindow && !petWindow.isDestroyed()) {
+    cancelPetWalk({ notifyRenderer: false });
     petWindow.hide();
   }
   writePetSettings();
@@ -883,6 +1059,18 @@ function resetPetPosition() {
   writePetSettings();
   if (petWindow && !petWindow.isDestroyed()) petWindow.setPosition(position.x, position.y, true);
   return position;
+}
+
+function startPetPatrol() {
+  if (!readPetSettings().enabled) setPetEnabled(true, { notify: true });
+  const window = createPetWindow();
+  const run = () => triggerPetReminderWalk('overtime', overtimePetMessages.ot30);
+  if (window.webContents.isLoading()) {
+    window.webContents.once('did-finish-load', () => setTimeout(run, 180));
+    return { ok: true, queued: true };
+  }
+  run();
+  return { ok: true, queued: false };
 }
 
 function showPetContextMenu() {
@@ -931,6 +1119,7 @@ function movePetDuringDrag(payload = {}) {
 
 function startPetDrag(payload = {}) {
   if (!petWindow || petWindow.isDestroyed()) return false;
+  cancelPetWalk();
   const [x, y] = petWindow.getPosition();
   petDragSession = {
     cursorPosition: Number.isFinite(payload.screenX) && Number.isFinite(payload.screenY)
@@ -1691,6 +1880,42 @@ async function runQaSmoke() {
       return result;
     };
     const early = await petState({ stage:'early', healthScore:100, healthLevel:0, reducedMotion:false }, 'pet-early');
+    const walkStarted = await petWindow.webContents.executeJavaScript(`(() => {
+      window.MA_XIEXIE_PET.startReminderWalk({ kind:'checkout', mode:'cross-screen', direction:'left' });
+      return window.MA_XIEXIE_PET.getState();
+    })()`);
+    const gaitA = await petWindow.webContents.executeJavaScript(`(() => { try { window.MA_XIEXIE_PET.showWalkStep(0); return window.MA_XIEXIE_PET.getState(); } catch (error) { return { qaError:String(error?.stack || error) }; } })()`);
+    await wait(120);
+    const gaitAImage = await petWindow.webContents.capturePage();
+    fs.writeFileSync(path.join(outputDir, 'pet-walk-step-a.png'), gaitAImage.toPNG());
+    const gaitB = await petWindow.webContents.executeJavaScript(`(() => { try { window.MA_XIEXIE_PET.showWalkStep(4); return window.MA_XIEXIE_PET.getState(); } catch (error) { return { qaError:String(error?.stack || error) }; } })()`);
+    await wait(120);
+    const walkImage = await petWindow.webContents.capturePage();
+    fs.writeFileSync(path.join(outputDir, 'pet-walk-step-b.png'), walkImage.toPNG());
+    const walkLook = await petWindow.webContents.executeJavaScript(`(() => {
+      window.MA_XIEXIE_PET.lookAtUserWhileWalking({ text:'喂，你怎么还在。' });
+      return window.MA_XIEXIE_PET.getState();
+    })()`);
+    await wait(120);
+    const walkLookImage = await petWindow.webContents.capturePage();
+    fs.writeFileSync(path.join(outputDir, 'pet-walk-look-user.png'), walkLookImage.toPNG());
+    const walkResumed = await petWindow.webContents.executeJavaScript(`(() => {
+      window.MA_XIEXIE_PET.setWalkDirection('left');
+      return window.MA_XIEXIE_PET.getState();
+    })()`);
+    const walkStopped = await petWindow.webContents.executeJavaScript(`(() => {
+      window.MA_XIEXIE_PET.stopReminderWalk({ kind:'checkout', reason:'complete' });
+      return window.MA_XIEXIE_PET.getState();
+    })()`);
+    const overtimeHorizontal = await petWindow.webContents.executeJavaScript(`(() => {
+      window.MA_XIEXIE_PET.startReminderWalk({ kind:'overtime', mode:'cross-screen', direction:'right', text:'半小时了，收尾不能无限续杯。' });
+      window.MA_XIEXIE_PET.setWalkDepth(1);
+      return window.MA_XIEXIE_PET.getState();
+    })()`);
+    await wait(180);
+    const overtimeHorizontalImage = await petWindow.webContents.capturePage();
+    fs.writeFileSync(path.join(outputDir, 'pet-walk-overtime-horizontal.png'), overtimeHorizontalImage.toPNG());
+    await petWindow.webContents.executeJavaScript(`window.MA_XIEXIE_PET.stopReminderWalk({ kind:'overtime', reason:'complete' })`);
     const helpBefore = await petWindow.webContents.executeJavaScript(`window.MA_XIEXIE_PET.getState()`);
     await petWindow.webContents.executeJavaScript(`document.querySelector('#help-chip').click()`);
     await wait(120);
@@ -1727,6 +1952,19 @@ async function runQaSmoke() {
       window.MA_XIEXIE_PET.setState({ stage:'steady', shiftId:'qa-hydration', workedMinutes:60, healthScore:100, healthLevel:0 });
       return window.MA_XIEXIE_PET.getState();
     })()`);
+    const patrolButton = await mainWindow.webContents.executeJavaScript(`(() => {
+      const button = document.querySelector('#pet-patrol-start');
+      document.querySelector('#pet-guide').hidden = false;
+      return { present:Boolean(button), first:button === document.querySelector('.pet-guide-grid > :first-child'), label:button?.querySelector('strong')?.textContent };
+    })()`);
+    await wait(120);
+    const patrolGuideImage = await mainWindow.webContents.capturePage();
+    fs.writeFileSync(path.join(outputDir, 'pet-guide-patrol.png'), patrolGuideImage.toPNG());
+    await mainWindow.webContents.executeJavaScript(`document.querySelector('#pet-patrol-start')?.click()`);
+    await wait(360);
+    const patrolTriggered = Boolean(petWalkSession && petWalkSession.mode === 'cross-screen' && petWalkSession.copies?.length > 1);
+    const patrolRequiredCalloutFirst = petWalkSession?.copies?.[0] === '喂，你怎么还在。';
+    cancelPetWalk();
     const activeDisplay = screen.getDisplayMatching(petWindow.getBounds());
     syncPetScaleForDisplay({ ...activeDisplay, internal:false });
     await wait(120);
@@ -1749,6 +1987,14 @@ async function runQaSmoke() {
         sizeSwitchWorks: laptopBounds.width === 208 && laptopBounds.height === 254 && monitorBounds.width === 320 && monitorBounds.height === 390
       },
       early,
+      reminderWalk: {
+        started: walkStarted.walking && walkStarted.walkKind === 'checkout' && walkStarted.motion === 'walkingLeft' && !walkStarted.speechVisible,
+        alternatingGait: gaitA.motion === gaitB.motion && gaitA.frame === 0 && gaitB.frame === 4,
+        lookedAtUser: walkLook.walking && walkLook.motion === 'front-glare' && walkLook.frontGlareReady && walkLook.speechVisible && walkLook.speechText === '喂，你怎么还在。',
+        speechOnlyWhenStopped: !walkStarted.speechVisible && walkLook.speechVisible && !walkResumed.speechVisible,
+        stopped: !walkStopped.walking && walkStopped.walkKind === null,
+        overtimeHorizontal: overtimeHorizontal.walking && overtimeHorizontal.walkKind === 'overtime' && overtimeHorizontal.walkDepthScale === 1
+      },
       defaultEnabled: readPetSettings().enabled,
       visibleAtLaunch: petWindow.isVisible(),
       helpClickWorks: helpAfter.hintIndex === helpBefore.hintIndex + 1 && helpAfter.speechVisible && Boolean(helpAfter.speechText),
@@ -1777,6 +2023,7 @@ async function runQaSmoke() {
         triggeredAtOneHour: hydration.lastHydrationHour === 1 && hydration.speechVisible,
         text: hydration.speechText
       },
+      patrolControl: { ...patrolButton, triggered: patrolTriggered, requiredCalloutFirst: patrolRequiredCalloutFirst },
       trueFrameRenderer: early.renderer === 'frame-atlas-v2' && early.spriteLayers === 1 && early.fakeEyeLayers === 0,
       transparent: petWindow.isVisible()
     };
@@ -1890,6 +2137,7 @@ app.whenReady().then(() => {
   ipcMain.handle('pet:get-settings', () => ({ ...readPetSettings() }));
   ipcMain.handle('pet:set-enabled', (_event, enabled) => setPetEnabled(typeof enabled === 'object' ? enabled?.enabled : enabled));
   ipcMain.handle('pet:reset-position', () => resetPetPosition());
+  ipcMain.handle('pet:start-patrol', () => startPetPatrol());
   ipcMain.handle('pet:sync-state', (_event, state) => {
     latestPetState = state && typeof state === 'object' ? state : {};
     if (petWindow && !petWindow.isDestroyed() && !petWindow.webContents.isLoading()) {

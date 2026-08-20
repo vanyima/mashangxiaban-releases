@@ -92,13 +92,16 @@
     lastHydrationHour: 0,
     packingComplete: false,
     collapseComplete: false,
+    walking: false,
+    walkKind: null,
+    walkDirection: 'right',
     ignoringMouse: null
   };
 
   const ANIMATIONS = {
     idle: { row: 0, durations: [280, 110, 110, 140, 140, 320] },
-    runningRight: { row: 1, durations: [120, 120, 120, 120, 120, 120, 120, 220] },
-    runningLeft: { row: 2, durations: [120, 120, 120, 120, 120, 120, 120, 220] },
+    walkingRight: { external: 'walkRightStrip', durations: [190, 190, 190, 190, 190, 190, 190, 190] },
+    walkingLeft: { external: 'walkLeftStrip', durations: [190, 190, 190, 190, 190, 190, 190, 190] },
     waving: { row: 3, durations: [140, 140, 140, 280] },
     jumping: { row: 4, durations: [140, 140, 140, 140, 280] },
     failed: { row: 5, durations: [140, 140, 140, 140, 140, 140, 140, 240] },
@@ -135,6 +138,12 @@
   const packedGazeFrames = externalFrames('ma-xiexie-packed-gaze-v2');
   const tiredGazeFrames = externalFrames('ma-xiexie-tired-gaze-v2');
   const angryGazeFrames = externalFrames('ma-xiexie-angry-gaze-v2');
+  const walkRightStrip = new Image();
+  const walkLeftStrip = new Image();
+  const frontGlareImage = new Image();
+  walkRightStrip.src = 'mascot/ma-xiexie-walk-right-strip-v1.png';
+  walkLeftStrip.src = 'mascot/ma-xiexie-walk-left-strip-v1.png';
+  frontGlareImage.src = 'mascot/ma-xiexie-front-glare-v1.png';
   let spriteReady = false;
   let packingReady = false;
   let workingReady = false;
@@ -145,6 +154,9 @@
   let packedGazeReady = false;
   let tiredGazeReady = false;
   let angryGazeReady = false;
+  let walkRightReady = false;
+  let walkLeftReady = false;
+  let frontGlareReady = false;
   let motionTimer = 0;
   let motionToken = 0;
   let currentMotion = { name: 'idle', frame: 0, loop: false, resting: false };
@@ -156,6 +168,22 @@
   }
 
   function drawMotionFrame(name, motion, frame) {
+    if (motion.external === 'walkRightStrip' || motion.external === 'walkLeftStrip') {
+      const strip = motion.external === 'walkLeftStrip' ? walkLeftStrip : walkRightStrip;
+      const ready = motion.external === 'walkLeftStrip' ? walkLeftReady : walkRightReady;
+      if (!ready) return drawSprite(motion.external === 'walkLeftStrip' ? 2 : 1, frame);
+      const sourceWidth = strip.naturalWidth / 8;
+      const sourceTop = Math.round(strip.naturalHeight * .276);
+      const sourceHeight = Math.round(strip.naturalHeight * .442);
+      const stepScale = frame >= 4 ? 1.055 : 1;
+      const targetWidth = spriteCanvas.width * stepScale;
+      const targetHeight = spriteCanvas.height * stepScale;
+      const targetLeft = (spriteCanvas.width - targetWidth) / 2;
+      const targetTop = spriteCanvas.height - targetHeight;
+      spriteContext.clearRect(0, 0, spriteCanvas.width, spriteCanvas.height);
+      spriteContext.drawImage(strip, frame * sourceWidth, sourceTop, sourceWidth, sourceHeight, targetLeft, targetTop, targetWidth, targetHeight);
+      return;
+    }
     if (motion.external === 'packing') {
       if (!packingReady) return drawSprite(ANIMATIONS.waiting.row, 0);
       spriteContext.clearRect(0, 0, spriteCanvas.width, spriteCanvas.height);
@@ -181,6 +209,23 @@
       return;
     }
     drawSprite(motion.row, frame);
+  }
+
+  function drawFrontGlare() {
+    if (!frontGlareReady) {
+      if (angryReady) return drawMotionFrame('angry', ANIMATIONS.angry, 0);
+      return drawSprite(0, 0);
+    }
+    // Crop only transparent padding, preserve the generated pose's proportions,
+    // and align the shoes with the same baseline as the walking frames.
+    const source = { x: 340, y: 40, width: 532, height: 1190 };
+    const scale = Math.min(spriteCanvas.width / source.width, spriteCanvas.height / source.height);
+    const targetWidth = source.width * scale;
+    const targetHeight = source.height * scale;
+    const targetLeft = (spriteCanvas.width - targetWidth) / 2;
+    const targetTop = spriteCanvas.height - targetHeight;
+    spriteContext.clearRect(0, 0, spriteCanvas.width, spriteCanvas.height);
+    spriteContext.drawImage(frontGlareImage, source.x, source.y, source.width, source.height, targetLeft, targetTop, targetWidth, targetHeight);
   }
 
   function motionSpeed() {
@@ -241,7 +286,7 @@
   }
 
   function resumeStageMotion() {
-    if (!spriteReady || pet.classList.contains('is-watching')) return;
+    if (!spriteReady || state.walking || pet.classList.contains('is-watching')) return;
     if (state.stage === 'near' && packingReady) {
       if (state.packingComplete || state.reducedMotion) {
         state.packingComplete = true;
@@ -281,6 +326,72 @@
     if (!lunchReady) return false;
     playMotion('lunch', { loop: false, resume: true });
     return true;
+  }
+
+  function setWalkDirection(direction) {
+    if (!state.walking) return false;
+    const next = direction === 'left' ? 'left' : 'right';
+    state.walkDirection = next;
+    clearTimeout(state.speechTimer);
+    speechBubble.hidden = true;
+    ++motionToken;
+    clearTimeout(motionTimer);
+    currentMotion = { name: next === 'left' ? 'walkingLeft' : 'walkingRight', frame: 0, loop: true, resting: false };
+    drawMotionFrame(currentMotion.name, ANIMATIONS[currentMotion.name], 0);
+    return true;
+  }
+
+  function showWalkStep(frame) {
+    if (!state.walking) return false;
+    const motionName = state.walkDirection === 'left' ? 'walkingLeft' : 'walkingRight';
+    const motion = ANIMATIONS[motionName];
+    const nextFrame = clamp(Math.round(finiteNumber(frame, 0)), 0, motion.durations.length - 1);
+    ++motionToken;
+    clearTimeout(motionTimer);
+    currentMotion = { name: motionName, frame: nextFrame, loop: true, resting: false };
+    drawMotionFrame(motionName, motion, nextFrame);
+    return true;
+  }
+
+  function startReminderWalk(payload = {}) {
+    state.walking = true;
+    state.walkKind = payload.kind || 'reminder';
+    body.dataset.walkMode = payload.mode || 'cross-screen';
+    body.classList.add('is-walking');
+    pet.classList.remove('is-watching');
+    clearTimeout(state.watchingTimer);
+    clearTimeout(state.speechTimer);
+    speechBubble.hidden = true;
+    setWalkDirection(payload.direction);
+  }
+
+  function lookAtUserWhileWalking(payload = {}) {
+    if (!state.walking) return;
+    ++motionToken;
+    clearTimeout(motionTimer);
+    currentMotion = { name: 'front-glare', frame: 0, loop: false, resting: true };
+    drawFrontGlare();
+    if (payload.text) showSpeech(payload.text, { force: true, duration: 1450 });
+    pet.classList.add('is-looking-at-user');
+    window.setTimeout(() => pet.classList.remove('is-looking-at-user'), 980);
+  }
+
+  function stopReminderWalk(payload = {}) {
+    const completedKind = payload.kind || state.walkKind;
+    state.walking = false;
+    state.walkKind = null;
+    body.classList.remove('is-walking');
+    pet.classList.remove('is-looking-at-user');
+    delete body.dataset.walkMode;
+    document.documentElement.style.setProperty('--walk-depth-scale', '1');
+    if (completedKind === 'lunch' && payload.reason === 'complete') playLunch();
+    else resumeStageMotion();
+  }
+
+  function setWalkDepth(value) {
+    const scale = clamp(finiteNumber(value, 1), .78, 1);
+    document.documentElement.style.setProperty('--walk-depth-scale', String(scale));
+    return scale;
   }
 
   function showLookDirection(x, y) {
@@ -344,6 +455,13 @@
   whenFramesReady(packedGazeFrames, () => { packedGazeReady = true; });
   whenFramesReady(tiredGazeFrames, () => { tiredGazeReady = true; });
   whenFramesReady(angryGazeFrames, () => { angryGazeReady = true; });
+  const whenImageReady = (image, callback) => {
+    if (image.complete && image.naturalWidth) callback();
+    else image.addEventListener('load', callback, { once: true });
+  };
+  whenImageReady(walkRightStrip, () => { walkRightReady = true; });
+  whenImageReady(walkLeftStrip, () => { walkLeftReady = true; });
+  whenImageReady(frontGlareImage, () => { frontGlareReady = true; });
 
   function clamp(value, min, max) { return Math.max(min, Math.min(max, value)); }
   function finiteNumber(value, fallback) {
@@ -517,7 +635,7 @@
   }
 
   function updateGaze(event) {
-    if (state.healthLevel >= 5 || state.dragging) return;
+    if (state.healthLevel >= 5 || state.dragging || state.walking) return;
     const rect = pet.getBoundingClientRect();
     const cx = rect.left + rect.width * .52;
     const cy = rect.top + rect.height * .42;
@@ -730,6 +848,12 @@
   bridge.onSpeak?.((payload) => showSpeech(payload?.text || payload, { force: true }));
   bridge.onAction?.((payload) => {
     if (payload?.action === 'lunch') playLunch(payload.text);
+    if (payload?.action === 'walk-start') startReminderWalk(payload);
+    if (payload?.action === 'walk-direction') setWalkDirection(payload.direction);
+    if (payload?.action === 'walk-step') showWalkStep(payload.frame);
+    if (payload?.action === 'walk-look-user') lookAtUserWhileWalking(payload);
+    if (payload?.action === 'walk-depth') setWalkDepth(payload.scale);
+    if (payload?.action === 'walk-stop') stopReminderWalk(payload);
   });
   bridge.onReducedMotion?.((reducedMotion) => setState({ reducedMotion }));
   bridge.onDisplayScale?.((scale) => {
@@ -740,6 +864,12 @@
   window.MA_XIEXIE_PET = Object.freeze({
     setState,
     playLunch,
+    startReminderWalk,
+    setWalkDirection,
+    lookAtUserWhileWalking,
+    stopReminderWalk,
+    setWalkDepth,
+    showWalkStep,
     showSpeech: (text, options) => showSpeech(text, { ...options, force: true }),
     close: () => bridge.close?.(),
     getState: () => ({
@@ -764,9 +894,15 @@
       angryReady,
       collapseReady,
       lunchReady,
+      walkReady: { left: walkLeftReady, right: walkRightReady },
+      frontGlareReady,
       gazeReady: { working: workingGazeReady, packed: packedGazeReady, tired: tiredGazeReady, angry: angryGazeReady },
       packingComplete: state.packingComplete,
       collapseComplete: state.collapseComplete,
+      walking: state.walking,
+      walkKind: state.walkKind,
+      walkDirection: state.walkDirection,
+      walkDepthScale: finiteNumber(getComputedStyle(document.documentElement).getPropertyValue('--walk-depth-scale'), 1),
       spriteLayers: document.querySelectorAll('#pet-sprite').length,
       fakeEyeLayers: document.querySelectorAll('.gaze-eye, .gaze-eyes, .sprite-head, .head-follow').length
     })
