@@ -1,27 +1,21 @@
 {
-  "version": "2.5.3",
-  "publishedAt": "2026-08-20T10:54:16Z",
+  "version": "2.5.4",
+  "publishedAt": "2026-08-20T16:21:31Z",
   "artifacts": {
     "darwin-arm64": {
-      "downloadUrl": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.5.3/mashangxiaban-2.5.3-macOS-Apple-Silicon.dmg",
-      "sha256": "8f1ca41a22812cab5323e63fc7e5653d9d5a0561006df98d7f2eb6b86d4fa271"
+      "downloadUrl": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.5.4/mashangxiaban-2.5.4-macOS-Apple-Silicon.dmg",
+      "sha256": "80e26b645cd137a85050a18dcbcab90ce10ab24d48b218004704d1f2b32bc233"
     },
     "win32-x64": {
-      "downloadUrl": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.5.3/mashangxiaban-2.5.3-Windows-x64.exe",
-      "sha256": "7893cfd3116aa56514b134ea5b6a5560bd3683972d7555688159ee8172a2821e"
+      "downloadUrl": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.5.4/mashangxiaban-2.5.4-Windows-x64.exe",
+      "sha256": "2790d775b2d23e2c50bd99664433d19a1fd7dcacb9e58b8605653d1ba7564936"
     }
   },
   "platform": "darwin-arm64",
-  "downloadUrl": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.5.3/mashangxiaban-2.5.3-macOS-Apple-Silicon.dmg",
-  "sha256": "8f1ca41a22812cab5323e63fc7e5653d9d5a0561006df98d7f2eb6b86d4fa271",
+  "downloadUrl": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.5.4/mashangxiaban-2.5.4-macOS-Apple-Silicon.dmg",
+  "sha256": "80e26b645cd137a85050a18dcbcab90ce10ab24d48b218004704d1f2b32bc233",
   "notes": [
-    "## 马上下班 2.5.3",
-    "工位雷达正式升级为「附近工友」，支持 1 公里、20 公里和不限范围。",
-    "可以向附近工友打招呼、随机发送 10 条抽象摸鱼暗号，或自由输入不超过 100 字的消息。",
-    "发消息与回复均支持图片和 10 个原创打工人疯感表情包，收件箱同步展示文字、图片与表情包。",
-    "优化收件箱布局、未读状态与桌面应用图标角标；没有未读消息时不显示数量。",
-    "官网同步更新附近工友介绍与收件箱示意，并升级退休生活的 3D 环形照片墙和场景素材。",
-    "Cloudflare 真实模式已完成数据库迁移和 Worker 部署，消息保留与位置隐私规则保持不变。",
-    "macOS 安装包适用于 Apple Silicon；Windows 安装包适用于 64 位 Windows 10 / 11。"
+    "新增「摸鱼乐园·带薪钓鱼」，支持一键工作文档伪装。",
+    "桌宠新增跨屏巡视与提醒。"
   ]
 }

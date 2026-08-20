@@ -1,5 +1,17 @@
 [
   {
+    "version": "2.5.4",
+    "publishedAt": "2026-08-20T16:21:31Z",
+    "notes": [
+      "新增「摸鱼乐园·带薪钓鱼」，支持一键工作文档伪装。",
+      "桌宠新增跨屏巡视与提醒。"
+    ],
+    "artifacts": {
+      "windows": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.5.4/mashangxiaban-2.5.4-Windows-x64.exe",
+      "mac": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.5.4/mashangxiaban-2.5.4-macOS-Apple-Silicon.dmg"
+    }
+  },
+  {
     "version": "2.5.3",
     "publishedAt": "2026-08-20T10:54:16Z",
     "notes": [
