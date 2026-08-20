@@ -1,29 +1,27 @@
 {
-  "version": "2.5.2",
-  "publishedAt": "2026-08-19T16:48:21Z",
+  "version": "2.5.3",
+  "publishedAt": "2026-08-20T10:54:16Z",
   "artifacts": {
     "darwin-arm64": {
-      "downloadUrl": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.5.2/mashangxiaban-2.5.2-macOS-Apple-Silicon.dmg",
-      "sha256": "01d65dc758b399eaa99f782e644bcefaeb297d9696b6aa82753c75e9ebee019e"
+      "downloadUrl": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.5.3/mashangxiaban-2.5.3-macOS-Apple-Silicon.dmg",
+      "sha256": "8f1ca41a22812cab5323e63fc7e5653d9d5a0561006df98d7f2eb6b86d4fa271"
     },
     "win32-x64": {
-      "downloadUrl": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.5.2/mashangxiaban-2.5.2-Windows-x64.exe",
-      "sha256": "7cfa95f6d5e81dcc76043ba147d434510ab2f8108d09d48f5985cff7b02e2933"
+      "downloadUrl": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.5.3/mashangxiaban-2.5.3-Windows-x64.exe",
+      "sha256": "7893cfd3116aa56514b134ea5b6a5560bd3683972d7555688159ee8172a2821e"
     }
   },
   "platform": "darwin-arm64",
-  "downloadUrl": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.5.2/mashangxiaban-2.5.2-macOS-Apple-Silicon.dmg",
-  "sha256": "01d65dc758b399eaa99f782e644bcefaeb297d9696b6aa82753c75e9ebee019e",
+  "downloadUrl": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.5.3/mashangxiaban-2.5.3-macOS-Apple-Silicon.dmg",
+  "sha256": "8f1ca41a22812cab5323e63fc7e5653d9d5a0561006df98d7f2eb6b86d4fa271",
   "notes": [
-    "## 马上下班 2.5.2",
-    "工位雷达真实模式支持匿名“递杯水 / 摸鱼暗号 / 辛苦了”，收件箱支持未读、距离显示和真实回复。",
-    "真实通信使用 Cloudflare Worker 与私有 D1 数据库；限制发送频率，消息保留 30 天，不向客户端返回对方经纬度。",
-    "修复 Windows 定位可能卡在“正在连接云端”的问题，增加定位阶段、云端超时、重新尝试及明确的权限检查步骤。",
-    "Windows 定位失败时弹出三项权限引导并打开系统位置设置；Mac 定位失败同样提供系统设置引导。",
-    "Mock 模式启动时默认开启附近发现；进入真实模式时默认关闭，只有用户主动开启才读取位置。",
-    "Mock 数据新增 40 米、90 米示例，直接展示 50 米内与 100 米内醒目标记。",
-    "放大雷达、工友卡片、异常说明和操作按钮文字；近距离标签调整到名字右侧，并错开中心雷达标签避免遮挡。",
-    "右上角通知铃铛取消持续高亮状态。",
+    "## 马上下班 2.5.3",
+    "工位雷达正式升级为「附近工友」，支持 1 公里、20 公里和不限范围。",
+    "可以向附近工友打招呼、随机发送 10 条抽象摸鱼暗号，或自由输入不超过 100 字的消息。",
+    "发消息与回复均支持图片和 10 个原创打工人疯感表情包，收件箱同步展示文字、图片与表情包。",
+    "优化收件箱布局、未读状态与桌面应用图标角标；没有未读消息时不显示数量。",
+    "官网同步更新附近工友介绍与收件箱示意，并升级退休生活的 3D 环形照片墙和场景素材。",
+    "Cloudflare 真实模式已完成数据库迁移和 Worker 部署，消息保留与位置隐私规则保持不变。",
     "macOS 安装包适用于 Apple Silicon；Windows 安装包适用于 64 位 Windows 10 / 11。"
   ]
 }

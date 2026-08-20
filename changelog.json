@@ -1,5 +1,19 @@
 [
   {
+    "version": "2.5.3",
+    "publishedAt": "2026-08-20T10:54:16Z",
+    "notes": [
+      "工位雷达正式升级为「附近工友」，支持 1 公里、20 公里和不限范围。",
+      "可以向附近工友打招呼、随机发送 10 条抽象摸鱼暗号，或自由输入不超过 100 字的消息。",
+      "发消息与回复均支持图片和 10 个原创打工人疯感表情包，收件箱同步展示文字、图片与表情包。",
+      "优化使用体验并修复已知问题。"
+    ],
+    "artifacts": {
+      "windows": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.5.3/mashangxiaban-2.5.3-Windows-x64.exe",
+      "mac": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.5.3/mashangxiaban-2.5.3-macOS-Apple-Silicon.dmg"
+    }
+  },
+  {
     "version": "2.5.2",
     "publishedAt": "2026-08-19T16:48:21Z",
     "notes": [
