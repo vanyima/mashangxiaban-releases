@@ -874,6 +874,46 @@
     .radar-person-actions { display: flex; flex-wrap: wrap; gap: 5px; }
     .radar-person-actions button { min-height: 27px; padding: 0 8px; border: 1px solid var(--ink); background: #eee8da; color: var(--ink); font-size: 8px; font-weight: 900; cursor: pointer; }
     .radar-person-actions button:hover { background: var(--yellow); }
+    .radar-message-dialog[hidden] { display: none; }
+    .radar-message-dialog { position: fixed; z-index: 1200; inset: 0; display: grid; place-items: center; padding: 24px; opacity: 0; transition: opacity .18s ease; }
+    .radar-message-dialog.is-open { opacity: 1; }
+    .radar-message-backdrop { position: absolute; inset: 0; background: rgba(3,8,27,.72); backdrop-filter: blur(5px); }
+    .radar-message-composer { position: relative; width: min(680px,calc(100vw - 32px)); max-height: min(760px,calc(100vh - 32px)); overflow: auto; padding: 24px; border: 3px solid var(--ink); background: var(--cream); color: var(--ink); box-shadow: 11px 11px 0 var(--ink); transform: translateY(14px) rotate(-.5deg); transition: transform .2s ease; }
+    .radar-message-dialog.is-open .radar-message-composer { transform: translateY(0) rotate(-.5deg); }
+    .radar-message-composer > small { color: var(--red); font: 900 9px/1 var(--mono); letter-spacing: .12em; }
+    .radar-message-composer h3 { margin: 12px 0 15px; font: 950 24px/1.05 var(--display); }
+    .radar-message-composer h3 strong { color: #2448bd; }
+    .radar-compose-input { margin-top: 10px; border: 2px solid var(--ink); background: #fffdf8; }
+    .radar-compose-input:focus-within { background: #fff8c9; box-shadow: 4px 4px 0 var(--ink); }
+    .radar-message-composer textarea { width: 100%; min-height: 115px; resize: vertical; padding: 13px; border: 0; outline: 0; background: transparent; color: var(--ink); font: 800 13px/1.6 var(--sans); }
+    .radar-message-tools { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .radar-message-tools > button,.radar-message-image-remove { min-height: 35px; padding: 0 11px; border: 2px solid var(--ink); background: #fffdf8; color: var(--ink); font-size: 10px; font-weight: 950; cursor: pointer; }
+    .radar-message-tools > button:hover,.radar-message-tools > button[aria-expanded="true"] { background: var(--yellow); }
+    .radar-message-image-preview[hidden],.radar-message-image-remove[hidden],.radar-sticker-panel[hidden] { display: none; }
+    .radar-message-image-preview { display: block; width: min(220px,100%); max-height: 170px; object-fit: contain; margin-top: 10px; border: 2px solid var(--ink); background: #10121a; }
+    .radar-message-image-remove { margin-top: 7px; color: var(--red); }
+    .radar-sticker-panel { margin-top: 9px; padding: 8px 0 2px; border-top: 1px dashed rgba(17,19,26,.4); border-bottom: 1px dashed rgba(17,19,26,.4); }
+    .radar-sticker-grid { display: grid; grid-template-columns: repeat(5,minmax(0,1fr)); gap: 8px; max-height: 300px; overflow: auto; }
+    .radar-sticker { min-width: 0; display: grid; justify-items: center; gap: 2px; padding: 3px; border: 0; outline: 0; background: transparent; color: var(--ink); cursor: pointer; }
+    .radar-sticker:hover,.radar-sticker.is-selected { transform: translateY(-3px) rotate(-3deg) scale(1.05); filter: drop-shadow(3px 5px 0 rgba(255,76,67,.28)); }
+    .radar-sticker.is-selected .radar-sticker-visual { outline: 2px dashed var(--red); outline-offset: -5px; border-radius: 48% 42% 55% 38%; }
+    .radar-sticker-visual { width: 88px; height: 88px; display: block; }
+    .radar-sticker-visual svg { width: 100%; height: 100%; overflow: visible; stroke: var(--ink); stroke-linecap: round; stroke-linejoin: round; }
+    .radar-sticker-visual .sticker-blob { stroke-width: 5; }
+    .radar-sticker-visual .sticker-accent { fill: none; stroke-width: 7; }
+    .radar-sticker-visual .sticker-spark,.radar-sticker-visual .sticker-jolt { fill: none; stroke-width: 5; }
+    .radar-sticker > strong { margin-top: -5px; font: 950 10px/1 var(--display); white-space: nowrap; transform: rotate(-2deg); }
+    .radar-sticker.is-received { width: 126px; margin: 6px 0 10px; cursor: default; transform: rotate(-3deg); }
+    .radar-compose-sticker[hidden] { display: none; }
+    .radar-compose-sticker { padding: 10px 10px 0; }
+    .radar-sticker.is-composing { position: relative; width: 126px; cursor: default; transform: rotate(-3deg); }
+    .radar-sticker.is-composing > button { position: absolute; top: 1px; right: 1px; width: 24px; height: 24px; padding: 0; border: 2px solid var(--ink); border-radius: 50%; background: var(--red); color: white; font-weight: 950; cursor: pointer; }
+    .radar-message-media { display: block; width: min(260px,100%); max-height: 220px; object-fit: contain; margin: 8px 0; border: 2px solid var(--ink); background: #11131a; }
+    .radar-message-composer-meta { min-height: 25px; display: flex; justify-content: space-between; gap: 12px; padding-top: 8px; color: var(--muted); font: 850 9px/1.3 var(--mono); }
+    .radar-message-error { color: var(--red); }
+    .radar-message-composer-actions { position: sticky; z-index: 3; bottom: -24px; display: flex; justify-content: flex-end; gap: 9px; margin: 13px -24px -24px; padding: 13px 24px 18px; border-top: 2px solid var(--ink); background: var(--cream); }
+    .radar-message-composer-actions button { min-height: 39px; padding: 0 15px; border: 2px solid var(--ink); background: #eee8da; color: var(--ink); font-weight: 950; cursor: pointer; }
+    .radar-message-composer-actions button[type="submit"] { background: var(--yellow); box-shadow: 4px 4px 0 var(--ink); }
     .radar-blip[data-proximity="within-50m"] i { background: #fff; box-shadow: 0 0 0 8px rgba(255,76,67,.45),0 0 28px rgba(255,76,67,1); animation-duration: .65s; }
     .radar-blip[data-proximity="within-100m"] i { background: var(--yellow); box-shadow: 0 0 0 8px rgba(255,225,52,.32),0 0 24px rgba(255,225,52,.95); animation-duration: .9s; }
     .radar-blip.is-selected { z-index: 10; }
@@ -933,7 +973,8 @@
     .radar-feed-tabs button { min-height: 45px; border: 0; background: transparent; color: var(--ink); font-size: 11px; font-weight: 950; cursor: pointer; }
     .radar-feed-tabs button + button { border-left: 1px solid var(--ink); }
     .radar-feed-tabs button.is-active { background: var(--yellow); }
-    .radar-feed-tabs b { display: inline-grid; min-width: 18px; height: 18px; margin-left: 4px; place-items: center; border: 1px solid var(--ink); border-radius: 50%; background: var(--red); color: var(--white); font: 900 8px/1 var(--mono); }
+    .radar-feed-tabs b { display: inline-grid; min-width: 18px; height: 18px; margin-left: 4px; place-items: center; border: 1px solid var(--ink); border-radius: 50%; background: #aeb2bc; color: var(--white); font: 900 8px/1 var(--mono); }
+    .radar-feed-tabs b.has-unread { background: var(--red); }
     .radar-people,.radar-inbox { min-height: 0; overflow-y: auto; padding: 9px; }
     .radar-people[hidden],.radar-inbox[hidden] { display: none; }
     .radar-person { padding: 9px; }
@@ -943,15 +984,15 @@
     .radar-troubleshooting { width: min(100%, 310px); margin: 8px auto 0; padding: 10px 12px 10px 27px; border: 1px dashed var(--ink); background: rgba(255,225,52,.16); text-align: left; }
     .radar-troubleshooting li { margin: 4px 0; color: var(--ink); font-size: 8px; font-weight: 800; line-height: 1.5; }
     .radar-list-empty .radar-retry { justify-self: center; margin-top: 8px; min-height: 32px; padding: 0 12px; border: 2px solid var(--ink); background: var(--yellow); color: var(--ink); box-shadow: 3px 3px 0 var(--ink); font-size: 9px; font-weight: 950; cursor: pointer; }
-    .radar-message { display: grid; grid-template-columns: 34px 1fr; gap: 9px; padding: 11px 8px; border-bottom: 1px solid rgba(17,19,26,.2); }
+    .radar-message { position: relative; display: grid; grid-template-columns: 34px 1fr; gap: 9px; padding: 11px 82px 11px 8px; border-bottom: 1px solid rgba(17,19,26,.2); }
     .radar-message.is-unread { background: #fff5b5; box-shadow: inset 3px 0 0 var(--red); }
     .radar-message-icon { width: 32px; height: 32px; display: grid; place-items: center; border: 2px solid var(--ink); border-radius: 50%; background: var(--yellow); font-size: 10px; font-weight: 950; }
     .radar-message-meta { display: flex; justify-content: space-between; gap: 8px; }
     .radar-message-meta strong { font-size: 10px; }
-    .radar-message-meta time { color: var(--muted); font: 800 8px/1 var(--mono); }
+    .radar-message-meta time { position: absolute; right: 9px; top: 11px; color: var(--muted); font: 800 8px/1 var(--mono); }
     .radar-message-distance { display: inline-block; margin-top: 4px; color: #2959cc; font: 900 8px/1 var(--mono); }
     .radar-message p { margin: 5px 0 7px; color: var(--muted); font-size: 9px; line-height: 1.45; }
-    .radar-message button { min-height: 26px; padding: 0 8px; border: 1px solid var(--ink); background: var(--white); color: var(--ink); font-size: 8px; font-weight: 900; cursor: pointer; }
+    .radar-message button { position: absolute; right: 9px; bottom: 9px; min-height: 28px; padding: 0 9px; border: 1px solid var(--ink); background: var(--white); color: var(--ink); font-size: 8px; font-weight: 900; white-space: nowrap; cursor: pointer; }
     .radar-message button:hover { background: var(--yellow); }
     .radar-privacy { flex: 0 0 auto; margin-top: auto; background: var(--cream); }
     .radar-real-view { min-height: 370px; margin-top: 14px; border-color: rgba(17,19,26,.45); }
@@ -1021,7 +1062,8 @@
     .radar-feed-tabs { display: flex; gap: 5px; padding: 7px; border: 0; border-bottom: 1px solid #e5e9f1; background: #fff; }
     .radar-feed-tabs button { flex: 1; min-height: 36px; border: 0 !important; border-radius: 9px; color: #778096; font-size: 10px; }
     .radar-feed-tabs button.is-active { background: #edf2ff; color: #2859d4; }
-    .radar-feed-tabs b { min-width: 17px; height: 17px; border: 0; background: #ff6259; font-size: 7px; }
+    .radar-feed-tabs b { min-width: 17px; height: 17px; border: 0; background: #aeb2bc; font-size: 7px; }
+    .radar-feed-tabs b.has-unread { background: #ff6259; }
     .radar-people,.radar-inbox { padding: 8px; }
     .radar-people { gap: 7px; }
     .radar-person { padding: 11px; border: 0; border-radius: 11px; background: #f6f8fb; }
@@ -1031,7 +1073,7 @@
     .radar-person-actions button,.radar-message button { min-height: 26px; border: 0; border-radius: 7px; background: #e9eef7; color: #536079; }
     .radar-person-actions button:hover,.radar-message button:hover { background: #dce6fb; color: #2959cc; }
     .radar-privacy { margin: auto 11px 9px; padding-top: 8px; border-color: #e2e6ee; background: #fff; color: #939bab; }
-    .radar-message { margin-bottom: 5px; padding: 10px; border: 0; border-radius: 11px; background: #f7f8fb; }
+    .radar-message { margin-bottom: 5px; padding: 10px 80px 10px 10px; border: 0; border-radius: 11px; background: #f7f8fb; }
     .radar-message.is-unread { background: #fff8dc; box-shadow: inset 3px 0 0 #ffcc32; }
     .radar-message-icon { border: 0; background: #e9efff; color: #2d5ed6; }
     .radar-message p { color: #778197; }
@@ -1108,14 +1150,15 @@
     .radar-feed-tabs button { min-height: 44px; border-radius: 0; color: var(--ink); }
     .radar-feed-tabs button + button { border-left: 1px solid var(--ink) !important; }
     .radar-feed-tabs button.is-active { background: var(--yellow); color: var(--ink); }
-    .radar-feed-tabs b { border: 1px solid var(--ink); background: var(--red); }
+    .radar-feed-tabs b { border: 1px solid var(--ink); background: #aeb2bc; }
+    .radar-feed-tabs b.has-unread { background: var(--red); }
     .radar-people,.radar-inbox { padding: 9px; }
     .radar-person { padding: 10px; border: 1px solid rgba(17,19,26,.3); border-radius: 0; background: var(--white); }
     .radar-person-name { color: var(--ink); }
     .radar-person-actions button,.radar-message button { border: 1px solid var(--ink); border-radius: 0; background: #eee8da; color: var(--ink); }
     .radar-person-actions button:hover,.radar-message button:hover { background: var(--yellow); color: var(--ink); }
     .radar-privacy { background: var(--cream); }
-    .radar-message { margin-bottom: 0; padding: 11px 8px; border-radius: 0; border-bottom: 1px solid rgba(17,19,26,.2); background: transparent; }
+    .radar-message { margin-bottom: 0; padding: 11px 82px 11px 8px; border-radius: 0; border-bottom: 1px solid rgba(17,19,26,.2); background: transparent; }
     .radar-message.is-unread { background: #fff5b5; box-shadow: inset 3px 0 0 var(--red); }
     .radar-message-icon { border: 2px solid var(--ink); background: var(--yellow); color: var(--ink); }
     .radar-real-view { border: 2px dashed rgba(17,19,26,.5); border-radius: 0; background: transparent; }
@@ -1214,6 +1257,8 @@
 
     .retirement-terminal { position: relative; min-width: 0; display: flex; flex-direction: column; justify-content: flex-end; padding: clamp(36px,5vw,70px); overflow: hidden; background: linear-gradient(180deg,#ee6849 0%,#f99555 43%,#ffcf72 72%,#f7d99d 100%); }
     .retirement-terminal::before { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 32%; background: linear-gradient(170deg,transparent 30%,rgba(93,48,56,.2) 31%,rgba(93,48,56,.2) 48%,transparent 49%),linear-gradient(190deg,transparent 18%,rgba(255,242,191,.45) 19%,rgba(255,242,191,.45) 42%,transparent 43%); }
+    .retirement-slogan { position: absolute; z-index: 2; top: clamp(28px,4vw,52px); left: clamp(28px,5vw,70px); display: inline-flex; align-items: center; gap: 9px; padding: 10px 13px; border: 2px solid var(--ink); background: #fffdf8; color: var(--ink); box-shadow: 5px 5px 0 var(--ink); font: 950 12px/1 var(--display); letter-spacing: .04em; }
+    .retirement-slogan::before { content: "100"; display: grid; place-items: center; width: 31px; height: 31px; margin: -4px 1px -4px -5px; border-radius: 50%; background: var(--yellow); font: 950 10px/1 var(--mono); }
     .retirement-sun { position: absolute; top: 11%; right: 11%; width: clamp(145px,18vw,250px); aspect-ratio: 1; border: 3px solid var(--ink); border-radius: 50%; background: var(--yellow); box-shadow: 10px 10px 0 rgba(17,19,26,.16); }
     .retirement-board { position: relative; z-index: 2; padding: 22px 24px 25px; border: 3px solid var(--ink); background: #181a22; color: #fff8e9; box-shadow: 9px 9px 0 rgba(17,19,26,.42); }
     .retirement-board-top { display: flex; justify-content: space-between; gap: 20px; padding-bottom: 14px; border-bottom: 1px solid rgba(255,255,255,.3); color: #f6c65f; font: 800 8px/1 var(--mono); letter-spacing: .12em; }
@@ -1343,6 +1388,7 @@
       .retirement-age-fields { grid-template-columns: 1fr; }
       .retirement-age-fields > i { display: none; }
       .retirement-terminal { min-height: 530px; padding: 27px 22px; }
+      .retirement-slogan { top: 24px; left: 22px; font-size: 11px; }
       .retirement-sun { top: 7%; }
       .retirement-board { padding: 19px 17px 22px; }
       .retirement-day-value strong { font-size: clamp(52px,17vw,78px); }
@@ -1380,7 +1426,7 @@
       </div>
       <nav class="nav-tabs" aria-label="应用页面">
         <button class="nav-tab is-active" data-page="today">今日陪伴</button>
-        <button class="nav-tab" data-page="radar">工位雷达</button>
+          <button class="nav-tab" data-page="radar">附近工友</button>
         <button class="nav-tab" data-page="attendance">考勤簿</button>
         <button class="nav-tab" data-page="health">马生健康</button>
         <button class="nav-tab" data-page="retirement">我要退休</button>
@@ -1655,7 +1701,7 @@
     <main class="page radar-page" id="page-radar">
       <section class="radar-shell" id="radar-shell" data-mode="mock" aria-label="匿名打工人雷达">
         <header class="radar-head">
-          <div><span class="radar-kicker">WORKER SIGNAL / 匿名工位电波</span><div class="radar-title-line"><h2>附近工友雷达</h2><button class="radar-discovery-toggle" id="radar-discovery-toggle" type="button" aria-pressed="false"><span class="radar-switch" aria-hidden="true"><i></i></span><span><strong>附近发现</strong><small id="radar-discovery-status">关闭时不读取位置，也不会出现在别人附近</small></span></button></div><p>看看附近谁在搬砖、摸鱼或开会神游，只显示匿名工牌和模糊距离。</p></div>
+          <div><span class="radar-kicker">WORKER SIGNAL / 匿名工位电波</span><div class="radar-title-line"><h2>附近工友</h2><button class="radar-discovery-toggle" id="radar-discovery-toggle" type="button" aria-pressed="false"><span class="radar-switch" aria-hidden="true"><i></i></span><span><strong>附近发现</strong><small id="radar-discovery-status">关闭时不读取位置，也不会出现在别人附近</small></span></button></div><p>看看附近谁在搬砖、摸鱼或开会神游，只显示匿名工牌和模糊距离。</p></div>
           <div class="radar-head-actions">
             <div class="radar-mode-actions"><span class="radar-demo-label" id="radar-mode-label">本地示例数据</span><button class="radar-mode-toggle" id="radar-mode-toggle" type="button">查看真实数据</button></div>
           </div>
@@ -1669,13 +1715,13 @@
             <button class="radar-name-save" id="radar-name-save" type="button">保存</button>
             <small id="radar-name-hint">可自定义，也可以掷骰子随机生成</small>
           </div>
-          <fieldset class="radar-radius"><legend>扫描范围</legend><div><button type="button" data-radar-radius="1" aria-pressed="false">1km</button><button type="button" data-radar-radius="5" aria-pressed="true">5km</button><button type="button" data-radar-radius="50" aria-pressed="false">50km</button></div></fieldset>
+          <fieldset class="radar-radius"><legend>扫描范围</legend><div><button type="button" data-radar-radius="1" aria-pressed="false">1KM</button><button type="button" data-radar-radius="20" aria-pressed="true">20KM</button><button type="button" data-radar-radius="0" aria-pressed="false">不限</button></div></fieldset>
         </section>
 
         <div class="radar-mock radar-data-view">
           <div class="radar-layout">
             <section class="radar-board" aria-label="附近匿名用户雷达图">
-              <div class="radar-board-head"><span id="radar-range-label">扫描范围 · 5 KM</span><span class="radar-mini-stats"><span><b id="radar-nearby-count">0</b> 附近</span><span><b id="radar-moyu-count">0</b> 摸鱼</span><span><b id="radar-working-count">0</b> 搬砖</span></span><b class="radar-live">● LIVE</b></div>
+              <div class="radar-board-head"><span id="radar-range-label">扫描范围 · 20 KM</span><span class="radar-mini-stats"><span><b id="radar-nearby-count">0</b> 附近</span><span><b id="radar-moyu-count">0</b> 摸鱼</span><span><b id="radar-working-count">0</b> 搬砖</span></span><b class="radar-live">● LIVE</b></div>
               <div class="radar-field"><i class="radar-ring"></i><i class="radar-ring"></i><i class="radar-ring"></i><i class="radar-axis"></i><i class="radar-sweep"></i><div id="radar-blips"></div><div class="radar-self" aria-label="我的位置"><strong>我</strong><span id="radar-self-name" hidden>工位隐身术士·17</span></div></div>
               <div class="radar-disabled"><strong>附近发现已关闭</strong><span>开启后才会扫描附近工友</span></div>
             </section>
@@ -1717,6 +1763,7 @@
         </div>
 
         <div class="retirement-terminal">
+          <span class="retirement-slogan">退休后的100种生活</span>
           <div class="retirement-sun" aria-hidden="true"></div>
           <div class="retirement-board">
             <div class="retirement-board-top"><span>LAST CHECKOUT</span><span>终点站 · 永久自由</span></div>
@@ -1736,6 +1783,19 @@
         </section>
       </section>
     </main>
+
+    <div class="radar-message-dialog" id="radar-message-dialog" role="dialog" aria-modal="true" aria-labelledby="radar-message-title" hidden>
+      <div class="radar-message-backdrop" data-radar-message-close></div>
+      <form class="radar-message-composer" id="radar-message-form">
+        <small>ANONYMOUS MESSAGE / 100 字以内</small>
+        <h3 id="radar-message-title">发消息给 <strong id="radar-message-target">附近工友</strong></h3>
+        <div class="radar-message-tools"><button id="radar-message-image" type="button">＋ 发送图片</button><button id="radar-sticker-toggle" type="button" aria-expanded="false" aria-controls="radar-sticker-panel">表情包</button><input id="radar-message-image-input" type="file" accept="image/png,image/jpeg,image/webp" hidden></div>
+        <section class="radar-sticker-panel" id="radar-sticker-panel" aria-label="内置打工人表情包" hidden><div class="radar-sticker-grid" id="radar-sticker-grid"></div></section>
+        <div class="radar-compose-input"><div class="radar-compose-sticker" id="radar-compose-sticker" hidden></div><img class="radar-message-image-preview" id="radar-message-image-preview" alt="待发送图片预览" hidden><button class="radar-message-image-remove" id="radar-message-image-remove" type="button" hidden>移除图片</button><textarea id="radar-message-input" maxlength="100" placeholder="写点什么吧。也可以只发图片或表情包。" autocomplete="off" aria-describedby="radar-message-count radar-message-error"></textarea></div>
+        <div class="radar-message-composer-meta"><span class="radar-message-error" id="radar-message-error"></span><span id="radar-message-count">0 / 100</span></div>
+        <div class="radar-message-composer-actions"><button id="radar-message-cancel" type="button">取消</button><button type="submit">匿名发送</button></div>
+      </form>
+    </div>
 
     <audio id="checkout-voice" preload="auto" src="audio/xiaban-qingzhuyi-v1.wav"></audio>
 

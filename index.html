@@ -7,13 +7,13 @@
   <title>马上下班｜专治无偿加班嘴替</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="preload" as="image" href="screenshots/today-640.webp" imagesrcset="screenshots/today-640.webp 640w, screenshots/today-960.webp 960w, screenshots/today-1240.webp 1240w" imagesizes="(max-width: 650px) 320px, 55vw" fetchpriority="high">
-  <link rel="stylesheet" href="styles-mobile10.css?v=icon-black-1">
+  <link rel="stylesheet" href="styles-mobile10.css?v=retirement-orbit-6">
 </head>
 <body>
   <div class="cursor-stamp" aria-hidden="true">撤</div>
   <header class="site-nav site-nav-v2">
     <a class="logo" href="#top" aria-label="马上下班首页"><img src="assets/app-icon.png" srcset="assets/app-icon-96.webp 96w, assets/app-icon.webp 192w" sizes="(max-width: 650px) 40px, 48px" alt="" fetchpriority="high" decoding="async"><span><b>马上下班</b><small>OFF DUTY COMPANION</small></span></a>
-    <nav aria-label="页面导航"><a class="top-nav-link nav-feature" href="#companion">今日陪伴</a><a class="top-nav-link nav-feature" href="#radar">工位雷达</a><a class="top-nav-link nav-feature" href="#health">马生健康</a><a class="top-nav-link nav-feature" href="#retirement">我要退休</a><a class="top-nav-link nav-feature" href="#evidence">考勤簿</a><span class="nav-divider" aria-hidden="true"></span><a class="top-nav-link nav-meta" href="changelog.html?v=roundtrip-2">更新日志</a></nav>
+    <nav aria-label="页面导航"><a class="top-nav-link nav-feature" href="#companion">今日陪伴</a><a class="top-nav-link nav-feature" href="#radar">附近工友</a><a class="top-nav-link nav-feature" href="#health">马生健康</a><a class="top-nav-link nav-feature" href="#retirement">我要退休</a><a class="top-nav-link nav-feature" href="#evidence">考勤簿</a><span class="nav-divider" aria-hidden="true"></span><a class="top-nav-link nav-meta nav-changelog" href="changelog.html?v=roundtrip-2"><span>更新日志</span><em class="night-update-tag">🌚 半夜又更了</em></a></nav>
     <a class="nav-download" href="#download">立马下载 ↘</a>
   </header>
 
@@ -42,17 +42,8 @@
       <div class="ticker" aria-label="产品特点"><div><span>距离下班前 3h / 2h / 1h / 30m / 5m / 准点提醒</span><b>✦</b><span>12:00 催你吃饭</span><b>✦</b><span>加班后继续催离</span><b>✦</b><span>Icon 实时倒计时</span><b>✦</b><span>距离下班前 3h / 2h / 1h / 30m / 5m / 准点提醒</span></div></div>
     </section>
 
-    <section class="showcase showcase-blue showcase-single" id="companion">
-      <header class="showcase-head"><div><span class="section-index">01 / 今日陪伴</span><h2><span class="headline-line">从“我到工位了”</span><span class="headline-line">陪你熬到“我要下班了”</span></h2></div><p>早上看你一脸班味，中午催你先去吃饭，晚上盯着你别再免费加钟。它不帮老板提高效率，只负责提醒你还有生活。</p></header>
-      <div class="carousel-stage">
-        <div class="carousel-track">
-          <figure class="slide is-active"><img src="screenshots/off-summary.png" srcset="screenshots/off-summary-640.webp 640w, screenshots/off-summary-960.webp 960w, screenshots/off-summary-1240.webp 1240w" sizes="(max-width: 650px) 320px, 88vw" alt="下班总结状态" loading="lazy" decoding="async"></figure>
-        </div>
-      </div>
-    </section>
-
-    <section class="feature-split">
-      <div class="feature-copy"><span class="section-index">02 / 下班提醒</span><h2><span class="headline-line">到点不是失联，</span><span class="headline-line accent">是该回到生活。</span></h2><p>不用反复看钟，也不用打开应用。马歇歇会在关键时间主动提醒你；到了下班点，应用图标还会直接显示倒计时和加班时长。</p><ul><li>下班前 3 小时起，越近提醒越及时</li><li>Windows / macOS 即时通知，抬眼就能看到</li><li>应用图标实时显示倒计时与超时时长</li></ul></div>
+    <section class="feature-split" id="companion">
+      <div class="feature-copy"><span class="section-index">01 / 今日陪伴</span><h2><span class="headline-line">从“我到工位了”，</span><span class="headline-line accent">陪到“下班请注意”。</span></h2><p>不用反复看钟，也不用打开应用。马歇歇从你到工位起一路陪着，在关键时间主动通知；到了下班点，应用图标还会直接显示倒计时和加班时长。</p><ul><li>下班前 3 小时起，越近提醒越及时</li><li>Windows / macOS 即时通知，抬眼就能看到</li><li>应用图标实时显示倒计时与超时时长</li></ul></div>
       <div class="notification-demo">
         <div class="desktop-time">18:55</div>
         <div class="demo-kicker"><span>正在演示</span><b>下班前 5 分钟</b></div>
@@ -77,16 +68,26 @@
     </section>
 
     <section class="radar-zone" id="radar">
-      <div class="radar-copy"><span class="section-index">03 / 工位雷达</span><h2><span class="headline-line">附近还有谁，</span><span class="headline-line">也在偷偷等下班？</span></h2><ul><li>1 / 3 / 5 公里范围自由切换</li><li>递杯水、摸鱼暗号、辛苦了：只发轻量匿名信号</li><li>关闭发现后立即隐身；示例模式可先体验完整界面</li></ul></div>
-      <div class="radar-demo" aria-label="工位雷达匿名附近发现示意图">
-        <div class="radar-demo-head"><span>WORKER SIGNAL RECEIVER</span><b>3 KM</b></div>
-        <div class="radar-scope"><i></i><i></i><i></i><span class="radar-sweep"></span><strong class="radar-self">我</strong><button class="radar-signal signal-a signal-near" type="button"><span class="near-badge">就在附近</span><b>摸鱼海獭</b><small class="radar-distance"><strong>50</strong><em>米</em></small></button><button class="radar-signal signal-b" type="button"><b>报表刺猬</b><small class="radar-distance"><strong>1</strong><em>公里</em></small></button><button class="radar-signal signal-c" type="button"><b>工位候鸟</b><small class="radar-distance"><strong>2.4</strong><em>公里</em></small></button></div>
-        <div class="radar-demo-foot"><span><b>03</b> 附近信号</span><span><b>02</b> 正在摸鱼</span><em>精确位置已隐藏</em></div>
+      <div class="radar-copy"><span class="section-index">02 / 附近工友</span><h2><span class="headline-line">附近有人懂，</span><span class="headline-line">你为什么想下班。</span></h2><ul><li>1KM / 20KM / 不限范围自由切换，只显示模糊距离</li><li>打招呼、随机摸鱼暗号，也能自由发送 100 字消息</li><li>支持图片与 10 个原创疯癫打工人表情包；收件箱可直接回复</li><li>关闭发现后立即隐身；示例模式可先体验完整界面</li></ul></div>
+      <div class="radar-demo" aria-label="附近工友、发消息与收件箱功能示意图">
+        <div class="radar-demo-head"><span>NEARBY WORKMATES / 匿名工位电波</span><b>20 KM</b></div>
+        <div class="radar-scope"><i></i><i></i><i></i><span class="radar-sweep"></span><strong class="radar-self">我</strong><button class="radar-signal signal-a signal-near" type="button"><span class="near-badge">就在附近</span><b>摸鱼海獭</b><small class="radar-distance"><strong>50</strong><em>米</em></small><span class="signal-actions"><em>打招呼</em><em>发消息</em></span></button><button class="radar-signal signal-b" type="button"><b>报表刺猬</b><small class="radar-distance"><strong>1</strong><em>公里</em></small></button><button class="radar-signal signal-c" type="button"><b>工位候鸟</b><small class="radar-distance"><strong>2.4</strong><em>公里</em></small></button>
+          <section class="radar-inbox-preview" aria-label="收件箱预览">
+            <header><span>附近工友</span><strong>收件箱 <b>3</b></strong></header>
+            <div class="inbox-preview-list">
+              <article class="is-unread"><i>信</i><div><b>会议静音艺术家</b><p>这会再不开完，我就要开花了。</p></div><button type="button">回复</button></article>
+              <article class="is-unread"><i class="preview-sticker">会开<br>烂了</i><div><b>周报赛博难民</b><p>发来一个抽象表情包</p></div><button type="button">回复</button></article>
+              <article><i>图</i><div><b>咖啡续命合伙人</b><p>发来一张图片 · 31 分钟前</p></div><button type="button">回复</button></article>
+            </div>
+            <footer><span>＋ 图片</span><span>表情包</span><strong>发消息</strong></footer>
+          </section>
+        </div>
+        <div class="radar-demo-foot"><span><b>03</b> 附近信号</span><span><b>03</b> 未读消息</span><em>精确位置已隐藏</em></div>
       </div>
     </section>
 
     <section class="health-zone" id="health">
-      <div class="health-intro"><span class="section-index">04 / 马生健康</span><h2><span class="headline-line">你每加一次班，</span><span class="headline-line">马替你掉一格血。</span></h2><p>你嘴上说“就一会儿”，身体可是一分钟都没忘。从活人微死到病床 ICU，再卷下去，马歇歇没等到年终奖，先等到了一块碑。</p></div>
+      <div class="health-intro"><span class="section-index">03 / 马生健康</span><h2><span class="headline-line">你每加一次班，</span><span class="headline-line">马替你掉一格血。</span></h2><p>你嘴上说“就一会儿”，身体可是一分钟都没忘。从活人微死到病床 ICU，再卷下去，马歇歇没等到年终奖，先等到了一块碑。</p></div>
       <div class="health-gallery">
         <figure class="health-card yellow"><span>15—25h</span><img src="screenshots/health-with-data-hero.png" srcset="screenshots/health-with-data-hero-320.webp 320w, screenshots/health-with-data-hero.webp 600w" sizes="(max-width: 650px) 112px, (max-width: 980px) 70vw, 30vw" alt="过劳生病状态：马歇歇与生命值" loading="lazy" decoding="async"><figcaption>过劳生病</figcaption></figure>
         <figure class="health-card red"><span>40—50h</span><img src="screenshots/health-icu-hero.png" srcset="screenshots/health-icu-hero-320.webp 320w, screenshots/health-icu-hero.webp 600w" sizes="(max-width: 650px) 112px, (max-width: 980px) 70vw, 30vw" alt="癌症警报状态：ICU 病床与生命值" loading="lazy" decoding="async"><figcaption>癌症警报</figcaption></figure>
@@ -95,16 +96,23 @@
     </section>
 
     <section class="retirement-zone" id="retirement">
-      <div class="retirement-visual">
-        <img src="screenshots/retirement-norway-mobile-1240.jpg" srcset="screenshots/retirement-norway-mobile-640.jpg 640w, screenshots/retirement-norway-mobile-960.jpg 960w, screenshots/retirement-norway-mobile-1240.jpg 1240w" sizes="(max-width: 650px) 100vw, 58vw" width="1672" height="941" alt="马歇歇背对画面拍摄挪威峡湾雪城与大桥" loading="lazy" decoding="async">
-        <span class="retirement-location">📍 挪威 · 特罗姆瑟</span><blockquote>灯火落进峡湾，余生慢慢按下快门。</blockquote>
+      <div class="retirement-life-grid retirement-orbit" aria-label="退休后的旅行生活自动轮播">
+        <figure class="retirement-shot shot-yemen" role="button" tabindex="0"><img src="desktop-app/assets/retirement/socotra-dragon-blood-v3.png" alt="也门索科特拉岛龙血树旅行场景" loading="lazy" decoding="async"><figcaption>也门 · 索科特拉</figcaption></figure>
+        <figure class="retirement-shot shot-norway" role="button" tabindex="0"><img src="desktop-app/assets/retirement/norway-photographer-back-v1.png" alt="挪威雪城与峡湾旅行场景" loading="lazy" decoding="async"><figcaption>挪威 · 特罗姆瑟</figcaption></figure>
+        <figure class="retirement-shot shot-volcano" role="button" tabindex="0"><img src="desktop-app/assets/retirement/us-volcano-v2.png" alt="火山旅行场景" loading="lazy" decoding="async"><figcaption>火山 · 去看地球发光</figcaption></figure>
+        <figure class="retirement-shot shot-rose" role="button" tabindex="0"><img src="desktop-app/assets/retirement/socotra-desert-rose-v1.png" alt="也门沙漠玫瑰旅行场景" loading="lazy" decoding="async"><figcaption>沙漠玫瑰 · 风里开花</figcaption></figure>
+        <figure class="retirement-shot shot-iceland" role="button" tabindex="0"><img src="desktop-app/assets/retirement/reynisfjara-winter-v1.png" alt="冰岛黑沙滩冬日旅行场景" loading="lazy" decoding="async"><figcaption>冰岛 · 黑沙滩</figcaption></figure>
+        <figure class="retirement-shot shot-kilimanjaro" role="button" tabindex="0"><img src="desktop-app/assets/retirement/kilimanjaro-safari-v1.png" alt="乞力马扎罗草原旅行场景" loading="lazy" decoding="async"><figcaption>乞力马扎罗 · 草原</figcaption></figure>
+        <figure class="retirement-shot shot-dolomites" role="button" tabindex="0"><img src="assets/retirement-dolomites-autumn-v2.png" alt="多洛米蒂秋日山谷与村庄旅行场景" loading="lazy" decoding="async"><figcaption>意大利 · 多洛米蒂</figcaption></figure>
+        <figure class="retirement-shot shot-dive" role="button" tabindex="0"><img src="desktop-app/assets/retirement/dive-v3.png" alt="海底洞穴潜水旅行场景" loading="lazy" decoding="async"><figcaption>潜水 · 海底洞穴</figcaption></figure>
+        <figure class="retirement-shot shot-ski" role="button" tabindex="0"><img src="desktop-app/assets/retirement/ski-v3.png" alt="雪山滑雪旅行场景" loading="lazy" decoding="async"><figcaption>滑雪 · 雪山旷野</figcaption></figure>
       </div>
-      <div class="retirement-copy"><span class="section-index">05 / 我要退休</span><h2><span class="headline-line">等忙完这一生，</span><span class="headline-line">就去看世界发光。</span></h2><p class="retirement-poem">风会替你翻过群山，<br>时间终于只属于自己。</p></div>
+      <div class="retirement-copy"><span class="section-index">04 / 我要退休</span><h2><span class="headline-line">这次下班，</span><span class="headline-line retirement-final-line">不再回来。</span></h2><p class="retirement-poem">雪山、海底、草原与风，<br>余生不再只有一种答案。</p><small class="retirement-cosmic-note">✦ 带你穿越地球</small></div>
     </section>
 
     <section class="showcase showcase-paper showcase-single evidence-personas" id="evidence">
       <header class="showcase-head evidence-head">
-        <div><span class="section-index">06 / 考勤簿 + 打工人格</span><h2><span class="headline-line">记录日均工时，</span><span class="headline-line">自动领取你的打工人格。</span></h2></div>
+        <div><span class="section-index">05 / 考勤簿 + 打工人格</span><h2><span class="headline-line">记录日均工时，</span><span class="headline-line">自动领取你的打工人格。</span></h2></div>
         <p>几点被工位捕获，几点终于恢复自由，这里都记着。马歇歇还会根据你的日均工时，自动识别一枚打工人格——不是荣誉，是工伤昵称。</p>
         <div class="persona-board" aria-label="日均工时对应的打工人格示例">
           <span class="persona-label">工时越长，人格越离谱</span>
@@ -125,11 +133,11 @@
 
     <section class="download-final" id="download">
       <div class="download-horse"><img src="assets/horse.png" srcset="assets/horse-480.webp 480w, assets/horse.webp 900w" sizes="(max-width: 650px) 240px, (max-width: 980px) 70vw, 42vw" alt="斜眼看你的马歇歇" loading="lazy" decoding="async"><span>你都看到这了，<br>还不准备下班？</span></div>
-      <div class="download-copy"><span class="section-index">07 / 现在开始</span><h2 class="final-night-title"><span>公司已经拥有你的白天，</span><span>美丽的你值得享受美丽的夜晚。</span></h2><p>免费下载 Windows x64 或 macOS Apple 芯片版。不需要账号，考勤只留在你的电脑里——放心，老板看不到你几点跑路。</p><div class="final-platform-downloads"><a href="https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.5.2/mashangxiaban-2.5.2-Windows-x64.exe"><span><b>下载 Windows 版 2.5.2</b><small>Windows 10 / 11 · x64<em data-download-count="windows">27 次下载</em></small></span><strong>↓</strong></a><a class="final-download-mac" href="https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.5.2/mashangxiaban-2.5.2-macOS-Apple-Silicon.dmg"><span><b>下载 macOS 版 2.5.2</b><small>macOS · Apple Silicon<em data-download-count="mac">36 次下载</em></small></span><strong>↓</strong></a></div><div class="checksum"><span>Windows SHA-256 · 7cfa95f6d5e81dcc76043ba147d434510ab2f8108d09d48f5985cff7b02e2933</span><span>macOS SHA-256 · 01d65dc758b399eaa99f782e644bcefaeb297d9696b6aa82753c75e9ebee019e</span></div></div>
+      <div class="download-copy"><span class="section-index">06 / 现在开始</span><h2 class="final-night-title"><span>公司已经拥有你的白天，</span><span>美丽的你值得享受美丽的夜晚。</span></h2><p>免费下载 Windows x64 或 macOS Apple 芯片版。不需要账号，考勤只留在你的电脑里——放心，老板看不到你几点跑路。</p><div class="final-platform-downloads"><a href="https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.5.2/mashangxiaban-2.5.2-Windows-x64.exe"><span><b>下载 Windows 版 2.5.2</b><small>Windows 10 / 11 · x64<em data-download-count="windows">27 次下载</em></small></span><strong>↓</strong></a><a class="final-download-mac" href="https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.5.2/mashangxiaban-2.5.2-macOS-Apple-Silicon.dmg"><span><b>下载 macOS 版 2.5.2</b><small>macOS · Apple Silicon<em data-download-count="mac">36 次下载</em></small></span><strong>↓</strong></a></div><div class="checksum"><span>Windows SHA-256 · 7cfa95f6d5e81dcc76043ba147d434510ab2f8108d09d48f5985cff7b02e2933</span><span>macOS SHA-256 · 01d65dc758b399eaa99f782e644bcefaeb297d9696b6aa82753c75e9ebee019e</span></div></div>
     </section>
   </main>
 
   <footer><a class="logo" href="#top"><img src="assets/app-icon.png" srcset="assets/app-icon-96.webp 96w, assets/app-icon.webp 192w" sizes="48px" alt="" loading="lazy" decoding="async"><span><b>马上下班</b><small>© 2026 OFF DUTY DEPARTMENT</small></span></a><p>工作只是工作，晚上才是你的。</p><div class="footer-links"><a href="changelog.html?v=roundtrip-2">更新日志</a><a href="#top">回到工位顶部 ↑</a></div></footer>
-  <script src="site-mobile10.js"></script>
+  <script src="site-mobile10.js?v=retirement-orbit-6"></script>
 </body>
 </html>

@@ -18,6 +18,7 @@ let petProgrammaticMoveUntil = 0;
 let petPointerInteractionUntil = 0;
 let currentPetScale = 0.65;
 let currentNativeBadgeKey = null;
+let radarUnreadCount = 0;
 let isQuitting = false;
 const liveNotifications = new Set();
 const reminderTimers = new Map();
@@ -469,6 +470,39 @@ function createWindowsCountdownOverlay(dataUrl) {
   const safeDataUrl = String(dataUrl || '');
   if (!safeDataUrl.startsWith('data:image/png;base64,') || safeDataUrl.length > 200000) return nativeImage.createEmpty();
   return nativeImage.createFromDataURL(safeDataUrl).resize({ width: 32, height: 32 });
+}
+
+function createWindowsUnreadOverlay(count) {
+  const label = count > 99 ? '99+' : String(count);
+  const fontSize = label.length > 2 ? 15 : label.length > 1 ? 18 : 21;
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><circle cx="16" cy="16" r="15" fill="#ff4f45" stroke="#ffffff" stroke-width="2"/><text x="16" y="17" fill="#ffffff" font-family="Arial,sans-serif" font-size="${fontSize}" font-weight="900" text-anchor="middle" dominant-baseline="middle">${label}</text></svg>`;
+  return nativeImage.createFromDataURL(`data:image/svg+xml;base64,${Buffer.from(svg).toString('base64')}`).resize({ width:32, height:32 });
+}
+
+function setRadarUnreadBadge(value) {
+  const count = Math.max(0, Math.min(999, Math.trunc(Number(value) || 0)));
+  radarUnreadCount = count;
+  const badgeKey = `radar-unread:${count}`;
+  if (badgeKey === currentNativeBadgeKey) return true;
+  currentNativeBadgeKey = badgeKey;
+
+  if (process.platform === 'darwin') {
+    app.setBadgeCount(count);
+    return true;
+  }
+
+  if (process.platform === 'win32' && mainWindow && !mainWindow.isDestroyed()) {
+    if (!count) {
+      mainWindow.setOverlayIcon(null, '没有未读工友消息');
+      return true;
+    }
+    const overlay = createWindowsUnreadOverlay(count);
+    if (overlay.isEmpty()) return false;
+    mainWindow.setOverlayIcon(overlay, `${count} 条未读工友消息`);
+    return true;
+  }
+
+  return false;
 }
 
 function setCountdownBadge(payload = {}) {
@@ -934,6 +968,7 @@ function createWindow() {
   });
 
   mainWindow.loadFile('index.html');
+  if (radarUnreadCount > 0) setRadarUnreadBadge(radarUnreadCount);
   mainWindow.on('focus', () => setTimeout(() => avoidPetMainMascotOverlap(), 100));
   mainWindow.on('blur', () => restorePetAfterMainAvoidance());
   mainWindow.on('hide', () => restorePetAfterMainAvoidance());
@@ -1469,7 +1504,7 @@ async function runQaSmoke() {
       discoveryOn: document.querySelector('#radar-discovery-toggle').getAttribute('aria-pressed') === 'true'
     };
     localStorage.setItem('ma-xiexie-radar-discovery-v1', 'on');
-    localStorage.setItem('ma-xiexie-radar-radius-v1', '5');
+    localStorage.setItem('ma-xiexie-radar-radius-v1', '20');
     renderRadar('mock');
     const firstAction = document.querySelector('#radar-people [data-radar-action]');
     firstAction.click();
@@ -1509,12 +1544,12 @@ async function runQaSmoke() {
   })()`);
   await wait(350);
   await capture('radar-mock');
-  radarUi.fiftyKm = await mainWindow.webContents.executeJavaScript(`(() => {
-    document.querySelector('[data-radar-radius="50"]').click();
+  radarUi.unlimited = await mainWindow.webContents.executeJavaScript(`(() => {
+    document.querySelector('[data-radar-radius="0"]').click();
     return { blipCount:document.querySelectorAll('.radar-blip').length, cardCount:document.querySelectorAll('.radar-person').length, label:document.querySelector('#radar-range-label').textContent };
   })()`);
   await wait(180);
-  await capture('radar-50km');
+  await capture('radar-unlimited');
   radarUi.oneKm = await mainWindow.webContents.executeJavaScript(`(() => {
     document.querySelector('[data-radar-radius="1"]').click();
     return { blipCount:document.querySelectorAll('.radar-blip').length, cardCount:document.querySelectorAll('.radar-person').length, label:document.querySelector('#radar-range-label').textContent };
@@ -1840,10 +1875,18 @@ app.whenReady().then(() => {
     const store = getRadarStore();
     return { source: store.source, writeConfigured: store.writeConfigured };
   });
-  ipcMain.handle('radar:sync-location', (_event, payload = {}) => getRadarStore().syncLocation(payload));
+  ipcMain.handle('radar:sync-location', async (_event, payload = {}) => {
+    const result = await getRadarStore().syncLocation(payload);
+    if (result?.ok) setRadarUnreadBadge(result.unreadCount);
+    return result;
+  });
   ipcMain.handle('radar:hide-self', () => getRadarStore().hideSelf());
   ipcMain.handle('radar:send-signal', (_event, payload = {}) => getRadarStore().sendSignal(payload));
-  ipcMain.handle('radar:mark-messages-read', () => getRadarStore().markMessagesRead());
+  ipcMain.handle('radar:mark-messages-read', async () => {
+    const result = await getRadarStore().markMessagesRead();
+    if (result?.ok) setRadarUnreadBadge(0);
+    return result;
+  });
   ipcMain.handle('pet:get-settings', () => ({ ...readPetSettings() }));
   ipcMain.handle('pet:set-enabled', (_event, enabled) => setPetEnabled(typeof enabled === 'object' ? enabled?.enabled : enabled));
   ipcMain.handle('pet:reset-position', () => resetPetPosition());

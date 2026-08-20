@@ -2,11 +2,13 @@ const assert = require('assert');
 const { createCloudflareRadarStore, normalizeRadius, normalizeCoordinate, normalizeSignalType } = require('../radar-cloudflare');
 
 assert.equal(normalizeRadius(1), 1);
-assert.equal(normalizeRadius('50'), 50);
-assert.equal(normalizeRadius(999), 5);
+assert.equal(normalizeRadius('20'), 20);
+assert.equal(normalizeRadius(0), 0);
+assert.equal(normalizeRadius(999), 20);
 assert.equal(normalizeCoordinate('31.2', -90, 90), 31.2);
 assert.throws(() => normalizeCoordinate(181, -180, 180), /invalid-location/);
 assert.equal(normalizeSignalType('water'), 'water');
+assert.equal(normalizeSignalType('message'), 'message');
 assert.throws(() => normalizeSignalType('custom-text'), /invalid-signal-type/);
 
 const calls = [];
@@ -22,7 +24,7 @@ const store = createCloudflareRadarStore({
 });
 
 (async () => {
-  const result = await store.syncLocation({ name: ' 我 ', latitude: 31.2, longitude: 121.5, radius: 5, tone: 'moyu' });
+  const result = await store.syncLocation({ name: ' 我 ', latitude: 31.2, longitude: 121.5, radius: 20, tone: 'moyu' });
   assert.equal(result.ok, true);
   assert.equal(result.people.length, 1);
   assert.equal(result.messages[0].distanceMeters, 200);
@@ -40,9 +42,15 @@ const store = createCloudflareRadarStore({
   assert.equal(calls[2].body.deviceId, '11111111-1111-4111-8111-111111111111');
   assert.equal(calls[2].body.toDeviceId, '33333333-3333-4333-8333-333333333333');
   assert.equal(calls[2].body.type, 'water');
+  const custom = await store.sendSignal({ toDeviceId: '33333333-3333-4333-8333-333333333333', fromName: '测试工友', type: 'message', content: `  ${'哈'.repeat(120)}  `, media:'data:image/webp;base64,AAAA', sticker:'crazy' });
+  assert.equal(custom.ok, true);
+  assert.equal(calls[3].body.type, 'message');
+  assert.equal(calls[3].body.content.length, 100);
+  assert.equal(calls[3].body.media, 'data:image/webp;base64,AAAA');
+  assert.equal(calls[3].body.sticker, 'crazy');
   const read = await store.markMessagesRead();
   assert.equal(read.ok, true);
-  assert.equal(calls[3].url, 'https://radar.example.test/v1/radar/messages/read');
+  assert.equal(calls[4].url, 'https://radar.example.test/v1/radar/messages/read');
 
   const failing = createCloudflareRadarStore({
     config: { endpoint: 'https://radar.example.test' },

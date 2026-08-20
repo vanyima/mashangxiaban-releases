@@ -8,7 +8,7 @@ function normalizeEndpoint(value) {
 
 function normalizeRadius(value) {
   const radius = Number(value);
-  return [1, 5, 50].includes(radius) ? radius : 5;
+  return [0, 1, 20].includes(radius) ? radius : 20;
 }
 
 function normalizeCoordinate(value, min, max) {
@@ -17,7 +17,7 @@ function normalizeCoordinate(value, min, max) {
   return coordinate;
 }
 
-const RADAR_SIGNAL_TYPES = Object.freeze(['water', 'moyu', 'encourage', 'reply']);
+const RADAR_SIGNAL_TYPES = Object.freeze(['water', 'hello', 'moyu', 'encourage', 'message', 'reply']);
 
 function normalizeSignalType(value) {
   const type = clampText(value, 16);
@@ -103,7 +103,10 @@ function createCloudflareRadarStore({ fetchImpl, config, deviceId, appVersion = 
           deviceId,
           toDeviceId: clampText(payload.toDeviceId, 80),
           fromName: clampText(payload.fromName, 24) || '匿名工友',
-          type: normalizeSignalType(payload.type)
+          type: normalizeSignalType(payload.type),
+          content: clampText(payload.content, 100),
+          media: clampText(payload.media, 350000),
+          sticker: clampText(payload.sticker, 24)
         });
         return { ok: true, writeConfigured: true, messageId: result.messageId };
       } catch (error) {

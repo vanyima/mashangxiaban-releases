@@ -7,7 +7,7 @@ const CORS_HEADERS = {
 const ONLINE_WINDOW_MS = 30 * 60 * 1000;
 const STALE_WINDOW_MS = 7 * 24 * 60 * 60 * 1000;
 const MESSAGE_RETENTION_MS = 30 * 24 * 60 * 60 * 1000;
-const SIGNAL_TYPES = new Set(['water', 'moyu', 'encourage', 'reply']);
+const SIGNAL_TYPES = new Set(['water', 'hello', 'moyu', 'encourage', 'message', 'reply']);
 
 function json(data, status = 200) {
   return new Response(JSON.stringify(data), { status, headers: { ...CORS_HEADERS, 'Content-Type': 'application/json; charset=utf-8' } });
@@ -45,8 +45,8 @@ function positionFor(deviceId, distanceKm, radius) {
 
 function publicPerson(row, selfLatitude, selfLongitude, radius) {
   const distanceKm = haversineKm(selfLatitude, selfLongitude, row.latitude, row.longitude);
-  if (distanceKm > radius) return null;
-  const spot = positionFor(row.device_id, distanceKm, radius);
+  if (radius !== 0 && distanceKm > radius) return null;
+  const spot = positionFor(row.device_id, distanceKm, radius === 0 ? 20 : radius);
   const proximity = distanceKm <= .05 ? 'within-50m' : distanceKm <= .1 ? 'within-100m' : '';
   return {
     id: row.device_id.slice(0, 8),
@@ -73,6 +73,9 @@ function publicMessage(row, selfLatitude, selfLongitude) {
     fromDeviceId: row.sender_device_id,
     from: text(row.sender_name, 24, '匿名工友'),
     type: SIGNAL_TYPES.has(row.signal_type) ? row.signal_type : 'encourage',
+    content: text(row.message_body, 100),
+    media: text(row.message_media, 350000),
+    sticker: text(row.message_sticker, 24),
     createdAt: new Date(row.created_at).toISOString(),
     distanceMeters,
     unread: row.read_at == null
@@ -80,7 +83,7 @@ function publicMessage(row, selfLatitude, selfLongitude) {
 }
 
 async function inboxFor(env, deviceId, selfLatitude, selfLongitude) {
-  const result = await env.RADAR_DB.prepare(`SELECT m.id, m.sender_device_id, m.sender_name, m.signal_type, m.created_at, m.read_at,
+  const result = await env.RADAR_DB.prepare(`SELECT m.id, m.sender_device_id, m.sender_name, m.signal_type, m.message_body, m.message_media, m.message_sticker, m.created_at, m.read_at,
       p.latitude AS sender_latitude, p.longitude AS sender_longitude
     FROM radar_messages m LEFT JOIN radar_presence p ON p.device_id = m.sender_device_id
     WHERE m.recipient_device_id = ? ORDER BY m.created_at DESC LIMIT 50`)
@@ -92,7 +95,7 @@ async function inboxFor(env, deviceId, selfLatitude, selfLongitude) {
 async function parseBody(request) {
   if (!String(request.headers.get('content-type') || '').toLowerCase().includes('application/json')) throw new Error('json-required');
   const length = Number(request.headers.get('content-length') || 0);
-  if (length > 4096) throw new Error('payload-too-large');
+  if (length > 420000) throw new Error('payload-too-large');
   return request.json();
 }
 
@@ -101,7 +104,7 @@ async function sync(request, env) {
   if (!validDeviceId(body.deviceId)) return json({ ok: false, error: 'invalid-device-id' }, 400);
   const latitude = coordinate(body.latitude, -90, 90);
   const longitude = coordinate(body.longitude, -180, 180);
-  const radius = [1, 5, 50].includes(Number(body.radius)) ? Number(body.radius) : 5;
+  const radius = [0, 1, 20].includes(Number(body.radius)) ? Number(body.radius) : 20;
   const now = Date.now();
   await env.RADAR_DB.batch([
     env.RADAR_DB.prepare('DELETE FROM radar_presence WHERE updated_at < ?').bind(now - STALE_WINDOW_MS),
@@ -129,6 +132,12 @@ async function sendMessage(request, env) {
   if (body.deviceId === body.toDeviceId) return json({ ok: false, error: 'cannot-message-self' }, 400);
   const signalType = text(body.type, 16);
   if (!SIGNAL_TYPES.has(signalType)) return json({ ok: false, error: 'invalid-signal-type' }, 400);
+  const content = text(body.content, 100);
+  const media = text(body.media, 350000);
+  const sticker = text(body.sticker, 24);
+  if (media && !/^data:image\/(?:png|jpeg|webp);base64,[a-z0-9+/=]+$/i.test(media)) return json({ ok: false, error: 'invalid-image' }, 400);
+  if (sticker && !/^[a-z0-9-]{1,24}$/i.test(sticker)) return json({ ok: false, error: 'invalid-sticker' }, 400);
+  if (signalType === 'message' && !content && !media && !sticker) return json({ ok: false, error: 'empty-message' }, 400);
 
   const now = Date.now();
   const presences = await env.RADAR_DB.prepare(`SELECT device_id, latitude, longitude, updated_at FROM radar_presence
@@ -147,9 +156,9 @@ async function sendMessage(request, env) {
   if (Number(recent?.count) >= 10) return json({ ok: false, error: 'too-many-requests' }, 429);
 
   const inserted = await env.RADAR_DB.prepare(`INSERT INTO radar_messages
-    (sender_device_id, recipient_device_id, sender_name, signal_type, created_at, read_at)
-    VALUES (?, ?, ?, ?, ?, NULL)`)
-    .bind(body.deviceId, body.toDeviceId, text(body.fromName, 24, '匿名工友'), signalType, now).run();
+    (sender_device_id, recipient_device_id, sender_name, signal_type, message_body, message_media, message_sticker, created_at, read_at)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, NULL)`)
+    .bind(body.deviceId, body.toDeviceId, text(body.fromName, 24, '匿名工友'), signalType, content, media, sticker, now).run();
   return json({ ok: true, messageId: inserted.meta?.last_row_id });
 }
 

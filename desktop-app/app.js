@@ -42,7 +42,7 @@ const els = {
   petToggle: $('#pet-toggle'), petToggleState: $('#pet-toggle-state'), petGuideOpen: $('#pet-guide-open'), petResetPosition: $('#pet-reset-position'), petGuide: $('#pet-guide'), petGuideClose: $('#pet-guide-close'),
   autoCheckInOption: $('#auto-check-in-option'), autoCheckInToggle: $('#auto-check-in-toggle'), autoCheckInStatus: $('#auto-check-in-status'),
   retirementShell: $('#retirement-shell'), retirementForm: $('#retirement-form'), retirementCurrentAge: $('#retirement-current-age'), retirementTargetAge: $('#retirement-target-age'), retirementAgeError: $('#retirement-age-error'), retirementDays: $('#retirement-days'), retirementYears: $('#retirement-years'), retirementAgeSummary: $('#retirement-age-summary'), retirementEdit: $('#retirement-edit'), retirementPreviewOpen: $('#retirement-preview-open'), retirementPreview: $('#retirement-preview'), retirementPreviewImage: $('#retirement-preview-image'), retirementPreviewMeta: $('#retirement-preview-meta'), retirementPreviewCopyline: $('#retirement-preview-copyline'), retirementPreviewShuffle: $('#retirement-preview-shuffle'), retirementPreviewClose: $('#retirement-preview-close'),
-  radarShell: $('#radar-shell'), radarModeLabel: $('#radar-mode-label'), radarModeToggle: $('#radar-mode-toggle'), radarShowMock: $('#radar-show-mock'), radarSelfName: $('#radar-self-name'), radarNameInput: $('#radar-name-input'), radarNameDice: $('#radar-name-dice'), radarNameSave: $('#radar-name-save'), radarBlips: $('#radar-blips'), radarPeople: $('#radar-people'), radarInbox: $('#radar-inbox'), radarDiscoveryToggle: $('#radar-discovery-toggle'), radarDiscoveryStatus: $('#radar-discovery-status'), radarRangeLabel: $('#radar-range-label'), radarNearbyCount: $('#radar-nearby-count'), radarMoyuCount: $('#radar-moyu-count'), radarWorkingCount: $('#radar-working-count')
+  radarShell: $('#radar-shell'), radarModeLabel: $('#radar-mode-label'), radarModeToggle: $('#radar-mode-toggle'), radarShowMock: $('#radar-show-mock'), radarSelfName: $('#radar-self-name'), radarNameInput: $('#radar-name-input'), radarNameDice: $('#radar-name-dice'), radarNameSave: $('#radar-name-save'), radarBlips: $('#radar-blips'), radarPeople: $('#radar-people'), radarInbox: $('#radar-inbox'), radarDiscoveryToggle: $('#radar-discovery-toggle'), radarDiscoveryStatus: $('#radar-discovery-status'), radarRangeLabel: $('#radar-range-label'), radarNearbyCount: $('#radar-nearby-count'), radarMoyuCount: $('#radar-moyu-count'), radarWorkingCount: $('#radar-working-count'), radarMessageDialog: $('#radar-message-dialog'), radarMessageForm: $('#radar-message-form'), radarMessageTarget: $('#radar-message-target'), radarMessageInput: $('#radar-message-input'), radarMessageCount: $('#radar-message-count'), radarMessageError: $('#radar-message-error'), radarMessageCancel: $('#radar-message-cancel'), radarMessageImage: $('#radar-message-image'), radarMessageImageInput: $('#radar-message-image-input'), radarMessageImagePreview: $('#radar-message-image-preview'), radarMessageImageRemove: $('#radar-message-image-remove'), radarStickerToggle: $('#radar-sticker-toggle'), radarStickerPanel: $('#radar-sticker-panel'), radarStickerGrid: $('#radar-sticker-grid'), radarComposeSticker: $('#radar-compose-sticker')
 };
 els.todayDate = $('#today-date');
 els.ticketNumber = $('#ticket-number');
@@ -156,18 +156,57 @@ const radarMockPeople = Object.freeze([
 ]);
 
 const radarMockMessages = Object.freeze([
-  { from:'Excel在逃单元格·07', icon:'水', text:'给你递了一杯赛博温水：忙归忙，先喝两口。', time:'刚刚', distance:'约 40 米', unread:true },
-  { from:'会议静音艺术家·21', icon:'鱼', text:'向你发送摸鱼暗号：老板来了就咳嗽。', time:'6 分钟前', distance:'约 1.6 公里', unread:true },
-  { from:'下班撤退预备役·66', icon:'撤', text:'对你说：今天也要把完整的自己带回家。', time:'18 分钟前', distance:'约 2.1 公里', unread:true },
-  { from:'咖啡续命合伙人·44', icon:'咖', text:'回应了你的“辛苦了”：收到，电量勉强续上。', time:'31 分钟前', distance:'约 2.7 公里', unread:false }
+  { from:'Excel在逃单元格·07', type:'hello', text:'向你打了个招呼：工位很近，灵魂先碰个杯。', time:'刚刚', distance:'约 40 米', unread:true },
+  { from:'会议静音艺术家·21', type:'message', sticker:'meeting', text:'', time:'6 分钟前', distance:'约 1.6 公里', unread:true },
+  { from:'下班撤退预备役·66', type:'message', sticker:'leave', text:'门禁已经在偷偷笑我们了。', time:'18 分钟前', distance:'约 2.1 公里', unread:true },
+  { from:'咖啡续命合伙人·44', type:'message', sticker:'salary', text:'第三杯也救不回来了。', time:'31 分钟前', distance:'约 2.7 公里', unread:false },
+  { from:'需求第八版受害者·18', type:'message', sticker:'crazy', text:'正常沟通失败，申请一起发癫。', time:'42 分钟前', distance:'约 4.2 公里', unread:false }
 ]);
 
 const radarSignalCopy = Object.freeze({
   water: { label:'递杯水', icon:'水', text:'给你递了一杯赛博温水：忙归忙，先喝两口。' },
+  hello: { label:'打招呼', icon:'嗨', text:'向你打了个招呼：工位很近，灵魂先碰个杯。' },
   moyu: { label:'摸鱼暗号', icon:'鱼', text:'向你发送摸鱼暗号：老板来了就咳嗽。' },
   encourage: { label:'辛苦了', icon:'撑', text:'对你说：辛苦了，今天也要把完整的自己带回家。' },
+  message: { label:'发消息', icon:'信', text:'给你发来一条匿名工位消息。' },
   reply: { label:'回个信号', icon:'收', text:'回了一个“收到”，你的工位电波已送达。' }
 });
+
+const radarMoyuMessages = Object.freeze([
+  '老板来了就咳嗽三声，我会立刻把淘宝切成 Excel。',
+  '如果你也在假装加载，请眨两次眼，我们共享同一个进度条。',
+  '今日摸鱼坐标已加密，暗号是：需求将在下班后自动失忆。',
+  '我不是在发呆，我在等待灵魂从会议室缓存回来。',
+  '键盘敲得越响，项目进度越像一种民间传说。',
+  '厕所第三隔间已设为临时精神避难所，请错峰登录。',
+  '刚把“收到”翻译成了“我不同意但工资让我礼貌”。',
+  '工位信号微弱，检测到一颗想下班的心正在持续广播。',
+  '别回头，领导在画饼；往前走，茶水间还有最后一包咖啡。',
+  '本暗号阅后即焚，若被抓获请声称这是团建需求调研。'
+]);
+
+const radarStickers = Object.freeze([
+  ['cpu','烧了算了','#ff594d','#ffe139',0], ['horse','马上发疯','#ffb44a','#3159df',1],
+  ['meeting','会开烂了','#a77cff','#ffdf32',2], ['salary','工资装死','#5bd2a1','#ff5b50',3],
+  ['soul','灵魂出逃','#73d5ff','#f4f0e5',4], ['boss','饼吃吐了','#ff85b4','#ffe139',5],
+  ['overtime','加班尸变','#78a35a','#bdff55',6], ['loading','人已卡死','#4778ff','#ffdf32',7],
+  ['leave','现在就跑','#ff7d3e','#f4f0e5',8], ['crazy','全员发癫','#f04cff','#56f2d0',9]
+].map(([id, title, fill, accent, variant]) => Object.freeze({ id, title, fill, accent, variant })));
+function radarStickerById(id) { return radarStickers.find((sticker) => sticker.id === id); }
+function radarStickerArt(sticker) {
+  const blobs = ['M18 58C8 28 27 8 55 15c25-8 49 11 46 39 6 28-16 48-44 44C31 106 16 86 18 58Z','M13 53C19 21 42 7 67 18c26-2 42 19 32 44 2 29-27 43-49 32C20 99 5 79 13 53Z','M22 23c20-18 53-9 61 10 25 10 25 42 4 55-16 20-50 16-61-3C3 73 5 39 22 23Z'];
+  const eyes = sticker.variant % 3 === 0 ? '<circle cx="41" cy="48" r="8"/><circle cx="76" cy="43" r="4"/>' : sticker.variant % 3 === 1 ? '<path d="M32 49q12-13 24 0M67 46q11-14 22 0" fill="none" stroke-width="6"/>' : '<circle cx="42" cy="45" r="5"/><path d="M68 38l19 13M87 37L68 52" fill="none" stroke-width="6"/>';
+  const mouths = ['M36 71q23 22 48-5','M38 75q22-19 46 1','M44 68l9 12 9-14 10 13 9-15','M39 72q22 7 45-2','M47 65q9 24 22 0'];
+  return `<svg viewBox="0 0 116 116" aria-hidden="true"><path class="sticker-spark" d="M10 18l8 7-7 7M94 12l-3 11 12 2M101 82l-9 2 4 9"/><path class="sticker-blob" d="${blobs[sticker.variant % blobs.length]}" fill="${sticker.fill}"/><path class="sticker-accent" d="M22 33q13-13 22-8M73 22q13 1 20 12" stroke="${sticker.accent}"/>${eyes}<path d="${mouths[sticker.variant % mouths.length]}" fill="none" stroke-width="7"/><path class="sticker-jolt" d="M19 88l-10 12m88-49 12-7M55 11 51 2" stroke="${sticker.accent}"/></svg>`;
+}
+function radarStickerInner(sticker) { return `<span class="radar-sticker-visual">${radarStickerArt(sticker)}</span><strong>${escapeHTML(sticker.title)}</strong>`; }
+function radarMessageBodyMarkup(message, signal) {
+  const sticker = radarStickerById(message.sticker);
+  const stickerMarkup = sticker ? `<div class="radar-sticker is-received">${radarStickerInner(sticker)}</div>` : '';
+  const imageMarkup = /^data:image\/(?:png|jpeg|webp);base64,/i.test(message.media || '') ? `<img class="radar-message-media" src="${escapeHTML(message.media)}" alt="对方发送的图片">` : '';
+  const textMarkup = message.content ? `<p>${escapeHTML(message.content)}</p>` : (!stickerMarkup && !imageMarkup ? `<p>${escapeHTML(signal.text)}</p>` : '');
+  return `${stickerMarkup}${imageMarkup}${textMarkup}`;
+}
 
 // 24 × 24 = 576 种基础搭配，再附加两位设备号；覆盖职场、松弛、文艺、社恐、赛博等气质。
 const radarNameHeads = Object.freeze([
@@ -215,8 +254,15 @@ function saveRadarName(value, { announce = true } = {}) {
 }
 
 function radarRadius() {
-  const value = Number(localStorage.getItem(STORAGE.radarRadius));
-  return [1, 5, 50].includes(value) ? value : 5;
+  const stored = localStorage.getItem(STORAGE.radarRadius);
+  const value = Number(stored);
+  if (stored !== null && [0, 1, 20].includes(value)) return value;
+  localStorage.setItem(STORAGE.radarRadius, '20');
+  return 20;
+}
+
+function radarRadiusLabel(radius) {
+  return radius === 0 ? '不限' : `${radius} KM`;
 }
 
 function renderRadarFeed(tab = els.radarShell?.dataset.feed || 'nearby') {
@@ -293,13 +339,14 @@ function radarPresence() {
 
 function radarEmptyCopy(mode, discovery, radius) {
   if (!discovery) return ['附近发现尚未开启', '点击上方开关；只有真实数据模式会读取并同步定位。'];
-  if (mode === 'mock') return [`${radius}km 内暂时没信号`, '可以扩大扫描范围，或者安心独享这片摸鱼区。'];
+  const range = radius === 0 ? '不限范围内' : `${radius}km 内`;
+  if (mode === 'mock') return [`${range}暂时没信号`, '可以扩大扫描范围，或者安心独享这片摸鱼区。'];
   if (radarRealState.status === 'locating') return ['正在获取系统位置', 'Windows 首次定位可能需要几秒，请稍候。'];
   if (radarRealState.status === 'syncing') return ['位置已获取，正在连接云端', '正在上传匿名位置并获取附近工友。'];
   if (radarRealState.status === 'denied') return ['没有定位权限', radarRealState.reason || '请在系统设置中允许“马上下班”使用位置后再试。'];
   if (radarRealState.status === 'location-error') return ['系统暂时无法定位', radarRealState.reason || '请检查系统定位设置后重试。'];
   if (radarRealState.status === 'error') return ['真实数据暂时不可用', radarRealState.reason || '请检查网络后重试。'];
-  return [`${radius}km 内暂时没有在线工友`, '仅显示最近 30 分钟主动开启附近发现的匿名用户。'];
+  return [`${range}暂时没有在线工友`, '仅显示最近 30 分钟主动开启附近发现的匿名用户。'];
 }
 
 function radarTroubleshootingSteps() {
@@ -336,7 +383,7 @@ function renderRadar(mode = localStorage.getItem(STORAGE.radarMode) || 'mock') {
   const discovery = localStorage.getItem(STORAGE.radarDiscovery) === 'on';
   const radius = radarRadius();
   const sourcePeople = nextMode === 'mock' ? radarMockPeople : radarRealState.people;
-  const people = discovery ? sourcePeople.filter((person) => person.distanceKm <= radius) : [];
+  const people = discovery ? sourcePeople.filter((person) => radius === 0 || person.distanceKm <= radius) : [];
   if (radarSelectedPersonKey && !people.some((person) => radarPersonKey(person) === radarSelectedPersonKey)) radarSelectedPersonKey = '';
   localStorage.setItem(STORAGE.radarMode, nextMode);
   els.radarShell.dataset.mode = nextMode;
@@ -357,7 +404,7 @@ function renderRadar(mode = localStorage.getItem(STORAGE.radarMode) || 'mock') {
   else if (radarRealState.status === 'location-error') els.radarDiscoveryStatus.textContent = '系统定位失败 · 未上传任何位置';
   else if (radarRealState.status === 'error') els.radarDiscoveryStatus.textContent = '定位已开启 · 云端同步失败';
   else els.radarDiscoveryStatus.textContent = '定位已开启 · 已同步云端真实数据';
-  els.radarRangeLabel.textContent = `扫描范围 · ${radius} KM`;
+  els.radarRangeLabel.textContent = `扫描范围 · ${radarRadiusLabel(radius)}`;
   document.querySelectorAll('[data-radar-radius]').forEach((button) => {
     const active = Number(button.dataset.radarRadius) === radius;
     button.classList.toggle('is-active', active);
@@ -372,13 +419,17 @@ function renderRadar(mode = localStorage.getItem(STORAGE.radarMode) || 'mock') {
   const troubleshootingSteps = canRetry ? radarTroubleshootingSteps() : [];
   const troubleshooting = troubleshootingSteps.length ? `<ol class="radar-troubleshooting">${troubleshootingSteps.map((step) => `<li>${escapeHTML(step)}</li>`).join('')}</ol>` : '';
   els.radarPeople.innerHTML = people.length
-    ? people.map((person) => { const key = radarPersonKey(person); const proximity = radarProximity(person); const proximityLabel = radarProximityLabel(proximity); const target = nextMode === 'real' ? ` data-peer-id="${escapeHTML(person.peerId)}"` : ''; return `<article class="radar-person${key === radarSelectedPersonKey ? ' is-selected' : ''}" data-person-key="${escapeHTML(key)}"><div class="radar-person-top"><div class="radar-person-titleline"><strong class="radar-person-name">${escapeHTML(person.name)} · ${escapeHTML(person.status)}</strong>${proximityLabel ? `<span class="radar-proximity" data-proximity="${escapeHTML(proximity)}">${escapeHTML(proximityLabel)}</span>` : ''}</div><span class="radar-distance">${escapeHTML(person.distance)}</span></div><p>${escapeHTML(person.copy)}</p><div class="radar-person-actions"><button type="button" data-radar-action="递杯水" data-radar-signal="water" data-person="${escapeHTML(person.name)}"${target}>递杯水</button><button type="button" data-radar-action="摸鱼暗号" data-radar-signal="moyu" data-person="${escapeHTML(person.name)}"${target}>摸鱼暗号</button><button type="button" data-radar-action="辛苦了" data-radar-signal="encourage" data-person="${escapeHTML(person.name)}"${target}>辛苦了</button></div></article>`; }).join('')
+    ? people.map((person) => { const key = radarPersonKey(person); const proximity = radarProximity(person); const proximityLabel = radarProximityLabel(proximity); const target = nextMode === 'real' ? ` data-peer-id="${escapeHTML(person.peerId)}"` : ''; return `<article class="radar-person${key === radarSelectedPersonKey ? ' is-selected' : ''}" data-person-key="${escapeHTML(key)}"><div class="radar-person-top"><div class="radar-person-titleline"><strong class="radar-person-name">${escapeHTML(person.name)} · ${escapeHTML(person.status)}</strong>${proximityLabel ? `<span class="radar-proximity" data-proximity="${escapeHTML(proximity)}">${escapeHTML(proximityLabel)}</span>` : ''}</div><span class="radar-distance">${escapeHTML(person.distance)}</span></div><p>${escapeHTML(person.copy)}</p><div class="radar-person-actions"><button type="button" data-radar-action="打招呼" data-radar-signal="hello" data-person="${escapeHTML(person.name)}"${target}>打招呼</button><button type="button" data-radar-action="摸鱼暗号" data-radar-signal="moyu" data-person="${escapeHTML(person.name)}"${target}>摸鱼暗号</button><button type="button" data-radar-action="发消息" data-radar-signal="message" data-person="${escapeHTML(person.name)}"${target}>发消息</button></div></article>`; }).join('')
     : `<div class="radar-list-empty"><strong>${escapeHTML(emptyTitle)}</strong><span>${escapeHTML(emptyCopy)}</span>${troubleshooting}${canRetry ? '<button class="radar-retry" type="button" data-radar-retry>重新尝试</button>' : ''}</div>`;
   els.radarInbox.innerHTML = nextMode === 'mock'
-    ? radarMockMessages.map((message) => `<article class="radar-message${message.unread ? ' is-unread' : ''}"><span class="radar-message-icon">${message.icon}</span><div><div class="radar-message-meta"><strong>${message.from}</strong><time>${message.time}</time></div><span class="radar-message-distance">${message.distance}</span><p>${message.text}</p><button type="button" data-radar-reply="${message.from}">回个信号</button></div></article>`).join('')
-    : (radarRealState.messages.length ? radarRealState.messages.map((message) => { const signal = radarSignalCopy[message.type] || radarSignalCopy.encourage; return `<article class="radar-message${message.unread ? ' is-unread' : ''}"><span class="radar-message-icon">${escapeHTML(signal.icon)}</span><div><div class="radar-message-meta"><strong>${escapeHTML(message.from)}</strong><time>${escapeHTML(radarMessageTime(message.createdAt))}</time></div><span class="radar-message-distance">${escapeHTML(radarMessageDistance(message))}</span><p>${escapeHTML(signal.text)}</p><button type="button" data-radar-reply="${escapeHTML(message.from)}" data-peer-id="${escapeHTML(message.fromDeviceId)}">回个信号</button></div></article>`; }).join('') : '<div class="radar-list-empty"><strong>收件箱还没有信号</strong><span>附近工友发来的匿名招呼会出现在这里。</span></div>');
+    ? radarMockMessages.map((message) => { const signal = radarSignalCopy[message.type] || radarSignalCopy.message; return `<article class="radar-message${message.unread ? ' is-unread' : ''}"><span class="radar-message-icon">${escapeHTML(signal.icon)}</span><div><div class="radar-message-meta"><strong>${escapeHTML(message.from)}</strong><time>${escapeHTML(message.time)}</time></div><span class="radar-message-distance">${escapeHTML(message.distance)}</span>${radarMessageBodyMarkup({ ...message, content:message.text }, signal)}<button type="button" data-radar-reply="${escapeHTML(message.from)}">回复消息</button></div></article>`; }).join('')
+    : (radarRealState.messages.length ? radarRealState.messages.map((message) => { const signal = radarSignalCopy[message.type] || radarSignalCopy.encourage; return `<article class="radar-message${message.unread ? ' is-unread' : ''}"><span class="radar-message-icon">${escapeHTML(signal.icon)}</span><div><div class="radar-message-meta"><strong>${escapeHTML(message.from)}</strong><time>${escapeHTML(radarMessageTime(message.createdAt))}</time></div><span class="radar-message-distance">${escapeHTML(radarMessageDistance(message))}</span>${radarMessageBodyMarkup(message, signal)}<button type="button" data-radar-reply="${escapeHTML(message.from)}" data-peer-id="${escapeHTML(message.fromDeviceId)}">回复消息</button></div></article>`; }).join('') : '<div class="radar-list-empty"><strong>收件箱还没有信号</strong><span>附近工友发来的匿名招呼会出现在这里。</span></div>');
   const inboxBadge = document.querySelector('[data-radar-tab="inbox"] b');
-  if (inboxBadge) inboxBadge.textContent = String(nextMode === 'mock' ? 3 : radarRealState.unreadCount);
+  if (inboxBadge) {
+    const unreadCount = nextMode === 'mock' ? 3 : radarRealState.unreadCount;
+    inboxBadge.textContent = String(unreadCount);
+    inboxBadge.classList.toggle('has-unread', unreadCount > 0);
+  }
   const privacy = document.querySelector('.radar-privacy');
   if (privacy) privacy.textContent = nextMode === 'mock'
     ? '本地示例模式完全不读取定位。查看真实数据并主动开启后，才连接云端。'
@@ -513,18 +564,68 @@ function radarSendFailureCopy(reason) {
   return '云端暂时没收到信号，请稍后重试。';
 }
 
-async function sendRealRadarSignal({ type, toDeviceId, toName, button }) {
+async function sendRealRadarSignal({ type, toDeviceId, toName, button, content = '', media = '', sticker = '' }) {
   if (!window.desktop?.sendRadarSignal || !toDeviceId) return showToast('无法发送', '真实通信需要在桌面应用中运行。');
   if (localStorage.getItem(STORAGE.radarDiscovery) !== 'on') return showToast('附近发现未开启', '开启后才能向附近工友发送信号。');
   if (button) button.disabled = true;
   const signal = radarSignalCopy[type] || radarSignalCopy.encourage;
   try {
-    const result = await window.desktop.sendRadarSignal({ toDeviceId, fromName:deviceRadarName(), type });
+    const result = await window.desktop.sendRadarSignal({ toDeviceId, fromName:deviceRadarName(), type, content:String(content).trim().slice(0, 100), media, sticker });
     if (!result?.ok) return showToast('信号发送失败', radarSendFailureCopy(String(result?.reason || '')));
     showToast(`${signal.label}已发出`, `${toName || '对方'} 会在真实收件箱收到这条工位电波。`);
   } finally {
     if (button) button.disabled = false;
   }
+}
+
+let radarMessageDraftTarget = null;
+let radarMessageMedia = '';
+let radarMessageSticker = '';
+function randomRadarMoyuMessage() { return radarMoyuMessages[Math.floor(Math.random() * radarMoyuMessages.length)]; }
+function resetRadarMessageAttachments() {
+  radarMessageMedia = '';
+  radarMessageSticker = '';
+  if (els.radarMessageImageInput) els.radarMessageImageInput.value = '';
+  if (els.radarMessageImagePreview) { els.radarMessageImagePreview.removeAttribute('src'); els.radarMessageImagePreview.hidden = true; }
+  els.radarMessageImageRemove?.setAttribute('hidden', '');
+  els.radarStickerGrid?.querySelectorAll('[data-sticker-id]').forEach((button) => button.classList.remove('is-selected'));
+  if (els.radarComposeSticker) { els.radarComposeSticker.innerHTML = ''; els.radarComposeSticker.hidden = true; }
+}
+async function compressRadarImage(file) {
+  if (!/^image\/(?:png|jpeg|webp)$/i.test(file?.type || '')) throw new Error('只支持 PNG、JPG 和 WebP 图片。');
+  if (file.size > 12 * 1024 * 1024) throw new Error('原图不能超过 12 MB。');
+  const bitmap = await createImageBitmap(file);
+  const ratio = Math.min(1, 1280 / Math.max(bitmap.width, bitmap.height));
+  const canvas = document.createElement('canvas');
+  canvas.width = Math.max(1, Math.round(bitmap.width * ratio));
+  canvas.height = Math.max(1, Math.round(bitmap.height * ratio));
+  canvas.getContext('2d').drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+  bitmap.close?.();
+  let quality = .82;
+  let data = canvas.toDataURL('image/webp', quality);
+  while (data.length > 320000 && quality > .42) { quality -= .1; data = canvas.toDataURL('image/webp', quality); }
+  if (data.length > 350000) throw new Error('图片压缩后仍然太大，请换一张更小的图。');
+  return data;
+}
+function closeRadarMessageComposer() {
+  if (!els.radarMessageDialog) return;
+  els.radarMessageDialog.classList.remove('is-open');
+  window.setTimeout(() => { els.radarMessageDialog.hidden = true; }, 180);
+  radarMessageDraftTarget = null;
+}
+function openRadarMessageComposer({ toDeviceId = '', toName = '', button = null }) {
+  radarMessageDraftTarget = { toDeviceId, toName, button };
+  els.radarMessageTarget.textContent = toName || '附近工友';
+  els.radarMessageInput.value = '';
+  els.radarMessageCount.textContent = '0 / 100';
+  els.radarMessageError.textContent = '';
+  resetRadarMessageAttachments();
+  els.radarStickerPanel.hidden = true;
+  els.radarStickerToggle.setAttribute('aria-expanded', 'false');
+  els.radarStickerGrid.innerHTML = radarStickers.map((sticker) => `<button class="radar-sticker" type="button" data-sticker-id="${sticker.id}" aria-label="${escapeHTML(sticker.title)}">${radarStickerInner(sticker)}</button>`).join('');
+  els.radarMessageDialog.hidden = false;
+  requestAnimationFrame(() => els.radarMessageDialog.classList.add('is-open'));
+  window.setTimeout(() => els.radarMessageInput.focus(), 80);
 }
 
 async function markRealRadarInboxRead() {
@@ -645,21 +746,19 @@ function renderRetirementPlan({ editing = false } = {}) {
 }
 
 const retirementBlindBoxes = [
-  { key:'beach', day:365, label:'海边躺平', copy:'班味？不存在', image:'assets/retirement/beach-chair-v2.png', alt:'马歇歇戴着墨镜笑着躺在海边沙滩椅上喝冰饮' },
-  { key:'ski', day:47, label:'雪山开溜', copy:'人生下坡路，我先滑为敬。', image:'assets/retirement/ski-v2.png', alt:'马歇歇笑着穿越雪山滑雪' },
-  { key:'dive', day:128, label:'海底摸鱼', copy:'下潜两万里，烦恼已失联。', image:'assets/retirement/dive-v2.png', alt:'马歇歇开心地在珊瑚礁间潜水' },
-  { key:'tv', day:23, label:'沙发包场', copy:'沙发登基，遥控器传国玉玺。', image:'assets/retirement/tv-v2.png', alt:'马歇歇穿着睡衣在沙发上大笑着看电视' },
+  { key:'beach', day:365, label:'海边躺平', copy:'班味？不存在', image:'assets/retirement/beach-chair-v3.png', alt:'马歇歇躺在浅黄色遮阳伞下的海边躺椅上看蓝色大海' },
+  { key:'ski', day:47, label:'雪山开溜', copy:'人生下坡路，我先滑为敬。', image:'assets/retirement/ski-v3.png', alt:'小小的马歇歇沿着雪谷中的弯曲雪道滑雪' },
+  { key:'dive', day:128, label:'海底摸鱼', copy:'下潜两万里，烦恼已失联。', image:'assets/retirement/dive-v3.png', alt:'小小的马歇歇在幽深海底洞穴的蓝色光束中潜水' },
   { key:'park', day:188, label:'公园巡视', copy:'公园走一圈，烦恼自动掉线。', image:'assets/retirement/park-v2.png', alt:'马歇歇笑着在阳光下的公园池塘边散步' },
-  { key:'absurd', day:777, label:'宇宙出走', copy:'退休星球已登录，地球稍后回。', image:'assets/retirement/absurd-space-v2.png', alt:'马歇歇坐着喷气办公椅在宇宙中得意喝茶' },
   { key:'phone', day:58, label:'被窝续费', copy:'被窝续费成功，起床申请驳回。', image:'assets/retirement/bed-phone-v2.png', alt:'马歇歇笑着躺在床上盖着被子玩手机' },
   { key:'space', day:1001, label:'太空散步', copy:'地球太挤，出来透口气。', image:'assets/retirement/space-travel-v1.png', alt:'马歇歇开心地遨游太空' },
-  { key:'river-run', day:92, label:'江边撒欢', copy:'江风负责吹，我负责撒欢。', image:'assets/retirement/river-run-v1.png', alt:'马歇歇笑着沿江边跑步' },
+  { key:'river-run', day:92, label:'江边撒欢', copy:'江风负责吹，我负责撒欢。', image:'assets/retirement/river-run-v2.png', alt:'马歇歇在晨光中的上海滨江步道上轻松跑步' },
   { key:'concert', day:520, label:'现场蹦迪', copy:'前排已到位，青春重新开机。', image:'assets/retirement/concert-back-v2.png', alt:'马歇歇背对画面举手机观看红色灯光下的乐队演出' },
   { key:'aurora', day:666, label:'极光长夜', location:'冰岛 · 斯托克角', copy:'极光开灯，今晚宇宙请客。', image:'assets/retirement/iceland-aurora-v2.png', alt:'小小的马歇歇背对画面站在冰湖边仰望极光与群山' },
   { key:'volcano', day:404, label:'火山围观', location:'美国 · 夏威夷火山', copy:'地球在冒泡，我在看热闹。', image:'assets/retirement/us-volcano-v2.png', alt:'小小的马歇歇背对画面站在远处观看熔岩喷泉' },
   { key:'norway', day:818, label:'雪城出片', location:'挪威 · 特罗姆瑟', copy:'这座城很冷，快门很热。', image:'assets/retirement/norway-photographer-back-v1.png', alt:'马歇歇背对画面拍摄挪威峡湾雪城与大桥' },
-  { key:'reading', day:216, label:'窗边翻书', copy:'书翻到哪，日子就过到哪。', image:'assets/retirement/reading-window-v1.png', alt:'马歇歇坐在绿景落地窗与白色纱帘旁看书' },
-  { key:'bar', day:330, label:'小酌一下', copy:'今晚微醺，明天继续自由。', image:'assets/retirement/bar-v1.png', alt:'马歇歇在酒吧里开心喝酒' },
+  { key:'reading', day:216, label:'窗边翻书', copy:'书翻到哪，日子就过到哪。', image:'assets/retirement/reading-window-v2.png', alt:'马歇歇坐在明亮雅致的客厅窗边安静看书' },
+  { key:'bar', day:330, label:'小酌一下', copy:'今晚微醺，明天继续自由。', image:'assets/retirement/bar-v2.png', alt:'马歇歇坐在暖光唱片酒吧的一角松弛小酌' },
   { key:'robot', day:909, label:'家务托管', copy:'家务外包，快乐全款到账。', image:'assets/retirement/robot-cleaning-v1.png', alt:'马歇歇在家休息时机器人帮忙打扫卫生' },
   { key:'fuji', day:315, label:'湖畔出片', location:'日本 · 河口湖', copy:'富士山营业，我负责出片。', image:'assets/retirement/fuji-cherry-v2.png', alt:'小小的马歇歇站在河口湖栈桥尽头拍摄晨光中的富士山' },
   { key:'egypt', day:712, label:'沙漠巡游', location:'埃及 · 吉萨金字塔', copy:'金字塔很稳，我更悠闲。', image:'assets/retirement/egypt-pyramids-v2.png', alt:'小小的马歇歇背对画面骑在落日驼队末尾远望吉萨金字塔' },
@@ -670,7 +769,12 @@ const retirementBlindBoxes = [
   { key:'phuket-town', day:413, label:'老街散步', location:'泰国 · 普吉镇', copy:'晚霞落街，今天只逛不赶。', image:'assets/retirement/phuket-town-v1.png', alt:'马歇歇在粉橙晚霞与串灯下漫步普吉镇老街' },
   { key:'phi-phi', day:621, label:'海岛泡夏天', location:'泰国 · 皮皮岛', copy:'泰兰德夏天永不停歇。', image:'assets/retirement/phi-phi-island-v1.png', alt:'马歇歇背对画面走进皮皮岛碧绿浅海与石灰岩海湾' },
   { key:'diamond-beach', day:319, label:'踏冰看海', location:'冰岛 · 钻石沙滩', copy:'冰块在晒太阳，我在旁边发光。', image:'assets/retirement/iceland-diamond-beach-v1.png', alt:'马歇歇背对画面站在冰岛钻石沙滩的冰块上张开双手' },
-  { key:'desert-rose', day:1315, label:'沙漠花开', location:'也门 · 索科特拉岛', copy:'沙漠开花，荒凉也有浪漫。', image:'assets/retirement/socotra-desert-rose-v1.png', alt:'马歇歇坐在索科特拉岛海湾旁欣赏盛开的沙漠玫瑰' }
+  { key:'desert-rose', day:1315, label:'沙漠花开', location:'也门 · 索科特拉岛', copy:'沙漠开花，荒凉也有浪漫。', image:'assets/retirement/socotra-desert-rose-v1.png', alt:'马歇歇坐在索科特拉岛海湾旁欣赏盛开的沙漠玫瑰' },
+  { key:'dolomites', day:431, label:'秋谷漫游', location:'意大利 · 多洛米蒂', copy:'尖峰很高，日子很慢。', image:'assets/retirement/dolomites-autumn-v1.png', alt:'小小的马歇歇沿多洛米蒂秋日山谷小径漫步' },
+  { key:'kilimanjaro', day:602, label:'草原望山', location:'坦桑尼亚 · 乞力马扎罗', copy:'雪顶在远方，草原把日子拉长。', image:'assets/retirement/kilimanjaro-safari-v1.png', alt:'小小的马歇歇和远处大象一起眺望乞力马扎罗山' },
+  { key:'reynisfjara', day:734, label:'黑沙听浪', location:'冰岛 · 雷尼斯黑沙滩', copy:'黑沙白雪，海风把班味吹走。', image:'assets/retirement/reynisfjara-winter-v1.png', alt:'马歇歇站在覆雪的黑沙滩上看海浪与玄武岩海蚀柱' },
+  { key:'otaru', day:274, label:'雪街望海', location:'日本 · 北海道小樽', copy:'坡道通向海，冬天慢慢走。', image:'assets/retirement/hokkaido-otaru-v1.png', alt:'马歇歇沿北海道小樽积雪坡道走向蓝色大海' },
+  { key:'hulunbuir', day:579, label:'雪原追光', location:'中国 · 呼伦贝尔', copy:'月亮挂天边，雪原把时间放慢。', image:'assets/retirement/hulunbuir-winter-v1.png', alt:'马歇歇站在粉蓝暮色中的呼伦贝尔雪原与雾凇林前追光' }
 ];
 retirementBlindBoxes.forEach((scene) => { const image = new Image(); image.src = scene.image; });
 let retirementBlindBoxIndex = -1;
@@ -1823,12 +1927,76 @@ els.radarPeople?.addEventListener('click', (event) => {
   }
   const button = event.target.closest('[data-radar-action]');
   if (!button) return;
-  if (els.radarShell.dataset.mode === 'real') {
-    sendRealRadarSignal({ type:button.dataset.radarSignal, toDeviceId:button.dataset.peerId, toName:button.dataset.person, button });
+  if (button.dataset.radarSignal === 'message') {
+    openRadarMessageComposer({ toDeviceId:button.dataset.peerId, toName:button.dataset.person, button });
     return;
   }
-  showToast(`${button.dataset.radarAction}已发出`, `${button.dataset.person} 收到了一条匿名工位电波。示例模式不会真的发送。`);
+  const content = button.dataset.radarSignal === 'moyu' ? randomRadarMoyuMessage() : radarSignalCopy[button.dataset.radarSignal]?.text || '';
+  if (els.radarShell.dataset.mode === 'real') {
+    sendRealRadarSignal({ type:button.dataset.radarSignal, toDeviceId:button.dataset.peerId, toName:button.dataset.person, button, content });
+    return;
+  }
+  showToast(`${button.dataset.radarAction}已发出`, `${content}（示例模式不会真的发送）`);
 });
+els.radarMessageInput?.addEventListener('input', () => {
+  const characters = [...els.radarMessageInput.value];
+  if (characters.length > 100) els.radarMessageInput.value = characters.slice(0, 100).join('');
+  els.radarMessageCount.textContent = `${Math.min(characters.length, 100)} / 100`;
+  els.radarMessageError.textContent = '';
+});
+els.radarMessageCancel?.addEventListener('click', closeRadarMessageComposer);
+els.radarStickerToggle?.addEventListener('click', () => {
+  const open = els.radarStickerPanel.hidden;
+  els.radarStickerPanel.hidden = !open;
+  els.radarStickerToggle.setAttribute('aria-expanded', String(open));
+});
+els.radarStickerGrid?.addEventListener('click', (event) => {
+  const button = event.target.closest('[data-sticker-id]');
+  if (!button) return;
+  radarMessageSticker = button.dataset.stickerId;
+  radarMessageMedia = '';
+  els.radarMessageImagePreview.hidden = true;
+  els.radarMessageImageRemove.hidden = true;
+  els.radarStickerGrid.querySelectorAll('[data-sticker-id]').forEach((item) => item.classList.toggle('is-selected', item === button));
+  const sticker = radarStickerById(radarMessageSticker);
+  els.radarComposeSticker.innerHTML = `<div class="radar-sticker is-composing">${radarStickerInner(sticker)}<button type="button" data-remove-compose-sticker aria-label="移除表情包">×</button></div>`;
+  els.radarComposeSticker.hidden = false;
+  els.radarStickerPanel.hidden = true;
+  els.radarStickerToggle.setAttribute('aria-expanded', 'false');
+  els.radarMessageInput.focus();
+  els.radarMessageError.textContent = '';
+});
+els.radarComposeSticker?.addEventListener('click', (event) => { if (event.target.closest('[data-remove-compose-sticker]')) resetRadarMessageAttachments(); });
+els.radarMessageImage?.addEventListener('click', () => els.radarMessageImageInput.click());
+els.radarMessageImageInput?.addEventListener('change', async () => {
+  const [file] = els.radarMessageImageInput.files || [];
+  if (!file) return;
+  els.radarMessageError.textContent = '图片压缩中…';
+  try {
+    radarMessageMedia = await compressRadarImage(file);
+    radarMessageSticker = '';
+    els.radarStickerGrid.querySelectorAll('[data-sticker-id]').forEach((button) => button.classList.remove('is-selected'));
+    els.radarComposeSticker.innerHTML = '';
+    els.radarComposeSticker.hidden = true;
+    els.radarMessageImagePreview.src = radarMessageMedia;
+    els.radarMessageImagePreview.hidden = false;
+    els.radarMessageImageRemove.hidden = false;
+    els.radarMessageError.textContent = '';
+  } catch (error) { resetRadarMessageAttachments(); els.radarMessageError.textContent = error.message; }
+});
+els.radarMessageImageRemove?.addEventListener('click', resetRadarMessageAttachments);
+els.radarMessageDialog?.addEventListener('click', (event) => { if (event.target.matches('[data-radar-message-close]')) closeRadarMessageComposer(); });
+els.radarMessageForm?.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const content = [...els.radarMessageInput.value.trim()].slice(0, 100).join('');
+  if (!content && !radarMessageMedia && !radarMessageSticker) { els.radarMessageError.textContent = '写点什么，或者选一张图片 / 表情包。'; els.radarMessageInput.focus(); return; }
+  const target = radarMessageDraftTarget;
+  if (!target) return;
+  if (els.radarShell.dataset.mode === 'real') await sendRealRadarSignal({ type:'message', content, media:radarMessageMedia, sticker:radarMessageSticker, ...target });
+  else showToast('消息已模拟发出', `${target.toName || '附近工友'} 会收到${radarMessageSticker ? '一张抽象表情包' : radarMessageMedia ? '一张图片' : `：“${content}”`}。（示例模式不会真的发送）`);
+  closeRadarMessageComposer();
+});
+document.addEventListener('keydown', (event) => { if (event.key === 'Escape' && !els.radarMessageDialog?.hidden) closeRadarMessageComposer(); });
 els.radarBlips?.addEventListener('click', (event) => {
   const blip = event.target.closest('.radar-blip');
   if (!blip) return;
@@ -1841,11 +2009,7 @@ els.radarBlips?.addEventListener('click', (event) => {
 els.radarInbox?.addEventListener('click', (event) => {
   const button = event.target.closest('[data-radar-reply]');
   if (!button) return;
-  if (els.radarShell.dataset.mode === 'real') {
-    sendRealRadarSignal({ type:'reply', toDeviceId:button.dataset.peerId, toName:button.dataset.radarReply, button });
-    return;
-  }
-  showToast('匿名信号已回复', `已向 ${button.dataset.radarReply} 回了一个“收到”。示例模式不会真的发送。`);
+  openRadarMessageComposer({ toDeviceId:button.dataset.peerId, toName:button.dataset.radarReply, button });
 });
 let clearArmed = false; let clearTimer;
 els.clearAttendanceData.addEventListener('click', () => {
