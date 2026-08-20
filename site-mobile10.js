@@ -275,3 +275,100 @@ if (matchMedia('(min-width: 981px) and (pointer: fine)').matches) {
     setTimeout(() => sectionLocked = false, 720);
   }, { passive:false });
 }
+
+/* 退休旅行轨道：自动巡航；悬停或键盘聚焦的图片会变速滑到正中央。 */
+const retirementOrbit = document.querySelector('.retirement-orbit');
+if (retirementOrbit) {
+  const orbitShots = [...retirementOrbit.querySelectorAll('.retirement-shot')];
+  const reduceOrbitMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let orbitIndex = 0;
+  let orbitTimer = null;
+  let orbitInView = true;
+
+  const orbitOffset = (index) => {
+    let offset = index - orbitIndex;
+    const half = orbitShots.length / 2;
+    if (offset > half) offset -= orbitShots.length;
+    if (offset < -half) offset += orbitShots.length;
+    return offset;
+  };
+
+  const renderRetirementOrbit = (mode = 'auto') => {
+    const stageWidth = retirementOrbit.clientWidth || 900;
+    const stageHeight = retirementOrbit.clientHeight || 640;
+    retirementOrbit.classList.toggle('is-hover-steering', mode === 'hover');
+    orbitShots.forEach((shot, index) => {
+      const offset = orbitOffset(index);
+      const distance = Math.abs(offset);
+      const angle = offset * (Math.PI * 2 / orbitShots.length);
+      const depth = Math.cos(angle);
+      const side = Math.sin(angle);
+      const x = side * stageWidth * .415;
+      /* 椭圆轨道向右下倾斜：后排整体抬高，左右两翼产生可见的高度差。 */
+      const y = -(1 - depth) * stageHeight * .205 + side * stageHeight * .085 + stageHeight * .035;
+      const scale = distance === 0 ? 1 : distance === 1 ? .68 : distance === 2 ? .47 : distance === 3 ? .32 : .27;
+      const opacity = distance === 0 ? 1 : distance === 1 ? .86 : distance === 2 ? .73 : distance === 3 ? .64 : .58;
+      const rotate = side * -31;
+      const isFront = Math.abs(offset) < .1;
+      shot.style.transform = `translate(-50%,-50%) translate3d(${x}px,${y}px,${depth * 300}px) scale(${scale}) rotateY(${rotate}deg) rotateZ(-6deg)`;
+      shot.style.opacity = String(opacity);
+      shot.style.zIndex = String(Math.round((depth + 1) * 50));
+      shot.style.pointerEvents = 'auto';
+      shot.classList.toggle('is-front', isFront);
+      shot.setAttribute('aria-current', isFront ? 'true' : 'false');
+      shot.setAttribute('aria-label', `${shot.querySelector('figcaption')?.textContent || '旅行图片'}${isFront ? '，当前图片' : '，移到中央查看'}`);
+    });
+  };
+
+  const setOrbitIndex = (index, mode = 'auto') => {
+    orbitIndex = (index + orbitShots.length) % orbitShots.length;
+    renderRetirementOrbit(mode);
+  };
+
+  const stopOrbit = () => {
+    if (!orbitTimer) return;
+    clearInterval(orbitTimer);
+    orbitTimer = null;
+  };
+
+  const startOrbit = () => {
+    stopOrbit();
+    if (reduceOrbitMotion || !orbitInView || document.hidden) return;
+    orbitTimer = setInterval(() => setOrbitIndex(orbitIndex + 1, 'auto'), 3200);
+  };
+
+  orbitShots.forEach((shot, index) => {
+    shot.addEventListener('pointerenter', () => {
+      stopOrbit();
+      setOrbitIndex(index, 'hover');
+    });
+    shot.addEventListener('focus', () => {
+      stopOrbit();
+      setOrbitIndex(index, 'hover');
+    });
+    shot.addEventListener('keydown', (event) => {
+      if (!['Enter', ' '].includes(event.key)) return;
+      event.preventDefault();
+      setOrbitIndex(index, 'hover');
+    });
+  });
+
+  retirementOrbit.addEventListener('pointerleave', () => {
+    retirementOrbit.classList.remove('is-hover-steering');
+    startOrbit();
+  });
+  retirementOrbit.addEventListener('focusout', (event) => {
+    if (retirementOrbit.contains(event.relatedTarget)) return;
+    retirementOrbit.classList.remove('is-hover-steering');
+    startOrbit();
+  });
+  window.addEventListener('resize', () => renderRetirementOrbit('resize'));
+  document.addEventListener('visibilitychange', startOrbit);
+  new IntersectionObserver(([entry]) => {
+    orbitInView = entry.isIntersecting;
+    if (orbitInView) startOrbit(); else stopOrbit();
+  }, { threshold:.18 }).observe(retirementOrbit);
+
+  renderRetirementOrbit('initial');
+  startOrbit();
+}

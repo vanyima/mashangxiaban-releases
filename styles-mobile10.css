@@ -1004,6 +1004,33 @@
 .signal-near::before { content:''; position:absolute; left:-9px; top:50%; width:10px; height:10px; border:2px solid var(--ink); border-radius:50%; background:var(--red); animation:near-ping 1.4s ease-out infinite; }
 @keyframes near-ping { 0%,100%{box-shadow:0 0 0 0 rgba(255,76,62,.65)} 65%{box-shadow:0 0 0 9px rgba(255,76,62,0)} }
 
+/* “附近工友”官网示意：雷达留在后景，收件箱像一块真正的应用侧栏压在前景。 */
+.radar-scope>i { left:29%; }
+.radar-self { left:29%; }
+.radar-sweep { right:39%; }
+.radar-signal { z-index:2; }
+.signal-a { left:5%; top:19%; }
+.signal-b { left:7%; right:auto; top:auto; bottom:11%; }
+.signal-c { left:29%; bottom:5%; }
+.signal-actions { display:flex; gap:4px; margin-top:9px; }
+.signal-actions em { padding:4px 6px; border:1px solid var(--ink); background:white; color:var(--ink); font:950 8px/1 var(--mono); font-style:normal; }
+.radar-inbox-preview { position:absolute; z-index:8; top:5%; right:3%; bottom:5%; width:41%; display:grid; grid-template-rows:auto minmax(0,1fr) auto; border:3px solid var(--ink); background:var(--cream); color:var(--ink); box-shadow:9px 9px 0 var(--yellow); transform:rotate(.7deg); }
+.radar-inbox-preview header { display:grid; grid-template-columns:1fr 1fr; border-bottom:2px solid var(--ink); background:#ded8ca; font-size:10px; font-weight:950; }
+.radar-inbox-preview header span,.radar-inbox-preview header strong { display:flex; min-height:42px; align-items:center; justify-content:center; padding:8px; }
+.radar-inbox-preview header strong { border-left:1px solid var(--ink); background:var(--yellow); }
+.radar-inbox-preview header b { display:grid; width:19px; height:19px; margin-left:6px; place-items:center; border:1px solid var(--ink); border-radius:50%; background:var(--red); color:white; font:900 8px/1 var(--mono); }
+.inbox-preview-list { min-height:0; overflow:hidden; }
+.inbox-preview-list article { position:relative; display:grid; grid-template-columns:32px minmax(0,1fr) auto; gap:8px; align-items:center; min-height:66px; padding:9px 8px; border-bottom:1px solid rgba(16,19,27,.22); }
+.inbox-preview-list article.is-unread { background:#fff5b5; box-shadow:inset 4px 0 0 var(--red); }
+.inbox-preview-list article>i { display:grid; width:31px; height:31px; place-items:center; border:2px solid var(--ink); border-radius:50%; background:#7ee7ff; font:950 9px/1 var(--mono); font-style:normal; }
+.inbox-preview-list article>i.preview-sticker { height:38px; border:0; border-radius:47% 38% 51% 42%; background:var(--red); color:white; line-height:.9; transform:rotate(-8deg); }
+.inbox-preview-list article b { display:block; overflow:hidden; font-size:9px; text-overflow:ellipsis; white-space:nowrap; }
+.inbox-preview-list article p { margin:5px 0 0; overflow:hidden; color:#666d82; font-size:8px; line-height:1.35; text-overflow:ellipsis; white-space:nowrap; }
+.inbox-preview-list article button { min-height:27px; padding:0 8px; border:1px solid var(--ink); background:white; color:var(--ink); font-size:8px; font-weight:950; }
+.radar-inbox-preview footer { min-height:42px; display:flex; align-items:center; justify-content:flex-start; gap:6px; padding:7px 8px; border-top:2px solid var(--ink); background:var(--cream); color:var(--ink); }
+.radar-inbox-preview footer span,.radar-inbox-preview footer strong { padding:6px 7px; border:1px solid var(--ink); background:white; font:900 8px/1 var(--mono); }
+.radar-inbox-preview footer strong { margin-left:auto; background:var(--yellow); box-shadow:2px 2px 0 var(--ink); }
+
 /* 导航图标改为品牌贴纸字章，替代与页面视觉不一致的系统 emoji。 */
 .site-nav .nav-icon { border:2px solid var(--ink); border-radius:7px; background:var(--yellow); color:var(--ink); box-shadow:2px 2px 0 var(--ink); font:950 11px/1 var(--mono); }
 .site-nav .nav-icon-today { transform:rotate(-4deg); }
@@ -1018,6 +1045,13 @@
   .radar-signal.signal-near { padding-top:18px; }
   .radar-distance strong { font-size:22px; }
   .radar-distance em { font-size:9px; }
+  .radar-inbox-preview { right:9px; width:55%; }
+  .radar-scope>i,.radar-self { left:23%; }
+  .signal-b,.signal-c { display:none; }
+  .signal-actions { display:none; }
+  .inbox-preview-list article { grid-template-columns:27px minmax(0,1fr) auto; gap:6px; min-height:62px; padding-inline:6px; }
+  .inbox-preview-list article>i { width:27px; height:27px; }
+  .radar-inbox-preview footer span:nth-child(2) { display:none; }
 }
 
 @media (prefers-reduced-motion:reduce) { .signal-near::before { animation:none; } }
@@ -1118,5 +1152,226 @@
 .primary-download [data-download-count],
 .final-platform-downloads [data-download-count] { color:#fff; opacity:1; }
 
+/* 2.5.3 官网：退休后的 100 种生活，以旅行贴纸墙替代单张英雄图。 */
+.retirement-life-grid {
+  min-height:720px;
+  display:grid;
+  grid-template-columns:repeat(12,minmax(0,1fr));
+  grid-template-rows:repeat(8,minmax(0,1fr));
+  gap:6px;
+  padding:6px;
+  border-right:3px solid var(--ink);
+  background:var(--ink);
+  overflow:hidden;
+}
+.retirement-shot { position:relative; min-width:0; min-height:0; margin:0; overflow:hidden; background:#27335a; }
+.retirement-shot img { width:100%; height:100%; display:block; object-fit:cover; transition:transform .55s cubic-bezier(.2,.8,.2,1),filter .35s ease; }
+.retirement-shot::after { content:""; position:absolute; inset:52% 0 0; background:linear-gradient(transparent,rgba(7,9,17,.72)); pointer-events:none; }
+.retirement-shot figcaption { position:absolute; z-index:1; left:10px; bottom:9px; padding:6px 8px; border:2px solid var(--ink); background:var(--yellow); color:var(--ink); box-shadow:3px 3px 0 var(--ink); font:900 10px/1 var(--mono); white-space:nowrap; }
+.retirement-shot:hover img { transform:scale(1.035); filter:saturate(1.08); }
+.shot-yemen { grid-column:1/5; grid-row:1/5; }
+.shot-norway { grid-column:5/9; grid-row:1/5; }
+.shot-volcano { grid-column:1/5; grid-row:5/9; }
+.shot-rose { grid-column:5/9; grid-row:5/9; }
+.shot-iceland { grid-column:9/13; grid-row:1/3; }
+.shot-kilimanjaro { grid-column:9/13; grid-row:3/5; }
+.shot-dive { grid-column:9/13; grid-row:5/7; }
+.shot-ski { grid-column:9/13; grid-row:7/9; }
+.shot-yemen img { object-position:center 48%; }
+.shot-norway img { object-position:center 46%; }
+.shot-volcano img { object-position:center 50%; }
+.shot-rose img { object-position:center 48%; }
+.shot-iceland img,.shot-kilimanjaro img,.shot-dive img,.shot-ski img { object-position:center; }
+
+.retirement-copy::after {
+  content:'退休后的100种生活';
+  right:-.18em;
+  bottom:-.04em;
+  width:112%;
+  color:var(--ink);
+  font-size:clamp(58px,6.9vw,112px);
+  line-height:.82;
+  letter-spacing:-.09em;
+  white-space:normal;
+  text-align:right;
+  opacity:.07;
+  transform:rotate(-4deg);
+}
+
+/* 更新日志像开发者凌晨贴上去的临时纸条，专门勾住好奇心。 */
+.site-nav-v2 nav a.top-nav-link.nav-changelog { position:relative; min-width:74px; justify-content:center; overflow:visible; }
+.night-update-tag {
+  position:absolute;
+  z-index:3;
+  top:-17px;
+  right:-10px;
+  padding:5px 7px;
+  border:2px solid var(--ink);
+  background:var(--red);
+  color:white;
+  box-shadow:3px 3px 0 var(--ink);
+  font:950 9px/1 var(--mono);
+  font-style:normal;
+  letter-spacing:0;
+  white-space:nowrap;
+  transform:rotate(4deg);
+  animation:night-tag-peek 3.6s ease-in-out infinite;
+  pointer-events:none;
+}
+@keyframes night-tag-peek { 0%,72%,100%{transform:rotate(4deg) translateY(0)} 78%{transform:rotate(1deg) translateY(-3px)} 84%{transform:rotate(6deg) translateY(1px)} 90%{transform:rotate(4deg) translateY(0)} }
+
+@media (min-width:981px) {
+  .retirement-life-grid { min-height:0; height:100%; }
+}
+@media (max-width:1180px) and (min-width:981px) {
+  .night-update-tag { right:-13px; font-size:8px; }
+}
+@media (max-width:980px) {
+  .retirement-life-grid { min-height:92vw; border-right:0; border-bottom:3px solid var(--ink); }
+}
+@media (max-width:650px) {
+  .retirement-life-grid { min-height:auto; grid-template-columns:repeat(2,minmax(0,1fr)); grid-template-rows:repeat(8,34vw); gap:4px; padding:4px; }
+  .retirement-shot { grid-column:auto!important; grid-row:auto!important; }
+  .retirement-shot:nth-child(-n+4) { grid-column:span 2!important; grid-row:span 1!important; }
+  .retirement-shot figcaption { left:7px; bottom:7px; padding:5px 6px; font-size:8px; box-shadow:2px 2px 0 var(--ink); }
+  .retirement-copy::after { right:-.08em; bottom:.02em; width:106%; font-size:clamp(54px,19vw,82px); }
+}
+@media (prefers-reduced-motion:reduce) {
+  .night-update-tag { animation:none; }
+  .retirement-shot img { transition:none; }
+}
+
 /* 图标透明留白使用品牌黑填充，避免透出页面米白色。 */
 .logo img { background:var(--ink); }
+
+/* 退休旅行轨道：完整横图沿弧线巡航，当前画面在中央放大。 */
+.retirement-life-grid.retirement-orbit {
+  position:relative;
+  isolation:isolate;
+  display:block;
+  min-height:720px;
+  padding:0;
+  background:
+    radial-gradient(circle at 16% 22%,rgba(126,231,255,.34) 0 1px,transparent 2px),
+    radial-gradient(circle at 74% 18%,rgba(255,223,50,.42) 0 1px,transparent 2px),
+    radial-gradient(circle at 86% 69%,rgba(255,255,255,.42) 0 1px,transparent 2px),
+    radial-gradient(circle at 42% 77%,rgba(255,255,255,.3) 0 1px,transparent 2px),
+    radial-gradient(ellipse at 50% 54%,#2448df 0,#162b78 34%,#080d28 73%,#050817 100%);
+  background-size:83px 83px,119px 119px,151px 151px,101px 101px,auto;
+  perspective:1500px;
+  overflow:hidden;
+}
+.retirement-life-grid.retirement-orbit::before {
+  content:"";
+  position:absolute;
+  z-index:0;
+  left:50%;
+  top:51%;
+  width:88%;
+  aspect-ratio:2.35;
+  border:2px solid rgba(126,231,255,.38);
+  border-radius:50%;
+  box-shadow:0 0 45px rgba(66,163,255,.22),inset 0 0 45px rgba(66,163,255,.16);
+  transform:translate(-50%,-50%) rotate(-13deg) rotateX(58deg);
+  pointer-events:none;
+}
+.retirement-life-grid.retirement-orbit::after {
+  content:"退休后的100种生活";
+  position:absolute;
+  z-index:0;
+  left:22px;
+  top:18px;
+  color:rgba(255,255,255,.24);
+  font:900 10px/1 var(--mono);
+  letter-spacing:.13em;
+}
+.retirement-orbit .retirement-shot {
+  position:absolute;
+  z-index:1;
+  left:50%;
+  top:52%;
+  width:min(62%,720px);
+  min-width:0;
+  min-height:0;
+  max-height:88%;
+  margin:0;
+  padding:7px;
+  border:2px solid rgba(255,255,255,.68);
+  background:#070b20;
+  box-shadow:0 26px 70px rgba(0,0,0,.46);
+  opacity:0;
+  overflow:visible;
+  cursor:pointer;
+  transform:translate(-50%,-50%) scale(.42);
+  transform-origin:center;
+  transition:transform var(--orbit-speed,1.05s) cubic-bezier(.2,.86,.18,1),opacity .5s ease,filter .5s ease;
+  will-change:transform,opacity;
+}
+.retirement-orbit .retirement-shot::after { display:none; }
+.retirement-orbit .retirement-shot img {
+  display:block;
+  width:100%;
+  height:auto!important;
+  max-height:calc(100svh - 150px);
+  object-fit:contain!important;
+  object-position:center!important;
+  background:#070b20;
+  transform:none!important;
+  filter:none;
+}
+.retirement-orbit .retirement-shot figcaption {
+  left:13px;
+  bottom:13px;
+  padding:7px 9px;
+  background:var(--yellow);
+  font-size:10px;
+}
+.retirement-orbit .retirement-shot.is-front { border-color:var(--yellow); box-shadow:0 30px 85px rgba(0,0,0,.6),0 0 0 3px var(--ink),0 0 45px rgba(126,231,255,.24); }
+.retirement-orbit .retirement-shot:focus-visible { outline:4px solid var(--yellow); outline-offset:5px; }
+.retirement-orbit.is-hover-steering .retirement-shot { --orbit-speed:1.55s; }
+
+.retirement-final-line {
+  display:table!important;
+  margin-top:.15em;
+  padding:.06em .18em .12em;
+  border:3px solid var(--ink);
+  background:var(--red);
+  color:white!important;
+  box-shadow:7px 7px 0 var(--ink);
+  font-size:1.16em;
+  line-height:.92;
+  letter-spacing:-.075em;
+  transform:rotate(-1deg);
+}
+.retirement-cosmic-note {
+  width:max-content;
+  margin-top:24px;
+  padding:8px 11px;
+  border:2px solid var(--ink);
+  background:var(--ink);
+  color:var(--yellow);
+  box-shadow:4px 4px 0 var(--red);
+  font:900 11px/1 var(--mono);
+  letter-spacing:.08em;
+  transform:rotate(1.5deg);
+}
+
+@media (min-width:981px) {
+  .retirement-life-grid.retirement-orbit { min-height:0; height:100%; }
+}
+@media (max-width:980px) {
+  .retirement-life-grid.retirement-orbit { min-height:68vw; height:68vw; }
+  .retirement-orbit .retirement-shot { width:64%; }
+  .retirement-orbit .retirement-shot img { max-height:58vw; }
+}
+@media (max-width:650px) {
+  .retirement-life-grid.retirement-orbit { min-height:78vw; height:78vw; display:block; padding:0; }
+  .retirement-orbit .retirement-shot,
+  .retirement-orbit .retirement-shot:nth-child(-n+4) { grid-column:auto!important; grid-row:auto!important; width:70%; }
+  .retirement-orbit .retirement-shot img { max-height:66vw; }
+  .retirement-final-line { font-size:1.08em; box-shadow:5px 5px 0 var(--ink); }
+  .retirement-cosmic-note { margin-top:20px; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .retirement-orbit .retirement-shot { transition:opacity .2s ease; }
+}
