@@ -34,6 +34,7 @@ const isNotificationSelfTest = process.argv.includes('--test-notification');
 const isQaSmoke = process.argv.includes('--qa-smoke');
 const isIconPreviewExport = process.argv.includes('--export-icon-previews');
 const officialWebsiteUrl = 'https://vanyima.github.io/mashangxiaban-releases/';
+const officialFeedbackUrl = `${officialWebsiteUrl}feedback.html`;
 const gotSingleInstanceLock = isNotificationSelfTest || isQaSmoke || isIconPreviewExport || app.requestSingleInstanceLock();
 if (!gotSingleInstanceLock) app.quit();
 app.on('second-instance', () => {
@@ -1271,6 +1272,7 @@ async function runQaSmoke() {
     };
   })()`);
   newEntryQa.websiteOpen = await mainWindow.webContents.executeJavaScript(`window.desktop.openWebsite()`);
+  newEntryQa.feedbackOpen = await mainWindow.webContents.executeJavaScript(`window.desktop.openFeedback()`);
   const windowsCombinedBadgeDataUrl = await mainWindow.webContents.executeJavaScript(`createWindowsCountdownOverlay({ name:'working', seconds:9*60 }, 4).overlayDataUrl`);
   if (windowsCombinedBadgeDataUrl) fs.writeFileSync(path.join(outputDir, 'windows-countdown-unread-badge.png'), Buffer.from(windowsCombinedBadgeDataUrl.split(',')[1], 'base64'));
   await wait(120);
@@ -2121,6 +2123,14 @@ app.whenReady().then(() => {
       return { ok: true, url: officialWebsiteUrl };
     } catch (error) {
       return { ok: false, reason: error?.message || 'website-open-failed' };
+    }
+  });
+  ipcMain.handle('desktop:open-feedback', async () => {
+    try {
+      if (!isQaSmoke) await shell.openExternal(officialFeedbackUrl);
+      return { ok: true, url: officialFeedbackUrl };
+    } catch (error) {
+      return { ok: false, reason: error?.message || 'feedback-open-failed' };
     }
   });
   ipcMain.handle('desktop:show-location-guide', async () => {

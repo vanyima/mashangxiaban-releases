@@ -1,0 +1,280 @@
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 76px;
+}
+
+.no-break { white-space: nowrap; }
+
+.feedback-hero,
+.idea-airspace {
+  position: relative;
+}
+
+.scroll-cue {
+  position: absolute;
+  z-index: 12;
+  left: 50%;
+  bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 13px;
+  border: 2px solid var(--ink);
+  box-shadow: 4px 4px 0 var(--ink);
+  font: 900 10px/1 var(--mono);
+  white-space: nowrap;
+  transform: translateX(-50%) rotate(-1deg);
+  transition: transform .16s ease, box-shadow .16s ease;
+}
+
+.scroll-cue:hover,
+.scroll-cue:focus-visible {
+  outline: 0;
+  box-shadow: 6px 6px 0 var(--ink);
+  transform: translate(-50%, -2px) rotate(0);
+}
+
+.scroll-cue b { font-size: 17px; }
+.scroll-cue-light { background: var(--yellow); color: var(--ink); }
+.scroll-cue-dark { background: var(--red); color: white; }
+
+.idea-pill-small {
+  padding: 9px 13px;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.idea-pill-medium {
+  font-size: 14px;
+}
+
+.idea-pill-large {
+  padding: 15px 20px;
+  font-size: clamp(18px, 1.6vw, 25px);
+  font-weight: 950;
+  letter-spacing: -.025em;
+}
+
+.idea-pill {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  scale: var(--vote-scale, 1);
+  transform-origin: center;
+  transition: scale .22s cubic-bezier(.2, 1.5, .3, 1);
+  white-space: normal;
+}
+
+.idea-pill:hover,
+.idea-pill:focus-within {
+  z-index: 8;
+  animation-play-state: paused;
+  box-shadow: 8px 8px 0 rgba(0,0,0,.72);
+}
+
+.idea-pill.is-mine {
+  z-index: 12;
+  width: max-content;
+  min-width: 0;
+  max-width: min(680px, 78vw);
+  min-height: 76px;
+  padding: 17px 21px;
+  font-size: clamp(17px, 1.45vw, 22px);
+  line-height: 1.35;
+}
+
+.idea-pill.is-mine::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -14px;
+  box-sizing: border-box;
+  padding: 12px;
+  background-color: #350c21;
+  background-image:
+    radial-gradient(circle at 5px 50%, #ff4545 0 3px, #fff4d6 3.4px 4px, transparent 4.5px),
+    radial-gradient(circle at 13px 50%, #ffdf32 0 3px, #fff8c7 3.4px 4px, transparent 4.5px),
+    radial-gradient(circle at 21px 50%, #43d38d 0 3px, #d9ffeb 3.4px 4px, transparent 4.5px),
+    radial-gradient(circle at 29px 50%, #58cfff 0 3px, #e2f8ff 3.4px 4px, transparent 4.5px),
+    radial-gradient(circle at 37px 50%, #d98cff 0 3px, #f7e4ff 3.4px 4px, transparent 4.5px);
+  background-size: 40px 12px;
+  background-repeat: repeat;
+  border: 2px solid var(--ink);
+  border-radius: 13px;
+  box-shadow: 0 0 7px rgba(255,69,69,.7), 0 0 12px rgba(88,207,255,.45), 3px 3px 0 var(--ink);
+  animation: disco-strip .72s steps(2, end) infinite;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.idea-pill.is-launch-focus {
+  left: 50%;
+  z-index: 14;
+  animation: none !important;
+  transform: translateX(-50%) rotate(0);
+  box-shadow: 10px 10px 0 rgba(0,0,0,.78), 0 0 0 5px rgba(255,223,50,.24);
+}
+
+.idea-pill.is-launch-focus::before {
+  animation-duration: .36s;
+}
+
+.idea-pill.is-launch-departing {
+  left: 50%;
+  z-index: 14;
+  animation: launch-depart 5.2s linear forwards !important;
+}
+
+@keyframes launch-depart {
+  from { transform: translateX(-50%) rotate(0); }
+  to { transform: translateX(calc(-50vw - 100% - 160px)) rotate(var(--tilt)); }
+}
+
+@keyframes disco-strip {
+  0% { background-position: 0 0; filter: brightness(.8) saturate(1.15); }
+  33% { background-position: 8px 0; filter: brightness(1.5) saturate(1.55); }
+  66% { background-position: 16px 0; filter: brightness(.96) hue-rotate(32deg); }
+  100% { background-position: 24px 0; filter: brightness(1.62) hue-rotate(-24deg); }
+}
+
+.idea-pill.is-mine .idea-copy > b {
+  margin-right: 9px;
+  padding: 5px 7px;
+  border: 2px solid var(--ink);
+  background: var(--yellow);
+  color: var(--ink);
+  box-shadow: 2px 2px 0 var(--ink);
+  font-size: 9px;
+  white-space: nowrap;
+}
+
+.idea-copy {
+  min-width: 0;
+  max-width: 390px;
+  line-height: 1.35;
+}
+
+.idea-meta {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.idea-pill time {
+  margin-left: 0;
+}
+
+.idea-pill.is-unclaimed {
+  background: #d8d9d4;
+  color: #34373f;
+}
+
+.idea-pill.is-supported-others {
+  background: var(--red);
+  color: white;
+}
+
+.idea-pill.is-supported-mine {
+  background: #43d38d;
+  color: var(--ink);
+}
+
+.idea-pill.is-supported-others time {
+  color: rgba(255,255,255,.72);
+}
+
+.idea-pill.is-supported-others .idea-vote {
+  background: var(--yellow);
+  color: var(--ink);
+}
+
+.idea-vote {
+  margin-left: 0;
+  padding: 5px 8px;
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+  background: var(--red);
+  color: white;
+  font: 950 9px/1 var(--mono);
+  cursor: pointer;
+  vertical-align: 2px;
+}
+
+.idea-vote:hover,
+.idea-vote:focus-visible {
+  outline: 2px solid white;
+  outline-offset: 2px;
+  transform: translateY(-1px);
+}
+
+.idea-vote:disabled {
+  background: #11643b;
+  color: white;
+  cursor: default;
+  opacity: 1;
+}
+
+@media (min-width: 901px) {
+  .feedback-hero {
+    height: calc(100svh - 76px);
+    min-height: 560px;
+    overflow: hidden;
+  }
+
+  .feedback-copy {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: clamp(32px, 4.6vh, 58px) clamp(28px, 5vw, 82px) clamp(58px, 7vh, 78px);
+  }
+
+  .feedback-copy h1 {
+    margin: clamp(17px, 2.4vh, 25px) 0 clamp(14px, 2vh, 22px);
+    font-size: clamp(56px, 6.2vw, 110px);
+    line-height: .88;
+    letter-spacing: -.08em;
+    white-space: nowrap;
+  }
+
+  .feedback-copy > p {
+    font-size: clamp(13px, 1.05vw, 16px);
+    line-height: 1.7;
+  }
+
+  .feedback-rule {
+    margin-top: clamp(18px, 2.8vh, 30px);
+    padding: clamp(12px, 1.6vh, 17px) 20px;
+  }
+
+  .idea-airspace {
+    height: calc(100svh - 76px);
+    min-height: 560px;
+    padding-top: clamp(48px, 7vh, 68px);
+    padding-bottom: 74px;
+  }
+
+  .idea-lanes {
+    height: calc(100% - 118px);
+    max-height: 520px;
+  }
+
+  .idea-composer {
+    min-height: calc(100svh - 76px);
+    align-content: center;
+  }
+}
+
+@media (max-width: 900px) {
+  html { scroll-padding-top: 66px; }
+  .scroll-cue { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .idea-pill.is-mine::before { animation: none; }
+}

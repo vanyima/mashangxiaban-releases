@@ -48,14 +48,15 @@
 @media (min-width: 981px) {
   html {
     height: 100%;
-    scroll-snap-type: y mandatory;
+    scroll-behavior: auto;
+    scroll-snap-type: none;
     scroll-padding-top: 76px;
     overscroll-behavior-y: contain;
   }
   body { min-height: 100%; }
   main > section {
-    scroll-snap-align: start;
-    scroll-snap-stop: always;
+    scroll-snap-align: none;
+    scroll-snap-stop: normal;
   }
   .hero-section,
   .showcase,

@@ -1,6 +1,6 @@
 {
   "name": "xiaban-countdown",
-  "version": "2.5.5",
+  "version": "2.6.0",
   "description": "一款懂打工人精神状态的下班倒计时桌面应用",
   "updateManifestUrl": "https://vanyima.github.io/mashangxiaban-releases/latest.json",
   "updateManifestHint": "发布官网后填写完整 HTTPS 地址，例如 https://你的域名/latest.json",

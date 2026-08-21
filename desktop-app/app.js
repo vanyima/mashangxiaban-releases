@@ -28,7 +28,7 @@ const els = {
   notification: $('#notification-card'), restore: $('#notification-restore'), notificationTitle: $('#notification-title'),
   notificationCopy: $('#notification-copy'), overtimeTitle: $('#overtime-alert-title'), overtimeCopy: $('#overtime-alert-copy'),
   startTime: $('#start-time'), startDate: $('#start-date'), workedDuration: $('#worked-duration'), sideProgress: $('#side-progress'), sideProgressLabel: $('#side-progress-label'), planTime: $('#plan-time'), planDate: $('#plan-date'), planTimeControl: $('.plan-time-control'), planStepCopy: $('#plan-step-copy'),
-  notificationSettings: $('#notification-settings'), notificationShortcut: $('#notification-shortcut'), notificationOnboarding: $('#notification-onboarding'), notificationOnboardingClose: $('#notification-onboarding-close'), notificationEnable: $('#notification-enable'), notificationLater: $('#notification-later'), sideActionZone: $('.side-action-zone'), settingsToggle: $('#settings-toggle'), settingsMenu: $('#settings-menu'), petMenuToggle: $('#pet-menu-toggle'), petMenu: $('#pet-menu'), soundToggle: $('#sound-toggle'), updateCheck: $('#update-check'), audioPreview: $('#audio-preview'), checkoutVoice: $('#checkout-voice'), contactMaXiexie: $('#contact-ma-xiexie'), visitWebsite: $('#visit-website'), contactCardDialog: $('#contact-card-dialog'), contactCardClose: $('#contact-card-close'),
+  notificationSettings: $('#notification-settings'), notificationShortcut: $('#notification-shortcut'), notificationOnboarding: $('#notification-onboarding'), notificationOnboardingClose: $('#notification-onboarding-close'), notificationEnable: $('#notification-enable'), notificationLater: $('#notification-later'), sideActionZone: $('.side-action-zone'), settingsToggle: $('#settings-toggle'), settingsMenu: $('#settings-menu'), petMenuToggle: $('#pet-menu-toggle'), petMenu: $('#pet-menu'), soundToggle: $('#sound-toggle'), updateCheck: $('#update-check'), audioPreview: $('#audio-preview'), checkoutVoice: $('#checkout-voice'), contactMaXiexie: $('#contact-ma-xiexie'), feedbackBox: $('#feedback-box'), contactCardDialog: $('#contact-card-dialog'), contactCardClose: $('#contact-card-close'), shareShortcut: $('#share-shortcut'), shareDialog: $('#share-dialog'), shareDialogClose: $('#share-dialog-close'), shareLink: $('#share-link'), shareCopyButton: $('#share-copy-button'), sharePersona: $('#share-persona'),
   ventButton: $('#vent-button'), ventFloats: $('#vent-floats'), ventCount: $('#vent-count'),
   ledger: $('#ledger'), dataModeLabel: $('#data-mode-label'), dataModeToggle: $('#data-mode-toggle'), emptyLedger: $('#empty-ledger'),
   userDashboard: $('#user-dashboard'), clearAttendanceData: $('#clear-attendance-data'), epitaph: $('#epitaph-text'), ledgerPersonaTitle: $('#ledger-persona-title'), ledgerPersonaCopy: $('#ledger-persona-copy'),
@@ -2099,22 +2099,49 @@ els.contactCardClose?.addEventListener('click', () => {
 els.contactCardDialog?.addEventListener('click', (event) => {
   if (event.target === els.contactCardDialog) els.contactCardClose.click();
 });
-els.visitWebsite?.addEventListener('click', async () => {
+function closeShareDialog() {
+  els.shareDialog.hidden = true;
+  els.shareShortcut.focus();
+}
+els.shareShortcut?.addEventListener('click', () => {
   closeTopMenus();
-  const websiteUrl = 'https://vanyima.github.io/mashangxiaban-releases/';
+  els.sharePersona.textContent = els.ledgerPersonaTitle?.textContent?.trim() || '工位钉子户预备役';
+  els.shareCopyButton.textContent = '一键复制';
+  els.shareDialog.hidden = false;
+  els.shareDialogClose.focus();
+});
+els.shareDialogClose?.addEventListener('click', closeShareDialog);
+els.shareDialog?.addEventListener('click', (event) => {
+  if (event.target === els.shareDialog) closeShareDialog();
+});
+els.shareCopyButton?.addEventListener('click', async () => {
+  const value = els.shareLink.value;
   try {
-    if (typeof window.desktop?.openWebsite === 'function') {
-      const result = await window.desktop.openWebsite();
+    await navigator.clipboard.writeText(value);
+  } catch {
+    els.shareLink.select();
+    document.execCommand('copy');
+  }
+  els.shareCopyButton.textContent = '接头成功 ✓';
+  showToast('接头地址已复制', '现在去发展一位新工友。');
+});
+els.feedbackBox?.addEventListener('click', async () => {
+  closeTopMenus();
+  const feedbackUrl = 'https://vanyima.github.io/mashangxiaban-releases/feedback.html';
+  try {
+    if (typeof window.desktop?.openFeedback === 'function') {
+      const result = await window.desktop.openFeedback();
       if (result?.ok) return;
     }
-    window.open(websiteUrl, '_blank', 'noopener,noreferrer');
-  } catch (error) {
-    showToast('官网暂时不接客', '请重启应用后再去互联网工位串门。');
+    window.open(feedbackUrl, '_blank', 'noopener,noreferrer');
+  } catch {
+    showToast('意见箱暂时没开门', '请稍后再发射，公共空域可能正在开会。');
   }
 });
 document.addEventListener('keydown', (event) => {
   if (event.key !== 'Escape') return;
-  if (!els.contactCardDialog?.hidden) els.contactCardClose.click();
+  if (!els.shareDialog?.hidden) closeShareDialog();
+  else if (!els.contactCardDialog?.hidden) els.contactCardClose.click();
   else closeTopMenus();
 });
 

@@ -260,18 +260,38 @@ voiceTracks.forEach((track, index) => {
 if (matchMedia('(min-width: 981px) and (pointer: fine)').matches) {
   const parts = [...document.querySelectorAll('main > section')];
   let sectionLocked = false;
+  let sectionLockUntil = 0;
+  let sectionUnlockTimer = 0;
   window.addEventListener('wheel', (event) => {
-    if (Math.abs(event.deltaY) < 18 || sectionLocked || event.ctrlKey) return;
+    if (event.ctrlKey) return;
+    if (sectionLocked) {
+      event.preventDefault();
+      clearTimeout(sectionUnlockTimer);
+      sectionUnlockTimer = setTimeout(() => { sectionLocked = false; }, Math.max(260, sectionLockUntil - Date.now()));
+      return;
+    }
+    if (Math.abs(event.deltaY) < 18) {
+      event.preventDefault();
+      return;
+    }
     const navHeight = document.querySelector('.site-nav')?.offsetHeight || 0;
     const current = parts.reduce((best, part, partIndex) => {
       const distance = Math.abs(part.getBoundingClientRect().top - navHeight);
       return distance < best.distance ? { index:partIndex, distance } : best;
     }, { index:0, distance:Infinity }).index;
     const next = Math.max(0, Math.min(parts.length - 1, current + Math.sign(event.deltaY)));
-    if (next === current) return;
+    if (next === current) {
+      const leavingForFooter = current === parts.length - 1 && event.deltaY > 0;
+      const leavingFromTop = current === 0 && event.deltaY < 0;
+      if (leavingForFooter || leavingFromTop) return;
+      event.preventDefault();
+      return;
+    }
     event.preventDefault();
     sectionLocked = true;
-    parts[next].scrollIntoView({ behavior:'smooth', block:'start' });
-    setTimeout(() => sectionLocked = false, 720);
+    sectionLockUntil = Date.now() + 900;
+    window.scrollTo({ top:Math.max(0, parts[next].offsetTop - navHeight), behavior:'smooth' });
+    clearTimeout(sectionUnlockTimer);
+    sectionUnlockTimer = setTimeout(() => { sectionLocked = false; }, sectionLockUntil - Date.now());
   }, { passive:false });
 }

@@ -21,6 +21,10 @@ function validDeviceId(value) {
   return /^[a-f0-9-]{20,80}$/i.test(String(value || ''));
 }
 
+function validFeedbackClientId(value) {
+  return /^[a-z0-9-]{16,100}$/i.test(String(value || ''));
+}
+
 function coordinate(value, min, max) {
   const number = Number(value);
   if (!Number.isFinite(number) || number < min || number > max) throw new Error('invalid-location');
@@ -177,6 +181,52 @@ async function hide(request, env) {
   return json({ ok: true });
 }
 
+async function listFeedback(request, env) {
+  const url = new URL(request.url);
+  const clientId = text(url.searchParams.get('clientId'), 100);
+  const result = await env.RADAR_DB.prepare(`SELECT f.id, f.client_id, f.content, f.created_at,
+      COUNT(v.idea_id) AS votes,
+      MAX(CASE WHEN v.client_id = ? THEN 1 ELSE 0 END) AS voted
+    FROM feedback_ideas f LEFT JOIN feedback_votes v ON v.idea_id = f.id
+    GROUP BY f.id ORDER BY f.created_at DESC LIMIT 80`).bind(clientId).all();
+  const ideas = (result.results || []).map((row) => ({
+    id: row.id,
+    content: text(row.content, 80),
+    createdAt: Number(row.created_at),
+    mine: Boolean(clientId) && row.client_id === clientId,
+    votes: Number(row.votes || 0),
+    voted: Boolean(row.voted)
+  }));
+  return json({ ok: true, ideas });
+}
+
+async function voteFeedback(request, env, ideaId) {
+  const body = await parseBody(request);
+  if (!validFeedbackClientId(body.clientId)) return json({ ok: false, error: 'invalid-client-id' }, 400);
+  const id = Number(ideaId);
+  if (!Number.isInteger(id) || id < 1) return json({ ok: false, error: 'invalid-idea-id' }, 400);
+  const idea = await env.RADAR_DB.prepare('SELECT id FROM feedback_ideas WHERE id = ?').bind(id).first();
+  if (!idea) return json({ ok: false, error: 'idea-not-found' }, 404);
+  await env.RADAR_DB.prepare('INSERT OR IGNORE INTO feedback_votes (idea_id, client_id, created_at) VALUES (?, ?, ?)')
+    .bind(id, body.clientId, Date.now()).run();
+  const result = await env.RADAR_DB.prepare('SELECT COUNT(*) AS count FROM feedback_votes WHERE idea_id = ?').bind(id).first();
+  return json({ ok: true, votes: Number(result?.count || 0), voted: true });
+}
+
+async function createFeedback(request, env) {
+  const body = await parseBody(request);
+  if (!validFeedbackClientId(body.clientId)) return json({ ok: false, error: 'invalid-client-id' }, 400);
+  const content = text(body.content, 80);
+  if (!content) return json({ ok: false, error: 'empty-feedback' }, 400);
+  const now = Date.now();
+  const recent = await env.RADAR_DB.prepare('SELECT COUNT(*) AS count FROM feedback_ideas WHERE client_id = ? AND created_at >= ?')
+    .bind(body.clientId, now - 60 * 1000).first();
+  if (Number(recent?.count) >= 5) return json({ ok: false, error: 'too-many-requests' }, 429);
+  const inserted = await env.RADAR_DB.prepare('INSERT INTO feedback_ideas (client_id, content, created_at) VALUES (?, ?, ?)')
+    .bind(body.clientId, content, now).run();
+  return json({ ok: true, idea: { id: inserted.meta?.last_row_id, content, createdAt: now, mine: true } }, 201);
+}
+
 export default {
   async fetch(request, env) {
     try {
@@ -187,6 +237,10 @@ export default {
       if (request.method === 'POST' && url.pathname === '/v1/radar/hide') return await hide(request, env);
       if (request.method === 'POST' && url.pathname === '/v1/radar/messages') return await sendMessage(request, env);
       if (request.method === 'POST' && url.pathname === '/v1/radar/messages/read') return await markMessagesRead(request, env);
+      if (request.method === 'GET' && url.pathname === '/v1/feedback') return await listFeedback(request, env);
+      if (request.method === 'POST' && url.pathname === '/v1/feedback') return await createFeedback(request, env);
+      const feedbackVoteMatch = url.pathname.match(/^\/v1\/feedback\/(\d+)\/vote$/);
+      if (request.method === 'POST' && feedbackVoteMatch) return await voteFeedback(request, env, feedbackVoteMatch[1]);
       return json({ ok: false, error: 'not-found' }, 404);
     } catch (error) {
       const message = text(error?.message, 80, 'server-error');

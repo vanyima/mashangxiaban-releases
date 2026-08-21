@@ -30,6 +30,7 @@ contextBridge.exposeInMainWorld('desktop', {
   setDesktopPinned: (enabled) => ipcRenderer.invoke('desktop:set-pinned', enabled),
   openNotificationSettings: () => ipcRenderer.invoke('desktop:open-notification-settings'),
   openWebsite: () => ipcRenderer.invoke('desktop:open-website'),
+  openFeedback: () => ipcRenderer.invoke('desktop:open-feedback'),
   openFocusSettings: () => ipcRenderer.invoke('desktop:open-focus-settings'),
   notify: (title, body) => ipcRenderer.invoke('desktop:notify', { title, body }),
   setSoundEnabled: (enabled) => ipcRenderer.invoke('desktop:set-sound-enabled', enabled),

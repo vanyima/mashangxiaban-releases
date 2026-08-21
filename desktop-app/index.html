@@ -195,6 +195,32 @@
     .mx-badge > footer strong { font-size: 30px; line-height: 1; letter-spacing: -.05em; }
     .mx-badge > footer span { font: 950 15px/1.15 var(--mono); }
     .contact-close { position: absolute; z-index: 2; top: -13px; right: -13px; width: 34px; height: 34px; border: 3px solid var(--ink); border-radius: 50%; background: var(--red); color: white; font: 950 22px/1 var(--body); box-shadow: 3px 3px 0 var(--ink); cursor: pointer; }
+    .share-dialog { position: fixed; inset: 0; z-index: 155; display: grid; place-items: center; padding: 24px; background: rgba(7,12,26,.78); backdrop-filter: blur(7px); }
+    .share-dialog[hidden] { display: none; }
+    .share-sheet { position: relative; width: min(920px,calc(100vw - 48px)); display: grid; grid-template-columns: minmax(300px,.86fr) minmax(360px,1.14fr); border: 3px solid var(--ink); background: var(--cream); color: var(--ink); box-shadow: 13px 14px 0 var(--ink),21px 23px 0 var(--yellow); transform: rotate(-.35deg); }
+    .share-sheet-copy { display: flex; flex-direction: column; padding: 34px; border-right: 3px solid var(--ink); background: var(--blue); color: var(--white); }
+    .share-sheet-kicker { color: var(--yellow); font: 900 10px/1 var(--mono); letter-spacing: .14em; }
+    .share-sheet-copy h2 { margin: 22px 0 16px; font: 950 46px/.98 var(--display); letter-spacing: -.06em; }
+    .share-sheet-copy > p { margin: 0; color: rgba(255,255,255,.72); font-size: 13px; line-height: 1.75; }
+    .share-link-box { margin-top: auto; padding-top: 30px; }
+    .share-link-box label { display: block; margin-bottom: 8px; color: rgba(255,255,255,.55); font: 850 9px/1 var(--mono); }
+    .share-link-row { display: grid; grid-template-columns: 1fr auto; border: 2px solid var(--ink); background: var(--white); box-shadow: 5px 5px 0 #07133f; }
+    .share-link-row input { width: 100%; min-width: 0; padding: 13px; border: 0; outline: 0; background: transparent; color: var(--ink); font: 750 10px/1 var(--mono); }
+    .share-copy-button { min-width: 92px; border: 0; border-left: 2px solid var(--ink); background: var(--yellow); color: var(--ink); font-size: 11px; font-weight: 950; cursor: pointer; }
+    .share-copy-button:hover,.share-copy-button:focus-visible { background: var(--red); color: white; outline: 0; }
+    .share-sheet-badge { position: relative; display: grid; place-items: center; padding: 44px 34px 36px; overflow: hidden; background-image: linear-gradient(rgba(17,19,26,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(17,19,26,.07) 1px,transparent 1px); background-size: 28px 28px; }
+    .share-sheet-badge::before { content: "转发即视为拒绝无偿加班"; position: absolute; right: -58px; top: 33px; width: 230px; padding: 7px; background: var(--red); color: white; text-align: center; font: 900 9px/1 var(--mono); transform: rotate(35deg); }
+    .share-pass { width: min(390px,100%); padding: 18px; border: 3px solid var(--ink); border-radius: 17px 17px 8px 8px; background: var(--white); box-shadow: 8px 9px 0 var(--ink); }
+    .share-pass-head { display: flex; justify-content: space-between; padding: 11px 12px; background: var(--yellow); font: 950 10px/1 var(--mono); }
+    .share-pass-person { display: grid; grid-template-columns: 76px 1fr; align-items: center; gap: 15px; padding: 20px 4px 17px; border-bottom: 2px dashed rgba(17,19,26,.32); }
+    .share-pass-person img { width: 76px; height: 76px; border: 3px solid var(--ink); border-radius: 15px; background: var(--yellow); box-shadow: 4px 4px 0 var(--blue); }
+    .share-pass-person small,.share-pass-person strong { display: block; }
+    .share-pass-person small { color: var(--muted); font: 850 9px/1 var(--mono); }
+    .share-pass-person strong { margin-top: 8px; font-size: 25px; line-height: 1.05; }
+    .share-pass-slogan { display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 12px; padding-top: 18px; }
+    .share-pass-slogan strong { font: 950 23px/1.05 var(--display); letter-spacing: -.045em; }
+    .share-pass-slogan span { padding: 6px 7px; border: 2px solid var(--ink); background: var(--red); color: white; font: 950 8px/1 var(--mono); transform: rotate(4deg); }
+    @media (max-width:760px) { .share-sheet { grid-template-columns:1fr; max-height:calc(100vh - 34px); overflow:auto; } .share-sheet-copy { min-height:330px; border-right:0; border-bottom:3px solid var(--ink); } .share-sheet-copy h2 { font-size:38px; } .share-sheet-badge { padding:32px 22px; } }
     .pet-guide { position: fixed; inset: 0; z-index: 140; display: grid; place-items: center; padding: 22px; background: rgba(7,17,63,.52); backdrop-filter: blur(3px); }
     .pet-guide[hidden] { display: none; }
     .pet-guide-card { width: min(520px,100%); padding: 22px; border: 2px solid var(--ink); background: var(--cream); color: var(--ink); box-shadow: 9px 9px 0 var(--ink); }
@@ -1672,6 +1698,7 @@
       </nav>
       <div class="top-actions">
         <div class="top-status"><span class="status-dot"></span><span id="top-status-text">肉身已到岗 · 灵魂登录中</span></div>
+        <button class="top-icon-button share-shortcut" id="share-shortcut" type="button" aria-label="分享马上下班" data-tooltip="发射马歇歇"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 10.5 6.8-4M8.6 13.5l6.8 4"/></svg></button>
         <button class="top-icon-button notification-shortcut is-off" id="notification-shortcut" type="button" aria-label="桌面通知未开启" data-tooltip="桌面通知未开启"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9Z"/><path d="M10 21h4"/></svg></button>
         <button class="top-icon-button update-check" id="update-check" type="button" aria-label="检查更新" data-tooltip="检查更新"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg></button>
         <div class="pet-menu-wrap">
@@ -1680,7 +1707,7 @@
         </div>
         <div class="settings-wrap">
           <button class="top-icon-button notification-settings" id="settings-toggle" type="button" aria-expanded="false" aria-label="打开设置菜单" data-tooltip="设置"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-2.8 2.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6v.2h-4V21a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1L4.2 17l.1-.1a1.7 1.7 0 0 0 .3-1.9A1.7 1.7 0 0 0 3 14H2.8v-4H3a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9L4.2 7 7 4.2l.1.1A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-1.6v-.2h4V3a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1L19.8 7l-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.6 1h.2v4H21a1.7 1.7 0 0 0-1.6 1z"/></svg></button>
-          <div class="settings-menu" id="settings-menu" role="menu"><button class="contact-button" id="contact-ma-xiexie" type="button" role="menuitem">联系马歇歇<small class="menu-meta">扫码领取一个活人售后</small></button><button id="visit-website" type="button" role="menuitem">去互联网工位串个门<small class="menu-meta">会打开官网，不会替你打卡</small></button><button id="audio-preview" type="button" role="menuitem">试听语音播报</button><button class="sound-toggle" id="sound-toggle" type="button" role="menuitem" aria-pressed="false">关闭音效</button><button id="notification-settings" type="button" role="menuitem">开启桌面通知</button><button class="clear-data-button" id="clear-attendance-data" type="button" role="menuitem">清空我的数据</button></div>
+          <div class="settings-menu" id="settings-menu" role="menu"><button class="contact-button" id="contact-ma-xiexie" type="button" role="menuitem">联系马歇歇<small class="menu-meta">扫码领取一个活人售后</small></button><button id="feedback-box" type="button" role="menuitem">意见箱<small class="menu-meta">不抽象的不采纳，但都会认真看</small></button><button id="audio-preview" type="button" role="menuitem">试听语音播报</button><button class="sound-toggle" id="sound-toggle" type="button" role="menuitem" aria-pressed="false">关闭音效</button><button id="notification-settings" type="button" role="menuitem">开启桌面通知</button><button class="clear-data-button" id="clear-attendance-data" type="button" role="menuitem">清空我的数据</button></div>
         </div>
       </div>
     </header>
@@ -1921,6 +1948,24 @@
         <div class="mx-badge-name"><img src="app-icon.png" alt=""><span><strong id="contact-card-title">马歇歇</strong><small>精神股东 / 摸鱼接头人</small></span><em>ONLINE</em></div>
         <div class="mx-badge-qr"><img src="assets/wechat-fanyima-qr-only.png" alt="范以马微信二维码"></div>
         <footer><strong>扫码，工友 +1</strong><span>有效期：下班前</span></footer>
+      </article>
+    </section>
+    <section class="share-dialog" id="share-dialog" role="dialog" aria-modal="true" aria-labelledby="share-dialog-title" hidden>
+      <article class="share-sheet">
+        <button class="contact-close" id="share-dialog-close" type="button" aria-label="关闭分享面板">×</button>
+        <div class="share-sheet-copy">
+          <span class="share-sheet-kicker">OFF DUTY UNDERGROUND / 下班地下组织</span>
+          <h2 id="share-dialog-title">把马歇歇发射到<br />工友的电脑。</h2>
+          <p>一个人准点下班叫早退，一群人准点下班叫组织文化。复制接头地址，把新工友发展到不加班这一边。</p>
+          <div class="share-link-box"><label for="share-link">工友接头地址</label><div class="share-link-row"><input id="share-link" value="https://vanyima.github.io/mashangxiaban-releases/" readonly /><button class="share-copy-button" id="share-copy-button" type="button">一键复制</button></div></div>
+        </div>
+        <div class="share-sheet-badge">
+          <article class="share-pass" aria-label="我的下班接头证">
+            <div class="share-pass-head"><span>马上下班 · 工友接头证</span><b>NO. 996</b></div>
+            <div class="share-pass-person"><img src="assets/ma-default-sideeye-v1.png" alt="马歇歇"><div><small>持证打工人格</small><strong id="share-persona">工位钉子户预备役</strong></div></div>
+            <div class="share-pass-slogan"><strong>今晚不失联，<br />下班见。</strong><span>精神在逃</span></div>
+          </article>
+        </div>
       </article>
     </section>
 
