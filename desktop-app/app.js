@@ -28,7 +28,7 @@ const els = {
   notification: $('#notification-card'), restore: $('#notification-restore'), notificationTitle: $('#notification-title'),
   notificationCopy: $('#notification-copy'), overtimeTitle: $('#overtime-alert-title'), overtimeCopy: $('#overtime-alert-copy'),
   startTime: $('#start-time'), startDate: $('#start-date'), workedDuration: $('#worked-duration'), sideProgress: $('#side-progress'), sideProgressLabel: $('#side-progress-label'), planTime: $('#plan-time'), planDate: $('#plan-date'), planTimeControl: $('.plan-time-control'), planStepCopy: $('#plan-step-copy'),
-  notificationSettings: $('#notification-settings'), notificationShortcut: $('#notification-shortcut'), notificationOnboarding: $('#notification-onboarding'), notificationOnboardingClose: $('#notification-onboarding-close'), notificationEnable: $('#notification-enable'), notificationLater: $('#notification-later'), sideActionZone: $('.side-action-zone'), settingsToggle: $('#settings-toggle'), settingsMenu: $('#settings-menu'), soundToggle: $('#sound-toggle'), updateCheck: $('#update-check'), audioPreview: $('#audio-preview'), checkoutVoice: $('#checkout-voice'),
+  notificationSettings: $('#notification-settings'), notificationShortcut: $('#notification-shortcut'), notificationOnboarding: $('#notification-onboarding'), notificationOnboardingClose: $('#notification-onboarding-close'), notificationEnable: $('#notification-enable'), notificationLater: $('#notification-later'), sideActionZone: $('.side-action-zone'), settingsToggle: $('#settings-toggle'), settingsMenu: $('#settings-menu'), petMenuToggle: $('#pet-menu-toggle'), petMenu: $('#pet-menu'), soundToggle: $('#sound-toggle'), updateCheck: $('#update-check'), audioPreview: $('#audio-preview'), checkoutVoice: $('#checkout-voice'), contactMaXiexie: $('#contact-ma-xiexie'), visitWebsite: $('#visit-website'), contactCardDialog: $('#contact-card-dialog'), contactCardClose: $('#contact-card-close'),
   ventButton: $('#vent-button'), ventFloats: $('#vent-floats'), ventCount: $('#vent-count'),
   ledger: $('#ledger'), dataModeLabel: $('#data-mode-label'), dataModeToggle: $('#data-mode-toggle'), emptyLedger: $('#empty-ledger'),
   userDashboard: $('#user-dashboard'), clearAttendanceData: $('#clear-attendance-data'), epitaph: $('#epitaph-text'), ledgerPersonaTitle: $('#ledger-persona-title'), ledgerPersonaCopy: $('#ledger-persona-copy'),
@@ -653,6 +653,7 @@ let previousRemaining = null;
 let iconImage;
 let defaultIconImage;
 let lastDockIconKey = '';
+let nativeRadarUnreadCount = 0;
 let lastHealthMinute = -1;
 let actualHealthIndex = 0;
 let actualHealthMinutes = 0;
@@ -1576,14 +1577,60 @@ function createDockIconDataUrl(stateInfo) {
   return { dataUrl: canvas.toDataURL('image/png'), label };
 }
 
+function createWindowsCountdownOverlay(stateInfo, unreadCount = nativeRadarUnreadCount) {
+  const active = !['ready', 'off'].includes(stateInfo.name);
+  const count = Math.max(0, Math.min(999, Math.trunc(Number(unreadCount) || 0)));
+  if (!active && !count) return { compact:'', tone:'idle', description:'当前没有进行中的下班倒计时', overlayDataUrl:'' };
+  const seconds = Math.max(0, Number(stateInfo.seconds) || 0);
+  const overtime = stateInfo.name === 'overtime';
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const secs = Math.floor(seconds % 60);
+  const compact = active ? (hours > 0 ? `${Math.min(99, hours)}H` : `${Math.min(99, Math.ceil(seconds / 60))}M`) : '';
+  const full = hours > 0 ? `${hours} 小时 ${minutes} 分` : minutes > 0 ? `${minutes} 分 ${secs} 秒` : `${secs} 秒`;
+  const canvas = document.createElement('canvas');
+  canvas.width = 64; canvas.height = 64;
+  const ctx = canvas.getContext('2d');
+  if (active) {
+    ctx.fillStyle = overtime ? '#ff4c3e' : '#2448df';
+    ctx.beginPath(); ctx.arc(32, 32, 29, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = '#fffdf8'; ctx.lineWidth = 4; ctx.stroke();
+    ctx.fillStyle = overtime ? '#ffdf32' : '#fffdf8';
+    ctx.font = `950 ${compact.length > 2 ? 24 : 27}px "Arial Black", Arial, sans-serif`;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(compact, count ? 29 : 32, 34);
+  }
+  if (count) {
+    const countLabel = count > 9 ? '9+' : String(count);
+    const center = active ? { x:50, y:14, radius:12 } : { x:32, y:32, radius:25 };
+    ctx.fillStyle = '#ff3b30';
+    ctx.beginPath(); ctx.arc(center.x, center.y, center.radius, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = '#fffdf8'; ctx.lineWidth = active ? 3 : 4; ctx.stroke();
+    ctx.fillStyle = '#ffffff';
+    ctx.font = `950 ${active ? (countLabel.length > 1 ? 12 : 16) : (countLabel.length > 1 ? 25 : 31)}px "Arial Black", Arial, sans-serif`;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(countLabel, center.x, center.y + 1);
+  }
+  const descriptions = [];
+  if (active) descriptions.push(overtime ? `已超时 ${full}` : `距离下班还有 ${full}`);
+  if (count) descriptions.push(`${count} 条未读工友消息`);
+  return {
+    compact,
+    tone:active ? (overtime ? 'urgent' : 'working') : 'idle',
+    description:descriptions.join('，'),
+    overlayDataUrl:canvas.toDataURL('image/png')
+  };
+}
+
 function updateDockIcon(stateInfo) {
-  if (!window.desktop?.setDynamicIcon) return;
+  if (!window.desktop?.setDynamicIcon && !window.desktop?.setCountdownBadge) return;
   const rendered = createDockIconDataUrl(stateInfo);
   if (!rendered) return;
-  const iconKey = `${stateInfo.name}:${rendered.label}`;
+  const iconKey = `${stateInfo.name}:${rendered.label}:${nativeRadarUnreadCount}`;
   if (iconKey === lastDockIconKey) return;
   lastDockIconKey = iconKey;
-  window.desktop.setDynamicIcon(rendered.dataUrl, rendered.label);
+  window.desktop?.setDynamicIcon?.(rendered.dataUrl, rendered.label);
+  if (window.desktop?.platform === 'win32') window.desktop?.setCountdownBadge?.(createWindowsCountdownOverlay(stateInfo));
 }
 
 function tick() {
@@ -2019,11 +2066,57 @@ els.clearAttendanceData.addEventListener('click', () => {
 
 els.settingsToggle.addEventListener('click', (event) => {
   event.stopPropagation();
+  els.petMenu.classList.remove('is-open');
+  els.petMenuToggle.setAttribute('aria-expanded', 'false');
   const open = els.settingsMenu.classList.toggle('is-open');
   els.settingsToggle.setAttribute('aria-expanded', String(open));
 });
 els.settingsMenu.addEventListener('click', (event) => event.stopPropagation());
-document.addEventListener('click', () => { els.settingsMenu.classList.remove('is-open'); els.settingsToggle.setAttribute('aria-expanded', 'false'); });
+els.petMenuToggle.addEventListener('click', (event) => {
+  event.stopPropagation();
+  els.settingsMenu.classList.remove('is-open');
+  els.settingsToggle.setAttribute('aria-expanded', 'false');
+  const open = els.petMenu.classList.toggle('is-open');
+  els.petMenuToggle.setAttribute('aria-expanded', String(open));
+});
+els.petMenu.addEventListener('click', (event) => event.stopPropagation());
+function closeTopMenus() {
+  els.settingsMenu.classList.remove('is-open');
+  els.settingsToggle.setAttribute('aria-expanded', 'false');
+  els.petMenu.classList.remove('is-open');
+  els.petMenuToggle.setAttribute('aria-expanded', 'false');
+}
+document.addEventListener('click', closeTopMenus);
+els.contactMaXiexie?.addEventListener('click', () => {
+  closeTopMenus();
+  els.contactCardDialog.hidden = false;
+  els.contactCardClose.focus();
+});
+els.contactCardClose?.addEventListener('click', () => {
+  els.contactCardDialog.hidden = true;
+  els.contactMaXiexie.focus();
+});
+els.contactCardDialog?.addEventListener('click', (event) => {
+  if (event.target === els.contactCardDialog) els.contactCardClose.click();
+});
+els.visitWebsite?.addEventListener('click', async () => {
+  closeTopMenus();
+  const websiteUrl = 'https://vanyima.github.io/mashangxiaban-releases/';
+  try {
+    if (typeof window.desktop?.openWebsite === 'function') {
+      const result = await window.desktop.openWebsite();
+      if (result?.ok) return;
+    }
+    window.open(websiteUrl, '_blank', 'noopener,noreferrer');
+  } catch (error) {
+    showToast('官网暂时不接客', '请重启应用后再去互联网工位串门。');
+  }
+});
+document.addEventListener('keydown', (event) => {
+  if (event.key !== 'Escape') return;
+  if (!els.contactCardDialog?.hidden) els.contactCardClose.click();
+  else closeTopMenus();
+});
 
 function setTopAction(button, name, pressed) {
   button.dataset.tooltip = name; button.setAttribute('aria-label', name);
@@ -2338,12 +2431,12 @@ els.petToggle?.addEventListener('click', async () => {
   const result = await window.desktop?.setPetEnabled?.(requested);
   renderPetSetting(typeof result?.enabled === 'boolean' ? result.enabled : requested);
   if (petEnabled) syncDesktopPet(getState(), new Date(), true);
-  showToast(petEnabled ? '桌面宠物已开启' : '桌面宠物已关闭', petEnabled ? '马歇歇回到桌面了。右键它可以随时关闭。' : '需要陪伴时，可从设置再次打开。');
+  showToast(petEnabled ? '桌面宠物已开启' : '桌面宠物已关闭', petEnabled ? '马歇歇回到桌面了。右键它可以随时关闭。' : '需要陪伴时，可点右上角的小马再次打开。');
   petTogglePending = false;
   els.petToggle.removeAttribute('aria-busy');
 });
 els.petGuideOpen?.addEventListener('click', () => {
-  els.settingsMenu.classList.remove('is-open'); els.settingsToggle.setAttribute('aria-expanded', 'false');
+  closeTopMenus();
   els.petGuide.hidden = false; els.petGuideClose.focus();
 });
 els.petGuideClose?.addEventListener('click', () => { els.petGuide.hidden = true; els.petGuideOpen.focus(); });
@@ -2358,7 +2451,7 @@ els.petPatrolStart?.addEventListener('click', async () => {
   showToast('马歇歇开始巡视', '它会模拟加班超时状态，从桌面一端慢慢走到另一端。');
 });
 els.petResetPosition?.addEventListener('click', async () => {
-  els.settingsMenu.classList.remove('is-open'); els.settingsToggle.setAttribute('aria-expanded', 'false');
+  closeTopMenus();
   await window.desktop?.resetPetPosition?.();
   showToast('宠物位置已重置', '马歇歇已经回到主屏幕右下角。');
 });
@@ -2518,6 +2611,11 @@ localStorage.setItem(STORAGE.radarMode, 'mock');
 localStorage.setItem(STORAGE.radarDiscovery, 'on');
 renderSoundState(); renderVentCount(); window.desktop?.setSoundEnabled?.(soundEnabled);
 renderLedgerMode(hasUserLedgerData() ? 'user' : 'mock'); renderRadar(); renderHealth(); renderTodos(); renderRetirementPlan(); applyState(getState().name); tick(); renderNotificationExperience(); runBootLoader();
+window.desktop?.onRadarUnreadChanged?.((count) => {
+  nativeRadarUnreadCount = Math.max(0, Math.min(999, Math.trunc(Number(count) || 0)));
+  lastDockIconKey = '';
+  updateDockIcon(getState());
+});
 window.desktop?.getRadarConfig?.().then((config) => {
   radarRealState.source = config?.source || radarRealState.source;
   radarRealState.writeConfigured = Boolean(config?.writeConfigured);

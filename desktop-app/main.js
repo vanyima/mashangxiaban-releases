@@ -21,6 +21,7 @@ let petWalkSession = null;
 let currentPetScale = 0.65;
 let currentNativeBadgeKey = null;
 let radarUnreadCount = 0;
+let latestCountdownBadgePayload = { compact:'', tone:'idle', description:'当前没有进行中的下班倒计时', overlayDataUrl:'' };
 let isQuitting = false;
 const liveNotifications = new Set();
 const reminderTimers = new Map();
@@ -32,6 +33,7 @@ let radarStore;
 const isNotificationSelfTest = process.argv.includes('--test-notification');
 const isQaSmoke = process.argv.includes('--qa-smoke');
 const isIconPreviewExport = process.argv.includes('--export-icon-previews');
+const officialWebsiteUrl = 'https://vanyima.github.io/mashangxiaban-releases/';
 const gotSingleInstanceLock = isNotificationSelfTest || isQaSmoke || isIconPreviewExport || app.requestSingleInstanceLock();
 if (!gotSingleInstanceLock) app.quit();
 app.on('second-instance', () => {
@@ -641,10 +643,22 @@ function setAppMoodIcon(mood) {
   return true;
 }
 
-function createWindowsCountdownOverlay(dataUrl) {
+function createWindowsCountdownOverlay(dataUrl, compact = '', tone = 'working', unreadCount = 0) {
   const safeDataUrl = String(dataUrl || '');
-  if (!safeDataUrl.startsWith('data:image/png;base64,') || safeDataUrl.length > 200000) return nativeImage.createEmpty();
-  return nativeImage.createFromDataURL(safeDataUrl).resize({ width: 32, height: 32 });
+  const count = Math.max(0, Math.min(999, Math.trunc(Number(unreadCount) || 0)));
+  if (safeDataUrl.startsWith('data:image/png;base64,') && safeDataUrl.length <= 200000) {
+    return nativeImage.createFromDataURL(safeDataUrl).resize({ width: 32, height: 32 });
+  }
+  const label = String(compact || '').replace(/[^0-9HM+]/gi, '').slice(0, 3);
+  if (!label && !count) return nativeImage.createEmpty();
+  if (!label) return createWindowsUnreadOverlay(count);
+  const background = tone === 'urgent' ? '#ff4c3e' : '#2448df';
+  const foreground = tone === 'urgent' ? '#ffdf32' : '#fffdf8';
+  const fontSize = label.length > 2 ? 15 : 18;
+  const unreadLabel = count > 9 ? '9+' : String(count);
+  const unread = count ? `<circle cx="25" cy="7" r="6" fill="#ff3b30" stroke="#fffdf8" stroke-width="1.5"/><text x="25" y="7.5" fill="#ffffff" font-family="Arial,sans-serif" font-size="${unreadLabel.length > 1 ? 6.5 : 8}" font-weight="900" text-anchor="middle" dominant-baseline="middle">${unreadLabel}</text>` : '';
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="${background}" stroke="#fffdf8" stroke-width="2"/><text x="${count ? 14.5 : 16}" y="17" fill="${foreground}" font-family="Arial,sans-serif" font-size="${fontSize}" font-weight="900" text-anchor="middle" dominant-baseline="middle">${label}</text>${unread}</svg>`;
+  return nativeImage.createFromDataURL(`data:image/svg+xml;base64,${Buffer.from(svg).toString('base64')}`).resize({ width:32, height:32 });
 }
 
 function createWindowsUnreadOverlay(count) {
@@ -657,9 +671,6 @@ function createWindowsUnreadOverlay(count) {
 function setRadarUnreadBadge(value) {
   const count = Math.max(0, Math.min(999, Math.trunc(Number(value) || 0)));
   radarUnreadCount = count;
-  const badgeKey = `radar-unread:${count}`;
-  if (badgeKey === currentNativeBadgeKey) return true;
-  currentNativeBadgeKey = badgeKey;
 
   if (process.platform === 'darwin') {
     app.setBadgeCount(count);
@@ -667,17 +678,30 @@ function setRadarUnreadBadge(value) {
   }
 
   if (process.platform === 'win32' && mainWindow && !mainWindow.isDestroyed()) {
-    if (!count) {
-      mainWindow.setOverlayIcon(null, '没有未读工友消息');
-      return true;
-    }
-    const overlay = createWindowsUnreadOverlay(count);
-    if (overlay.isEmpty()) return false;
-    mainWindow.setOverlayIcon(overlay, `${count} 条未读工友消息`);
+    if (!mainWindow.webContents.isLoading()) mainWindow.webContents.send('desktop:radar-unread-changed', count);
     return true;
   }
 
   return false;
+}
+
+function renderWindowsTaskbarBadge() {
+  if (process.platform !== 'win32' || !mainWindow || mainWindow.isDestroyed()) return false;
+  const payload = latestCountdownBadgePayload || {};
+  const compact = String(payload.compact || '');
+  const badgeKey = `win:${compact}:${payload.tone}:${radarUnreadCount}`;
+  if (badgeKey === currentNativeBadgeKey) return true;
+  currentNativeBadgeKey = badgeKey;
+  if (!compact && !radarUnreadCount) {
+    mainWindow.setOverlayIcon(null, '当前没有倒计时或未读消息');
+    return true;
+  }
+  const overlay = createWindowsCountdownOverlay(payload.overlayDataUrl, compact, payload.tone, radarUnreadCount);
+  if (overlay.isEmpty()) return false;
+  const countdownDescription = String(payload.description || '下班倒计时');
+  const unreadDescription = radarUnreadCount ? `，${radarUnreadCount} 条未读工友消息` : '';
+  mainWindow.setOverlayIcon(overlay, `${countdownDescription}${unreadDescription}`.slice(0, 120));
+  return true;
 }
 
 function setCountdownBadge(payload = {}) {
@@ -692,14 +716,9 @@ function setCountdownBadge(payload = {}) {
     return true;
   }
 
-  if (process.platform === 'win32' && mainWindow) {
-    const badgeKey = `win:${payload.compact}:${payload.tone}`;
-    if (badgeKey === currentNativeBadgeKey) return true;
-    const overlay = createWindowsCountdownOverlay(payload.overlayDataUrl);
-    if (overlay.isEmpty()) return false;
-    currentNativeBadgeKey = badgeKey;
-    mainWindow.setOverlayIcon(overlay, description);
-    return true;
+  if (process.platform === 'win32' && mainWindow && !mainWindow.isDestroyed()) {
+    latestCountdownBadgePayload = { ...payload, label, description };
+    return renderWindowsTaskbarBadge();
   }
 
   return false;
@@ -708,7 +727,8 @@ function setCountdownBadge(payload = {}) {
 function setDynamicIcon(payload = {}) {
   const dataUrl = String(payload.dataUrl || '');
   if (!dataUrl.startsWith('data:image/png;base64,') || dataUrl.length > 3000000) return false;
-  const image = nativeImage.createFromDataURL(dataUrl);
+  const sourceImage = nativeImage.createFromDataURL(dataUrl);
+  const image = process.platform === 'win32' ? sourceImage.resize({ width:256, height:256, quality:'best' }) : sourceImage;
   if (image.isEmpty()) return false;
   if (process.platform === 'darwin' && app.dock) app.dock.setIcon(image);
   if (mainWindow && process.platform !== 'darwin') mainWindow.setIcon(image);
@@ -1156,8 +1176,20 @@ function createWindow() {
     }
   });
 
+  mainWindow.webContents.setWindowOpenHandler(({ url }) => {
+    if (/^https:\/\//i.test(url)) void shell.openExternal(url);
+    return { action: 'deny' };
+  });
+  mainWindow.webContents.on('will-navigate', (event, url) => {
+    if (url === mainWindow.webContents.getURL() || !/^https:\/\//i.test(url)) return;
+    event.preventDefault();
+    void shell.openExternal(url);
+  });
   mainWindow.loadFile('index.html');
   if (radarUnreadCount > 0) setRadarUnreadBadge(radarUnreadCount);
+  mainWindow.webContents.once('did-finish-load', () => {
+    if (process.platform === 'win32') mainWindow.webContents.send('desktop:radar-unread-changed', radarUnreadCount);
+  });
   mainWindow.on('focus', () => setTimeout(() => avoidPetMainMascotOverlap(), 100));
   mainWindow.on('blur', () => restorePetAfterMainAvoidance());
   mainWindow.on('hide', () => restorePetAfterMainAvoidance());
@@ -1226,6 +1258,30 @@ async function runQaSmoke() {
     tapCueVisible: [...document.querySelectorAll('.tap-cue')].some(node => getComputedStyle(node).display !== 'none'),
     todoBoardPresent: Boolean(document.querySelector('#todo-list'))
   })`);
+  const newEntryQa = await mainWindow.webContents.executeJavaScript(`(() => {
+    document.querySelector('#pet-menu-toggle').click();
+    const windowsOverlay = createWindowsCountdownOverlay({ name:'working', seconds:9*60 }, 4);
+    return {
+      petMenuOpen:document.querySelector('#pet-menu').classList.contains('is-open'),
+      petControlsInSettings:document.querySelector('#settings-menu #pet-toggle') !== null,
+      petControlsInPetMenu:document.querySelector('#pet-menu #pet-toggle') !== null,
+      contactFirst:document.querySelector('#settings-menu button:first-child')?.id === 'contact-ma-xiexie',
+      websiteLabel:document.querySelector('#visit-website')?.childNodes[0]?.textContent.trim(),
+      windowsOverlay:{ compact:windowsOverlay.compact, png:windowsOverlay.overlayDataUrl.startsWith('data:image/png;base64,'), hasUnread:windowsOverlay.description.includes('4 条未读') }
+    };
+  })()`);
+  newEntryQa.websiteOpen = await mainWindow.webContents.executeJavaScript(`window.desktop.openWebsite()`);
+  const windowsCombinedBadgeDataUrl = await mainWindow.webContents.executeJavaScript(`createWindowsCountdownOverlay({ name:'working', seconds:9*60 }, 4).overlayDataUrl`);
+  if (windowsCombinedBadgeDataUrl) fs.writeFileSync(path.join(outputDir, 'windows-countdown-unread-badge.png'), Buffer.from(windowsCombinedBadgeDataUrl.split(',')[1], 'base64'));
+  await wait(120);
+  await capture('pet-menu');
+  await mainWindow.webContents.executeJavaScript(`document.querySelector('#settings-toggle').click()`);
+  await wait(120);
+  await capture('settings-contact');
+  await mainWindow.webContents.executeJavaScript(`document.querySelector('#contact-ma-xiexie').click()`);
+  await wait(120);
+  await capture('contact-card');
+  await mainWindow.webContents.executeJavaScript(`document.querySelector('#contact-card-close').click()`);
   const petEnabledBeforeQa = readPetSettings().enabled;
   setPetEnabled(false);
   const petSingleClickBefore = await mainWindow.webContents.executeJavaScript(`(async () => {
@@ -1773,7 +1829,7 @@ async function runQaSmoke() {
   })()`);
   await mainWindow.webContents.executeJavaScript(`(() => {
     Object.entries(window.__qaRadarBackup || {}).forEach(([key,value]) => value === null ? localStorage.removeItem(key) : localStorage.setItem(key,value));
-    document.querySelector('[data-page=health]').click();
+    document.querySelector('[data-page=attendance]').click();
   })()`);
   await wait(350);
   const healthCurrentHeight = await mainWindow.webContents.executeJavaScript("document.querySelector('.health-shell').getBoundingClientRect().height");
@@ -2030,7 +2086,7 @@ async function runQaSmoke() {
   }
   await mainWindow.webContents.executeJavaScript(`Object.entries(window.__qaStorageBackup || {}).forEach(([key,value]) => value === null ? localStorage.removeItem(key) : localStorage.setItem(key,value))`);
   setPetEnabled(petEnabledBeforeQa);
-  console.log(`[qa-smoke] ${JSON.stringify({ ...initialState, petSingleClick, todoCrud, todoLayout, automaticPlan, initialLayout, notificationOnboarding, notificationClose, notificationAlreadyEnabled, editablePlan, editableStart, partialStartEdit, shutdownShield, shutdownLayout, dateDisplay, planDayToggle, checkoutReport, attendanceData, radarUi, ventUi, healthCurrentHeight, healthPreviewHeight, offSummary, offSummaryFit, shortOvertime, morningReset, ...report, handVisibility, pinOn, pinOff, iconDurationLabels, petQa, outputDir })}`);
+  console.log(`[qa-smoke] ${JSON.stringify({ ...initialState, newEntryQa, petSingleClick, todoCrud, todoLayout, automaticPlan, initialLayout, notificationOnboarding, notificationClose, notificationAlreadyEnabled, editablePlan, editableStart, partialStartEdit, shutdownShield, shutdownLayout, dateDisplay, planDayToggle, checkoutReport, attendanceData, radarUi, ventUi, healthCurrentHeight, healthPreviewHeight, offSummary, offSummaryFit, shortOvertime, morningReset, ...report, handVisibility, pinOn, pinOff, iconDurationLabels, petQa, outputDir })}`);
   app.quit();
 }
 
@@ -2059,6 +2115,14 @@ app.whenReady().then(() => {
     return Boolean(enabled);
   });
   ipcMain.handle('desktop:open-location-settings', openLocationSettings);
+  ipcMain.handle('desktop:open-website', async () => {
+    try {
+      if (!isQaSmoke) await shell.openExternal(officialWebsiteUrl);
+      return { ok: true, url: officialWebsiteUrl };
+    } catch (error) {
+      return { ok: false, reason: error?.message || 'website-open-failed' };
+    }
+  });
   ipcMain.handle('desktop:show-location-guide', async () => {
     if (process.platform !== 'win32') return openLocationSettings();
     const result = await dialog.showMessageBox(mainWindow, {
@@ -2253,9 +2317,9 @@ app.whenReady().then(() => {
   }
   if (process.argv.includes('--test-badge')) {
     mainWindow.webContents.once('did-finish-load', async () => {
-      const dataUrl = await mainWindow.webContents.executeJavaScript("createCountdownOverlayDataUrl('9m', 'urgent')");
-      const overlay = createWindowsCountdownOverlay(dataUrl);
-      const ok = setCountdownBadge({ label: '09:42', compact: '9m', tone: 'urgent', description: '距离下班还有 9 分 42 秒' });
+      const dataUrl = await mainWindow.webContents.executeJavaScript("createWindowsCountdownOverlay({ name:'near', seconds:9*60 })?.overlayDataUrl");
+      const overlay = createWindowsCountdownOverlay(dataUrl, '9M', 'urgent');
+      const ok = setCountdownBadge({ label: '09:42', compact: '9M', tone: 'urgent', description: '距离下班还有 9 分 42 秒', overlayDataUrl:dataUrl });
       console.log(`[badge-self-test] badge=${ok} overlay=${!overlay.isEmpty()}`);
     });
   }
