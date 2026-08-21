@@ -326,6 +326,50 @@ if (matchMedia('(min-width: 981px) and (pointer: fine)').matches) {
   }, { passive:false });
 }
 
+/* 假装工作：只有演示屏成为当前主屏时，全局空格才会触发换皮。 */
+const workCover = document.querySelector('#work-cover');
+const workCoverStage = document.querySelector('#work-cover-stage');
+const workCoverToggle = document.querySelector('#work-cover-toggle');
+const workCoverState = document.querySelector('#work-cover-state');
+const workCoverWindowTitle = document.querySelector('#work-cover-window-title');
+if (workCover && workCoverStage && workCoverToggle && workCoverState) {
+  let coverIsVisible = false;
+  let hasDisguisedOnce = false;
+  const toggleCopy = workCoverToggle.querySelector('span');
+  const radarCopy = workCoverStage.querySelector('.work-cover-toolbar b');
+
+  const setWorkCover = (disguised) => {
+    hasDisguisedOnce ||= disguised;
+    workCoverStage.classList.toggle('is-disguised', disguised);
+    workCoverStage.setAttribute('aria-pressed', String(disguised));
+    workCoverWindowTitle.textContent = disguised ? '第三季度协同增效执行方案.docx' : '摸鱼事务所.mx';
+    radarCopy.textContent = disguised ? '老板雷达：工作中' : '老板雷达：安全';
+    workCoverState.querySelector('b').textContent = disguised ? '伪装已开启' : '摸鱼现场';
+    workCoverState.querySelector('span').textContent = disguised
+      ? '工位空气突然变得很专业'
+      : hasDisguisedOnce ? '危险解除，继续摸鱼。' : '按空格启动工位保护色';
+    toggleCopy.textContent = disguised ? '解除伪装' : hasDisguisedOnce ? '按空格再来一次' : '按空格试试';
+  };
+
+  const toggleWorkCover = () => setWorkCover(!workCoverStage.classList.contains('is-disguised'));
+  workCoverToggle.addEventListener('click', toggleWorkCover);
+  workCoverStage.addEventListener('click', toggleWorkCover);
+  workCoverStage.addEventListener('keydown', (event) => {
+    if (!['Enter', ' '].includes(event.key)) return;
+    event.preventDefault();
+    toggleWorkCover();
+  });
+  document.addEventListener('keydown', (event) => {
+    if (event.code !== 'Space' || !coverIsVisible || event.repeat) return;
+    if (event.target.closest?.('button,input,textarea,select,[contenteditable="true"],#work-cover-stage')) return;
+    event.preventDefault();
+    toggleWorkCover();
+  });
+  new IntersectionObserver(([entry]) => {
+    coverIsVisible = entry.isIntersecting && entry.intersectionRatio >= .55;
+  }, { threshold:[.55] }).observe(workCover);
+}
+
 /* 退休旅行轨道：自动巡航；悬停或键盘聚焦的图片会变速滑到正中央。 */
 const retirementOrbit = document.querySelector('.retirement-orbit');
 if (retirementOrbit) {

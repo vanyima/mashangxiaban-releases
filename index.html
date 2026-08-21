@@ -7,13 +7,13 @@
   <title>马上下班｜专治无偿加班嘴替</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="preload" as="image" href="screenshots/today-640.webp" imagesrcset="screenshots/today-640.webp 640w, screenshots/today-960.webp 960w, screenshots/today-1240.webp 1240w" imagesizes="(max-width: 650px) 320px, 55vw" fetchpriority="high">
-  <link rel="stylesheet" href="styles-mobile10.css?v=scroll-engine-3">
+  <link rel="stylesheet" href="styles-mobile10.css?v=work-cover-1">
 </head>
 <body>
   <div class="cursor-stamp" aria-hidden="true">撤</div>
   <header class="site-nav site-nav-v2">
     <a class="logo" href="#top" aria-label="马上下班首页"><img src="assets/app-icon.png" srcset="assets/app-icon-96.webp 96w, assets/app-icon.webp 192w" sizes="(max-width: 650px) 40px, 48px" alt="" fetchpriority="high" decoding="async"><span><b>马上下班</b><small>OFF DUTY COMPANION</small></span></a>
-    <nav aria-label="页面导航"><a class="top-nav-link nav-feature" href="#companion">今日陪伴</a><a class="top-nav-link nav-feature" href="#radar">附近工友</a><a class="top-nav-link nav-feature" href="#health">考勤健康</a><a class="top-nav-link nav-feature" href="#retirement">我要退休</a><span class="nav-divider" aria-hidden="true"></span><a class="top-nav-link nav-meta nav-changelog" href="changelog.html?v=roundtrip-2"><span>更新日志</span><em class="night-update-tag">🌚 半夜又更了</em></a><a class="top-nav-link nav-meta nav-feedback" href="feedback.html">意见箱</a></nav>
+    <nav aria-label="页面导航"><a class="top-nav-link nav-feature" href="#companion">今日陪伴</a><a class="top-nav-link nav-feature" href="#radar">附近工友</a><a class="top-nav-link nav-feature" href="#health">考勤健康</a><a class="top-nav-link nav-feature" href="#work-cover">假装工作</a><a class="top-nav-link nav-feature" href="#retirement">我要退休</a><span class="nav-divider" aria-hidden="true"></span><a class="top-nav-link nav-meta nav-changelog" href="changelog.html?v=roundtrip-2"><span>更新日志</span><em class="night-update-tag">🌚 半夜又更了</em></a><a class="top-nav-link nav-meta nav-feedback" href="feedback.html">意见箱</a></nav>
     <a class="nav-download" href="#download">立马下载 ↘</a>
   </header>
 
@@ -95,6 +95,42 @@
       </div>
     </section>
 
+    <section class="work-cover-zone" id="work-cover" aria-labelledby="work-cover-title">
+      <div class="work-cover-copy">
+        <span class="section-index">工位应急 / 假装工作</span>
+        <h2 id="work-cover-title">老板来了，<br><span>空格一下。</span></h2>
+        <p>马歇歇会把摸鱼现场当场翻译成生产力。网页这一屏也能试，按一次进入工位保护色，再按一次恢复原状。</p>
+        <button class="work-cover-toggle" id="work-cover-toggle" type="button"><kbd>SPACE</kbd><span>按空格试试</span></button>
+        <small>不保存、不上传，只负责让屏幕突然变得很忙。</small>
+      </div>
+      <div class="work-cover-stage" id="work-cover-stage" tabindex="0" role="button" aria-label="假装工作演示，按空格切换伪装文档" aria-pressed="false">
+        <div class="work-cover-monitor">
+          <div class="work-cover-toolbar"><i></i><i></i><i></i><span id="work-cover-window-title">摸鱼事务所.mx</span><b>老板雷达：安全</b></div>
+          <div class="work-cover-screen">
+            <div class="work-cover-idle" aria-hidden="true">
+              <img src="assets/app-icon.png" alt="">
+              <div><small>OFF DUTY PRIVATE DESKTOP</small><strong>今天的核心任务：<br>把班下明白。</strong></div>
+              <ul><li>已完成：打开电脑</li><li>进行中：等待下班</li><li>待处理：拒绝临时加戏</li></ul>
+            </div>
+            <article class="work-cover-document" aria-hidden="true">
+              <header><span>文件</span><span>开始</span><span>插入</span><span>审阅</span><b>协同云文档 · 自动保存</b></header>
+              <div class="work-cover-ruler"></div>
+              <div class="work-cover-paper">
+                <small>内部资料 / INTERNAL</small>
+                <h3>第三季度协同增效<br>执行方案（修订稿）</h3>
+                <p>一、项目背景与总体目标</p>
+                <div class="work-cover-lines"><i></i><i></i><i></i><i></i></div>
+                <table><tbody><tr><th>关键事项</th><th>责任闭环</th><th>当前进度</th></tr><tr><td>跨部门拉齐</td><td>持续跟进</td><td>稳步推进</td></tr><tr><td>颗粒度拆解</td><td>专项承接</td><td>重点攻坚</td></tr></tbody></table>
+                <p>二、下一阶段抓手</p>
+                <div class="work-cover-lines short"><i></i><i></i><i></i></div>
+              </div>
+            </article>
+            <div class="work-cover-state" id="work-cover-state"><b>摸鱼现场</b><span>按空格启动工位保护色</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section class="retirement-zone" id="retirement">
       <div class="retirement-life-grid retirement-orbit" aria-label="退休后的旅行生活自动轮播">
         <figure class="retirement-shot shot-yemen" role="button" tabindex="0"><img src="assets/retirement-orbit/socotra.jpg" alt="也门索科特拉岛龙血树旅行场景" loading="eager" decoding="async"><figcaption>也门 · 索科特拉</figcaption></figure>
@@ -117,6 +153,6 @@
   </main>
 
   <footer><a class="logo" href="#top"><img src="assets/app-icon.png" srcset="assets/app-icon-96.webp 96w, assets/app-icon.webp 192w" sizes="48px" alt="" loading="lazy" decoding="async"><span><b>马上下班</b><small>© 2026 OFF DUTY DEPARTMENT</small></span></a><p>工作只是工作，晚上才是你的。</p><div class="footer-links"><a href="changelog.html?v=roundtrip-2">更新日志</a><a href="feedback.html">意见箱</a><a href="#top">回到工位顶部 ↑</a></div></footer>
-  <script src="site-mobile10.js?v=scroll-engine-3"></script>
+  <script src="site-mobile10.js?v=work-cover-1"></script>
 </body>
 </html>

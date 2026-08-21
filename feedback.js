@@ -7,13 +7,7 @@ const fallbackIdeas = [
   { content: '准点下班也要有连续打卡。', size: 'small', votes: 0 },
   { content: '下班倒计时最后一分钟，播放火箭发射音。', size: 'medium', votes: 7 },
   { content: '老板已读不回', size: 'small', votes: 0 },
-  { content: '检测到周末开电脑，马直接瞪到全屏，直到我把电脑合上。', size: 'large', votes: 12 },
-  { content: '做一个“今天没被工作定义”勋章。', size: 'medium', votes: 0 },
-  { content: '工时太长时，桌宠替我原地躺平。', size: 'small', votes: 4 },
-  { content: '加一个假装掉线按钮，名字就叫精神离职。', size: 'medium', votes: 0 },
-  { content: '周报能不能自动翻译成：这周也活下来了。', size: 'small', votes: 9 },
-  { content: '下班！', size: 'large', votes: 0 },
-  { content: '加班超过两小时，直接进入工位静默保护模式。', size: 'medium', votes: 3 }
+  { content: '检测到周末开电脑，马直接瞪到全屏，直到我把电脑合上。', size: 'large', votes: 12 }
 ];
 
 const form = document.querySelector('#feedback-form');
@@ -30,14 +24,17 @@ function readLocalJson(key, fallback) {
   try { return JSON.parse(localStorage.getItem(key)) || fallback; } catch { return fallback; }
 }
 
-function fallbackIdeaList() {
+function mockIdeaList() {
   const votes = readLocalJson(LOCAL_VOTES_KEY, {});
-  const samples = fallbackIdeas.map((idea, index) => {
+  return fallbackIdeas.map((idea, index) => {
     const id = `mock-${index + 1}`;
     const hasLocalVote = Object.prototype.hasOwnProperty.call(votes, id);
     return { ...idea, id, createdAt: Date.now() - index * 370000, mine: false, votes: hasLocalVote ? Number(votes[id]) : Number(idea.votes || 0), voted: hasLocalVote, local: true };
   });
-  return [...readLocalJson(LOCAL_IDEAS_KEY, []), ...samples];
+}
+
+function fallbackIdeaList() {
+  return [...readLocalJson(LOCAL_IDEAS_KEY, []), ...mockIdeaList()];
 }
 
 function clientId() {
@@ -177,7 +174,7 @@ async function loadIdeas() {
     if (!response.ok) throw new Error('load-failed');
     const data = await response.json();
     usingLocalFallback = false;
-    renderIdeas(data.ideas || []);
+    renderIdeas([...(data.ideas || []), ...mockIdeaList()]);
   } catch {
     usingLocalFallback = true;
     renderIdeas(fallbackIdeaList());
