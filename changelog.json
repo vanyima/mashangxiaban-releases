@@ -1,5 +1,19 @@
 [
   {
+    "version": "2.6.0",
+    "publishedAt": "2026-08-21T06:27:41Z",
+    "notes": [
+      "APP 新增分享功能：把马歇歇发射到工友的电脑。",
+      "APP 设置新增意见箱入口，使用系统浏览器直达官网公共脑洞空域。",
+      "官网新增公开意见箱，支持提交、漂浮展示与“俺也要”采纳投票。",
+      "优化使用体验并修复已知问题。"
+    ],
+    "artifacts": {
+      "windows": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.6.0/mashangxiaban-2.6.0-Windows-x64.exe",
+      "mac": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.6.0/mashangxiaban-2.6.0-macOS-Apple-Silicon.dmg"
+    }
+  },
+  {
     "version": "2.5.5",
     "publishedAt": "2026-08-21T04:01:58Z",
     "notes": [
