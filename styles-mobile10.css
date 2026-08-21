@@ -1412,12 +1412,17 @@
 .work-cover-copy .section-index { color:#6f5b00; }
 .work-cover-copy h2 {
   margin:20px 0 22px;
-  font-size:clamp(52px,6vw,96px);
+  font-size:clamp(44px,3.8vw,62px);
   line-height:.88;
   letter-spacing:-.075em;
 }
-.work-cover-copy h2 span {
-  display:inline-block;
+.work-cover-copy h2 .work-cover-line {
+  display:block;
+  width:max-content;
+  max-width:100%;
+  white-space:nowrap;
+}
+.work-cover-copy h2 .work-cover-accent {
   padding:5px 10px 9px;
   background:var(--ink);
   color:var(--yellow);
@@ -1502,7 +1507,7 @@
 }
 @media (max-width:650px) {
   .work-cover-copy { padding:40px 20px 34px; }
-  .work-cover-copy h2 { font-size:48px; }
+  .work-cover-copy h2 { font-size:clamp(38px,12.8vw,52px); }
   .work-cover-stage { min-height:510px; padding:25px 16px; }
   .work-cover-screen { height:430px; min-height:0; }
   .work-cover-idle { grid-template-columns:76px 1fr; gap:16px; padding:32px 22px; }
