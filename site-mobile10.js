@@ -178,13 +178,47 @@ const navSections = [...document.querySelectorAll('.site-nav .nav-feature[href^=
   .map((link) => ({ link, section:document.querySelector(link.getAttribute('href')) }))
   .filter((item) => item.section);
 if (navSections.length) {
-  const navHighlight = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (!entry.isIntersecting) return;
-      navSections.forEach(({ link, section }) => link.classList.toggle('is-current', section === entry.target));
+  const nav = document.querySelector('.site-nav nav');
+  let activeNavSection = null;
+  let navHighlightFrame = 0;
+
+  const revealActiveNavLink = (link) => {
+    if (!nav || matchMedia('(min-width: 981px)').matches) return;
+    const left = link.getBoundingClientRect().left - nav.getBoundingClientRect().left + nav.scrollLeft;
+    const right = left + link.offsetWidth;
+    const visibleLeft = nav.scrollLeft;
+    const visibleRight = visibleLeft + nav.clientWidth;
+    if (left < visibleLeft) nav.scrollTo({ left:Math.max(0, left - 8), behavior:'smooth' });
+    else if (right > visibleRight) nav.scrollTo({ left:right - nav.clientWidth + 8, behavior:'smooth' });
+  };
+
+  const updateNavHighlight = () => {
+    navHighlightFrame = 0;
+    const navHeight = document.querySelector('.site-nav')?.offsetHeight || 0;
+    const probeY = navHeight + Math.min(120, Math.max(48, (window.innerHeight - navHeight) * .18));
+    const active = navSections.find(({ section }) => {
+      const rect = section.getBoundingClientRect();
+      return rect.top <= probeY && rect.bottom > probeY;
+    }) || null;
+    const nextSection = active?.section || null;
+    if (nextSection === activeNavSection) return;
+    activeNavSection = nextSection;
+    navSections.forEach(({ link, section }) => {
+      const isCurrent = section === activeNavSection;
+      link.classList.toggle('is-current', isCurrent);
+      if (isCurrent) link.setAttribute('aria-current', 'true');
+      else link.removeAttribute('aria-current');
+      if (isCurrent) revealActiveNavLink(link);
     });
-  }, { rootMargin:'-24% 0px -60% 0px', threshold:0 });
-  navSections.forEach(({ section }) => navHighlight.observe(section));
+  };
+
+  const scheduleNavHighlight = () => {
+    if (navHighlightFrame) return;
+    navHighlightFrame = requestAnimationFrame(updateNavHighlight);
+  };
+  addEventListener('scroll', scheduleNavHighlight, { passive:true });
+  addEventListener('resize', scheduleNavHighlight, { passive:true });
+  scheduleNavHighlight();
 }
 
 /* 通知演示区的两条语音互斥播放，避免同时播报。 */
