@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="马上下班意见箱——把离谱但有用的想法扔进来。">
+  <title>意见箱｜马上下班</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="feedback.css?v=1">
+  <link rel="stylesheet" href="feedback-viewport.css?v=launch-depart-2">
+</head>
+<body>
+  <header class="feedback-nav">
+    <a class="feedback-logo" href="index.html"><img src="assets/app-icon.png" alt=""><span><b>马上下班</b><small>OFF DUTY COMPANION</small></span></a>
+    <nav aria-label="资料导航"><a href="index.html">返回官网</a><a href="changelog.html?v=roundtrip-2">更新日志</a><a class="is-current" href="feedback.html" aria-current="page">意见箱</a></nav>
+    <a class="feedback-download" href="index.html#download">立马下载 ↘</a>
+  </header>
+
+  <main class="feedback-stage">
+    <section class="feedback-hero" aria-labelledby="feedback-title">
+      <div class="feedback-copy">
+        <span class="feedback-kicker">PUBLIC IDEA AIRSPACE / 公共脑洞空域</span>
+        <h1 id="feedback-title">有意见？<br><span>大声飘过去。</span></h1>
+        <p>想加什么、哪里难用、马还能怎么疯，都可以往这里扔。写完以后，它会和全体工友的脑洞一起在墙上游荡。</p>
+        <div class="feedback-rule"><b>唯一审核标准</b><strong>不抽象的，不采纳。</strong><small>但每一条都会被马歇歇瞪着看完。</small></div>
+      </div>
+      <div class="feedback-horse" aria-label="马歇歇正在瞪着意见箱">
+        <span class="feedback-eye-note">正在审核<br>你的精神状态</span>
+        <img src="assets/ma-xiexie-angry-gaze.png" alt="瞪眼的马歇歇">
+        <strong>你说。<br>我瞪着听。</strong>
+      </div>
+      <a class="scroll-cue scroll-cue-light" href="#airspace"><span>往下看工友都在提什么</span><b>↓</b></a>
+    </section>
+
+    <section class="idea-airspace" id="airspace" aria-labelledby="airspace-title">
+      <header><div><span>LIVE / 工友集体脑洞</span><h2 id="airspace-title">意见正在经过工位上空</h2></div><strong id="idea-count">载入中…</strong></header>
+      <div class="idea-lanes" id="idea-lanes" aria-live="polite"></div>
+      <p class="idea-empty" id="idea-empty" hidden>空域暂时清净。危险，可能有人在认真工作。</p>
+      <a class="scroll-cue scroll-cue-dark" href="#composer"><span>看够了，轮到你发射一个</span><b>↓</b></a>
+    </section>
+
+    <section class="idea-composer" id="composer" aria-labelledby="composer-title">
+      <div><span>DROP AN IDEA / 投放一个脑洞</span><h2 id="composer-title">让马歇歇再<span class="no-break">离谱</span>一点。</h2><p>80 字以内。别写简历，直接说人话。</p></div>
+      <form id="feedback-form">
+        <label for="feedback-input">你的意见或建议</label>
+        <textarea id="feedback-input" maxlength="80" required placeholder="例如：加班超过两小时，让马直接替我给老板发辞职信……"></textarea>
+        <div class="composer-actions"><span><b id="feedback-length">0</b> / 80</span><button type="submit" id="feedback-submit">发射到公共空域 ↑</button></div>
+        <p class="composer-status" id="feedback-status" role="status"></p>
+      </form>
+    </section>
+  </main>
+
+  <footer><span>马上下班 · 意见箱</span><strong>工作可以具体，意见必须抽象。</strong><a href="index.html">回官网继续摸鱼 →</a></footer>
+  <script src="feedback.js?v=launch-depart-2"></script>
+</body>
+</html>

@@ -260,19 +260,69 @@ voiceTracks.forEach((track, index) => {
 if (matchMedia('(min-width: 981px) and (pointer: fine)').matches) {
   const parts = [...document.querySelectorAll('main > section')];
   let sectionLocked = false;
+  let sectionAnimationDone = true;
+  let sectionFrame = 0;
+  let sectionUnlockTimer = 0;
+
+  const scheduleSectionUnlock = () => {
+    clearTimeout(sectionUnlockTimer);
+    sectionUnlockTimer = setTimeout(() => {
+      if (sectionAnimationDone) sectionLocked = false;
+    }, 220);
+  };
+
+  const scrollToPart = (part) => {
+    const navHeight = document.querySelector('.site-nav')?.offsetHeight || 0;
+    const startY = window.scrollY;
+    const targetY = Math.max(0, part.offsetTop - navHeight);
+    const distance = targetY - startY;
+    const duration = Math.min(560, Math.max(400, Math.abs(distance) * .52));
+    const startedAt = performance.now();
+    sectionLocked = true;
+    sectionAnimationDone = false;
+    document.documentElement.classList.add('is-section-scrolling');
+    cancelAnimationFrame(sectionFrame);
+
+    const step = (now) => {
+      const progress = Math.min(1, (now - startedAt) / duration);
+      const eased = 1 - Math.pow(1 - progress, 4);
+      window.scrollTo(0, Math.round(startY + distance * eased));
+      if (progress < 1) {
+        sectionFrame = requestAnimationFrame(step);
+        return;
+      }
+      window.scrollTo(0, targetY);
+      sectionAnimationDone = true;
+      document.documentElement.classList.remove('is-section-scrolling');
+      scheduleSectionUnlock();
+    };
+    sectionFrame = requestAnimationFrame(step);
+  };
+
   window.addEventListener('wheel', (event) => {
-    if (Math.abs(event.deltaY) < 18 || sectionLocked || event.ctrlKey) return;
+    if (event.ctrlKey) return;
+    if (sectionLocked) {
+      event.preventDefault();
+      scheduleSectionUnlock();
+      return;
+    }
+    if (Math.abs(event.deltaY) < 18) {
+      event.preventDefault();
+      return;
+    }
     const navHeight = document.querySelector('.site-nav')?.offsetHeight || 0;
     const current = parts.reduce((best, part, partIndex) => {
       const distance = Math.abs(part.getBoundingClientRect().top - navHeight);
       return distance < best.distance ? { index:partIndex, distance } : best;
     }, { index:0, distance:Infinity }).index;
     const next = Math.max(0, Math.min(parts.length - 1, current + Math.sign(event.deltaY)));
-    if (next === current) return;
+    if (next === current) {
+      const leavingPage = (current === 0 && event.deltaY < 0) || (current === parts.length - 1 && event.deltaY > 0);
+      if (!leavingPage) event.preventDefault();
+      return;
+    }
     event.preventDefault();
-    sectionLocked = true;
-    parts[next].scrollIntoView({ behavior:'smooth', block:'start' });
-    setTimeout(() => sectionLocked = false, 720);
+    scrollToPart(parts[next]);
   }, { passive:false });
 }
 
