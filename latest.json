@@ -1,23 +1,25 @@
 {
-  "version": "2.5.5",
-  "publishedAt": "2026-08-21T04:01:58Z",
+  "version": "2.6.0",
+  "publishedAt": "2026-08-21T06:27:41Z",
   "artifacts": {
     "darwin-arm64": {
-      "downloadUrl": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.5.5/mashangxiaban-2.5.5-macOS-Apple-Silicon.dmg",
-      "sha256": "221557f47b0934bd12a5e4d7f04d76e8454946331fa546522ac79e789fb7645d"
+      "downloadUrl": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.6.0/mashangxiaban-2.6.0-macOS-Apple-Silicon.dmg",
+      "sha256": "87c24fa0f7c71283f6f6977f5cde55cf810563800522ad06b19ee7cdee5d3193"
     },
     "win32-x64": {
-      "downloadUrl": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.5.5/mashangxiaban-2.5.5-Windows-x64.exe",
-      "sha256": "29c6280aa6344bd58b0816bffd8d25c5c28abd4ed87dd82e51cc8cdcad32b4f0"
+      "downloadUrl": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.6.0/mashangxiaban-2.6.0-Windows-x64.exe",
+      "sha256": "b0d3adc14d41ebc386682d33ed78c77a591175d0bdd76acc698a09590f22f41e"
     }
   },
   "platform": "darwin-arm64",
-  "downloadUrl": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.5.5/mashangxiaban-2.5.5-macOS-Apple-Silicon.dmg",
-  "sha256": "221557f47b0934bd12a5e4d7f04d76e8454946331fa546522ac79e789fb7645d",
+  "downloadUrl": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.6.0/mashangxiaban-2.6.0-macOS-Apple-Silicon.dmg",
+  "sha256": "87c24fa0f7c71283f6f6977f5cde55cf810563800522ad06b19ee7cdee5d3193",
   "notes": [
-    "桌面宠物入口移到右上角，设置新增联系马歇歇工牌与官网入口。",
-    "修复 Windows 打卡后任务栏图标不显示倒计时的问题。",
-    "倒计时与附近工友未读消息现在可同时显示，未读数固定在右上角。",
-    "优化 macOS 图标角标显示，并修复定位提示与官网跳转问题。"
+    "APP 新增分享功能：把马歇歇发射到工友的电脑。",
+    "APP 设置新增意见箱入口，使用系统浏览器直达官网公共脑洞空域。",
+    "官网新增公开意见箱，支持提交、漂浮展示与“俺也要”采纳投票。",
+    "官网导航合并考勤健康，并优化整屏滚动与第四屏到第五屏的完整对齐。",
+    "优化我的弹幕识别、灯带、居中展示与发射后漂浮动画。",
+    "安装包适用于 Apple Silicon macOS 与 64 位 Windows 10 / 11。"
   ]
 }
