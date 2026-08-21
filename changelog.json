@@ -1,5 +1,18 @@
 [
   {
+    "version": "2.5.5",
+    "publishedAt": "2026-08-21T04:01:58Z",
+    "notes": [
+      "桌面宠物入口移到右上角，设置新增联系马歇歇工牌与官网入口。",
+      "倒计时与附近工友未读消息现在可同时显示，未读数固定在右上角。",
+      "优化使用体验并修复已知问题。"
+    ],
+    "artifacts": {
+      "windows": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.5.5/mashangxiaban-2.5.5-Windows-x64.exe",
+      "mac": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.5.5/mashangxiaban-2.5.5-macOS-Apple-Silicon.dmg"
+    }
+  },
+  {
     "version": "2.5.4",
     "publishedAt": "2026-08-20T16:21:31Z",
     "notes": [

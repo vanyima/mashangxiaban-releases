@@ -1,21 +1,23 @@
 {
-  "version": "2.5.4",
-  "publishedAt": "2026-08-20T16:21:31Z",
+  "version": "2.5.5",
+  "publishedAt": "2026-08-21T04:01:58Z",
   "artifacts": {
     "darwin-arm64": {
-      "downloadUrl": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.5.4/mashangxiaban-2.5.4-macOS-Apple-Silicon.dmg",
-      "sha256": "80e26b645cd137a85050a18dcbcab90ce10ab24d48b218004704d1f2b32bc233"
+      "downloadUrl": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.5.5/mashangxiaban-2.5.5-macOS-Apple-Silicon.dmg",
+      "sha256": "221557f47b0934bd12a5e4d7f04d76e8454946331fa546522ac79e789fb7645d"
     },
     "win32-x64": {
-      "downloadUrl": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.5.4/mashangxiaban-2.5.4-Windows-x64.exe",
-      "sha256": "2790d775b2d23e2c50bd99664433d19a1fd7dcacb9e58b8605653d1ba7564936"
+      "downloadUrl": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.5.5/mashangxiaban-2.5.5-Windows-x64.exe",
+      "sha256": "29c6280aa6344bd58b0816bffd8d25c5c28abd4ed87dd82e51cc8cdcad32b4f0"
     }
   },
   "platform": "darwin-arm64",
-  "downloadUrl": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.5.4/mashangxiaban-2.5.4-macOS-Apple-Silicon.dmg",
-  "sha256": "80e26b645cd137a85050a18dcbcab90ce10ab24d48b218004704d1f2b32bc233",
+  "downloadUrl": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.5.5/mashangxiaban-2.5.5-macOS-Apple-Silicon.dmg",
+  "sha256": "221557f47b0934bd12a5e4d7f04d76e8454946331fa546522ac79e789fb7645d",
   "notes": [
-    "新增「摸鱼乐园·带薪钓鱼」，支持一键工作文档伪装。",
-    "桌宠新增跨屏巡视与提醒。"
+    "桌面宠物入口移到右上角，设置新增联系马歇歇工牌与官网入口。",
+    "修复 Windows 打卡后任务栏图标不显示倒计时的问题。",
+    "倒计时与附近工友未读消息现在可同时显示，未读数固定在右上角。",
+    "优化 macOS 图标角标显示，并修复定位提示与官网跳转问题。"
   ]
 }
