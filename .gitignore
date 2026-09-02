@@ -1,4 +1,5 @@
 .DS_Store
+.codex-checkpoints/
 .playwright-cli/
 .wrangler/
 cloudflare/.wrangler/
