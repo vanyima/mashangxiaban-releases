@@ -1,5 +1,19 @@
 [
   {
+    "version": "2.6.1",
+    "publishedAt": "2026-09-02T14:49:43Z",
+    "notes": [
+      "系统精确定位失败时，自动切换为同城级网络定位，并明确标注定位精度",
+      "恢复定位失败提示和排查步骤，不再误报“附近暂时没人”",
+      "精确定位成功时，继续提供 50 米 / 100 米距离提示",
+      "优化使用体验并修复已知问题。"
+    ],
+    "artifacts": {
+      "windows": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.6.1/mashangxiaban-2.6.1-Windows-x64.exe",
+      "mac": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.6.1/mashangxiaban-2.6.1-macOS-Apple-Silicon.dmg"
+    }
+  },
+  {
     "version": "2.6.0",
     "publishedAt": "2026-08-21T06:27:41Z",
     "notes": [

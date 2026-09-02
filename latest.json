@@ -1,25 +1,28 @@
 {
-  "version": "2.6.0",
-  "publishedAt": "2026-08-21T06:27:41Z",
+  "version": "2.6.1",
+  "publishedAt": "2026-09-02T14:49:43Z",
   "artifacts": {
     "darwin-arm64": {
-      "downloadUrl": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.6.0/mashangxiaban-2.6.0-macOS-Apple-Silicon.dmg",
-      "sha256": "87c24fa0f7c71283f6f6977f5cde55cf810563800522ad06b19ee7cdee5d3193"
+      "downloadUrl": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.6.1/mashangxiaban-2.6.1-macOS-Apple-Silicon.dmg",
+      "sha256": "7112523a55026b25f35a37eec99d7d061129fdceec77a4aeb2b37abfd3d54e6b"
     },
     "win32-x64": {
-      "downloadUrl": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.6.0/mashangxiaban-2.6.0-Windows-x64.exe",
-      "sha256": "b0d3adc14d41ebc386682d33ed78c77a591175d0bdd76acc698a09590f22f41e"
+      "downloadUrl": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.6.1/mashangxiaban-2.6.1-Windows-x64.exe",
+      "sha256": "aa4586b4df1c2fca76dd73caf17641650a10e6665e2b1bbc16a16a0452970a02"
     }
   },
   "platform": "darwin-arm64",
-  "downloadUrl": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.6.0/mashangxiaban-2.6.0-macOS-Apple-Silicon.dmg",
-  "sha256": "87c24fa0f7c71283f6f6977f5cde55cf810563800522ad06b19ee7cdee5d3193",
+  "downloadUrl": "https://github.com/vanyima/mashangxiaban-releases/releases/download/v2.6.1/mashangxiaban-2.6.1-macOS-Apple-Silicon.dmg",
+  "sha256": "7112523a55026b25f35a37eec99d7d061129fdceec77a4aeb2b37abfd3d54e6b",
   "notes": [
-    "APP 新增分享功能：把马歇歇发射到工友的电脑。",
-    "APP 设置新增意见箱入口，使用系统浏览器直达官网公共脑洞空域。",
-    "官网新增公开意见箱，支持提交、漂浮展示与“俺也要”采纳投票。",
-    "官网导航合并考勤健康，并优化整屏滚动与第四屏到第五屏的完整对齐。",
-    "优化我的弹幕识别、灯带、居中展示与发射后漂浮动画。",
-    "安装包适用于 Apple Silicon macOS 与 64 位 Windows 10 / 11。"
+    "修复附近工友在 macOS 和 Windows 定位失败后看不到人的问题。",
+    "系统精确定位失败时，自动切换为同城级网络定位，并明确标注定位精度",
+    "恢复定位失败提示和排查步骤，不再误报“附近暂时没人”",
+    "精确定位成功时，继续提供 50 米 / 100 米距离提示",
+    "升级 Electron 内核并修复已知安全问题",
+    "安装包：",
+    "Apple Silicon Mac（macOS 11+）",
+    "64 位 Windows（Windows 10/11）",
+    "隐私说明：附近工友接口不会向其他用户返回经纬度；网络定位仅提供同城级发现，不显示虚假的精确距离。"
   ]
 }
